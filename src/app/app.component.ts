@@ -3,7 +3,7 @@ import { RouterOutlet } from '@angular/router';
 import {AuthorizationComponent} from './pages/authorization/authorization.component';
 import {ProfileService} from './services/profile.service';
 import {JsonPipe} from '@angular/common';
-import {Profile} from './interfaces/profile.interface';
+import {ProfileFromVideo} from './interfaces/profileFromVideo.interface';
 
 @Component({
   selector: 'app-root',
@@ -16,7 +16,7 @@ export class AppComponent {
   title = 'ChatZoneFront';
 
   profileService = inject(ProfileService)
-  profiles: Profile[] = []
+  profiles: ProfileFromVideo[] = []
   constructor() {
     this.profileService.getTestAccounts()
       .subscribe(value => {

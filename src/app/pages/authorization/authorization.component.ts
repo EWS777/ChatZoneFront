@@ -1,7 +1,9 @@
 ﻿import {Component, inject} from '@angular/core';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {HttpClient} from '@angular/common/http';
-import {Profile} from '../../interfaces/profile.interface';
+import {ProfileFromVideo} from '../../interfaces/profileFromVideo.interface';
+import {tap} from 'rxjs';
+import {Token} from '../../interfaces/token';
 
 @Component({
   selector: 'authorization-app', //the name of Component, also should be as unique
@@ -47,9 +49,20 @@ export class AuthorizationComponent{
   http = inject(HttpClient)
   baseApiUrl = 'https://localhost:7212/'
 
+  token: string | null = null
+  refreshToken: string | null = null
 
-  login(payload: {usernameOrEmail: string, Password: string}){
-    return this.http.post(`${this.baseApiUrl}login`, payload)
+  get IsAuth(){
+    return !!this.token //!! string can be converted to bool to return true/false
   }
 
+  login(payload: {usernameOrEmail: string, Password: string}){
+    return this.http.post<Token>(`${this.baseApiUrl}login`, payload)
+      .pipe(
+        tap(value => {
+          this.token = value.accessToken
+          this.refreshToken = value.refreshToken
+        })
+      )
+  }
 }

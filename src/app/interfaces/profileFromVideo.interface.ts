@@ -1,4 +1,4 @@
-﻿export interface Profile{
+﻿export interface ProfileFromVideo {
   id: number,
   username: string,
   avatarUrl: string | null,
