@@ -17,17 +17,19 @@ import {Router, RouterLink} from '@angular/router';
 export class AuthorizationComponent{
   isLogin = signal<boolean>(true)
 
+  isConfirmEmailPage = signal<boolean>(false)
+
 
   loginForm = new FormGroup({
-    usernameOrEmail: new FormControl(null, Validators.required),
-    password: new FormControl(null, Validators.required)
+    usernameOrEmail: new FormControl(null, {validators: [Validators.required, Validators.minLength(8)]}),
+    password: new FormControl(null, {validators: [Validators.required, Validators.minLength(8)]})
   })
 
   registrationForm = new FormGroup({
-    username: new FormControl(null, Validators.required),
-    email: new FormControl(null, Validators.required),
-    password: new FormControl(null, Validators.required),
-    confirmedPassword: new FormControl(null, Validators.required)
+    username: new FormControl(null, {validators: [Validators.required, Validators.minLength(8)]}),
+    email: new FormControl(null, {validators: [Validators.required, Validators.email]}),
+    password: new FormControl(null, {validators: [Validators.required, Validators.minLength(8)]}),
+    confirmedPassword: new FormControl(null, {validators: [Validators.required, Validators.minLength(8)]})
   })
 
   authService = inject(AuthorizationService)
@@ -48,6 +50,26 @@ export class AuthorizationComponent{
     }
   }
   onRegistrationSubmit(){
+    if (this.registrationForm.invalid) {
+      this.registrationForm.markAllAsTouched();
+      return;
+    }
 
+    const dataToSend = {
+      email: this.registrationForm.get('email')?.value,
+      username: this.registrationForm.get('username')?.value,
+      password: this.registrationForm.get('password')?.value
+    }
+
+    // @ts-ignore
+    this.authService.registerLogin(dataToSend).subscribe({
+      next: value => {
+        console.log('Регистрация прошла успешно', value);
+        this.isConfirmEmailPage.set(true)
+      },
+      error: (err) => {
+        console.error('Ошибка входа:', err);
+      }
+    });
   }
 }

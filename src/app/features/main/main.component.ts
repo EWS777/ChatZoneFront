@@ -22,7 +22,7 @@ export class MainComponent implements OnInit{
       .subscribe({
         next: value => {
           console.log(value)
-          this.username = value.Username
+          this.username = value.username
         }
       })
   }

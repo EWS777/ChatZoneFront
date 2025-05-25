@@ -9,8 +9,14 @@ export class AuthorizationService {
   baseApiUrl = 'https://localhost:7212/'
 
   postLogin(payload: {usernameOrEmail: string, Password: string}){
-    return this.http.post(`${this.baseApiUrl}login`, payload,{
-      withCredentials: true
-    });
+    return this.http.post(`${this.baseApiUrl}login`, payload
+      // {
+      // withCredentials: true
+    // }
+    );
+  }
+
+  registerLogin(payload: {email: string, username: string, password: string}){
+    return this.http.post(`${this.baseApiUrl}register`, payload)
   }
 }

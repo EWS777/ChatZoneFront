@@ -1,4 +1,4 @@
 <p>main works!</p>
 
 <button (click)="onClickLogin()">Login</button>
-<button (click)="onClickProfile()">{{ username }}</button>
+<button (click)="onClickProfile()">{{ username || 'Profile'}}</button>

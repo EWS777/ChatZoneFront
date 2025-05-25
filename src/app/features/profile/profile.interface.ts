@@ -1,5 +1,5 @@
 export interface ProfileInterface {
-  Username: string,
+  username: string,
   Email: string,
   IsFindByProfile: boolean
 }

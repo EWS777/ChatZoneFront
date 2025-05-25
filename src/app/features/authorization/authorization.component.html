@@ -1,62 +1,93 @@
 ﻿
 <div class="app-wrapper">
-  <div class="auth-container">
-    <div>
-      <button name="button-login" (click)="isLogin.set(true)">Login</button>
-      <button name="button-login" (click)="isLogin.set(false)">Rejestracja</button>
+
+  @if(!isConfirmEmailPage()){
+    <div class="auth-container">
+      <div>
+        <button name="button-login" (click)="isLogin.set(true)">Login</button>
+        <button name="button-login" (click)="isLogin.set(false)">Rejestracja</button>
+      </div>
+
+      @if(isLogin()){
+        <form class="login-form" [formGroup]="loginForm" (ngSubmit)="onLoginSubmit()">
+          <label class="login-labels">
+            Username/Email
+            <input formControlName = "usernameOrEmail" class="login-inputs" type="text" placeholder="example123">
+          </label>
+
+          <label class="login-labels">
+            Password
+            <input formControlName = "password" class="login-inputs" type="text" placeholder="example123">
+          </label>
+
+          <button type="submit">Login</button>
+          <a [routerLink]="['/reset-password']">Zapomninałeś hasła?</a>
+        </form>
+      }
+      @else {
+        <form class="login-form" [formGroup]="registrationForm" (ngSubmit)="onRegistrationSubmit()">
+          <label class="auth-labels">
+            Email
+            <input formControlName = "email" class="auth-inputs" type="text" placeholder="example123">
+            @if(registrationForm.controls.email.invalid){
+              @if(registrationForm.controls.email.errors?.["required"]){
+                <small>Email is required</small>
+              }
+              @if(registrationForm.controls.email.errors?.["email"]){
+                <small>Email is not valid</small>
+              }
+            }
+          </label>
+
+          <label class="auth-labels">
+            Username
+            <input formControlName = "username" class="auth-inputs" type="text" placeholder="example123">
+            @if(registrationForm.controls.username.invalid){
+              @if(registrationForm.controls.username.errors?.["required"]){
+                <small>Username is required</small>
+              }
+              @if(registrationForm.controls.username.errors?.["minLength"]){
+                <small>Username min length is 8</small>
+              }
+            }
+          </label>
+
+          <label class="auth-labels">
+            Password
+            <input formControlName = "password" class="auth-inputs" type="text" placeholder="example123">
+            @if(registrationForm.controls.password.invalid){
+              @if(registrationForm.controls.password.errors?.["required"]){
+                <small>password is required</small>
+              }
+              @if(registrationForm.controls.password.errors?.["minLength"]){
+                <small>password min length is 8</small>
+              }
+            }
+          </label>
+
+          <label class="auth-labels">
+            Confirm Password
+            <input formControlName = "confirmedPassword" class="auth-inputs" type="text" placeholder="example123">
+            @if(registrationForm.controls.confirmedPassword.invalid){
+              @if(registrationForm.controls.confirmedPassword.errors?.["required"]){
+                <small>password is required</small>
+              }
+              @if(registrationForm.controls.confirmedPassword.errors?.["minLength"]){
+                <small>password min length is 8</small>
+              }
+            }
+          </label>
+
+          <button type="submit">Zarejestruj się</button>
+        </form>
+      }
     </div>
+  } @else {
+    Proszę podtwierdzić email żeby aktywować konto. Link został wysłany mailowo
+    <a [routerLink]="['/']">Przejdź do strony głównej</a>
+  }
 
-    @if(isLogin()){
-      <form class="login-form" [formGroup]="loginForm" (ngSubmit)="onLoginSubmit()">
-        <label class="login-labels">
-          Username/Email
-          <input
-            formControlName = "usernameOrEmail"
-            class="login-inputs" type="text" placeholder="example123">
-        </label>
 
-        <label class="login-labels">
-          Password
-          <input
-            formControlName = "password"
-            class="login-inputs" type="text" placeholder="example123">
-        </label>
 
-        <button type="submit">Login</button>
-        <a [routerLink]="['/reset-password']">Zapomninałeś hasła?</a>
-      </form>
-    } @else {
-      <form class="login-form" [formGroup]="registrationForm" (ngSubmit)="onRegistrationSubmit()">
-        <label class="auth-labels">
-          Email
-          <input
-            formControlName = "email"
-            class="auth-inputs" type="text" placeholder="example123">
-        </label>
 
-        <label class="auth-labels">
-          Username
-          <input
-            formControlName = "username"
-            class="auth-inputs" type="text" placeholder="example123">
-        </label>
-
-        <label class="auth-labels">
-          Password
-          <input
-            formControlName = "password"
-            class="auth-inputs" type="text" placeholder="example123">
-        </label>
-
-        <label class="auth-labels">
-          Confirm Password
-          <input
-            formControlName = "passwordConfirmed"
-            class="auth-inputs" type="text" placeholder="example123">
-        </label>
-
-        <button type="submit">Zarejestruj się</button>
-      </form>
-    }
-  </div>
 </div>
