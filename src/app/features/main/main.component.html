@@ -1,4 +1,23 @@
-<p>main works!</p>
+<div class="container">
+  <div class="header">
+    <div class="username">
+      <button class="fa fa-user" (click)="onClickProfile()">{{ username || 'Profile'}}</button>
+      <button (click)="onClickLogin()">Login</button>
+    </div>
+    <h1 class="title">ChatZone</h1>
+    <div class="online">Online: {{ 1231 }}</div>
+  </div>
 
-<button (click)="onClickLogin()">Login</button>
-<button (click)="onClickProfile()">{{ username || 'Profile'}}</button>
+  <div class="chat-options">
+    <div class="chat-card">
+      <h2>Czat indywidualny</h2>
+      <p>Online: {{1231}}</p>
+      <button class="go-button">Przejdź</button>
+    </div>
+    <div class="chat-card">
+      <h2>Czat grupowy</h2>
+      <p>Online: {{ 1231 }}</p>
+      <button class="go-button">Przejdź</button>
+    </div>
+  </div>
+</div>
