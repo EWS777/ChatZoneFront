@@ -1,17 +1,26 @@
-import {Component, inject} from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import {ProfileService} from './profile.service';
+import {FormsModule} from '@angular/forms';
+import {Profile} from './profile';
 
 @Component({
   selector: 'app-profile',
-  imports: [],
+  imports: [
+    FormsModule,
+  ],
   templateUrl: './profile.component.html',
   standalone: true,
   styleUrl: './profile.component.css'
 })
-export class ProfileComponent {
+export class ProfileComponent implements OnInit{
   profileService = inject(ProfileService)
 
-  onInit(){
-    // this.profileService.getProfile()
+  profile!: Profile;
+
+  ngOnInit() {
+    this.profileService.getProfile()
+      .subscribe(value => {
+        this.profile = value
+      })
   }
 }

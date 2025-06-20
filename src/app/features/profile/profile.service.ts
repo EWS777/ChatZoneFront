@@ -1,17 +1,18 @@
 import {inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {ProfileInterface} from './profile.interface';
+import {Profile} from './profile';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProfileService {
   http = inject(HttpClient)
-  url = 'https://localhost:7212/'
+  url = 'https://localhost:7212/profile'
 
-  getProfile(username: string | null){
-    return this.http.get<ProfileInterface>(`${this.url}${username}`, {
+  getProfile(){
+    return this.http.get<Profile>(`${this.url}`, {
       withCredentials: true
     })
   }
 }
+

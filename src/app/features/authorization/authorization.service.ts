@@ -6,17 +6,17 @@ import {HttpClient} from '@angular/common/http';
 })
 export class AuthorizationService {
   http = inject(HttpClient)
-  baseApiUrl = 'https://localhost:7212/'
+  baseApiUrl = 'https://localhost:7212/authentication/'
 
   postLogin(payload: {usernameOrEmail: string, Password: string}){
-    return this.http.post(`${this.baseApiUrl}login`, payload
-      // {
-      // withCredentials: true
-    // }
-    );
+    return this.http.post(`${this.baseApiUrl}login`, payload,{
+      withCredentials: true
+    })
   }
 
   registerLogin(payload: {email: string, username: string, password: string}){
-    return this.http.post(`${this.baseApiUrl}register`, payload)
+    return this.http.post(`${this.baseApiUrl}register`, payload,{
+      withCredentials: true
+    })
   }
 }

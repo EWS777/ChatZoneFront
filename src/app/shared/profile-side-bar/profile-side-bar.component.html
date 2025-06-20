@@ -1,2 +1,15 @@
-<p>profile-side-bar works!</p>
-<router-outlet></router-outlet>
+<div class="page-container">
+  <nav class="sidebar">
+    <ul>
+      @for (menuItem of menuItems; track menuItem.name) {
+        <li>
+          <button [routerLink]="menuItem.link">{{menuItem.name}}</button>
+        </li>
+      }
+    </ul>
+  </nav>
+
+  <div class="main-content">
+    <router-outlet></router-outlet>
+  </div>
+</div>

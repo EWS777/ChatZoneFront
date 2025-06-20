@@ -1,1 +1,25 @@
-<p>profile works!</p>
+<form class="profile-form">
+  <div>
+    Email:
+    <input type="email" [value]="profile.email" readonly>
+  </div>
+  <div>
+    Username:
+    <input type="text" name="username" [(ngModel)]="profile.username">
+  </div>
+
+  <div>
+    Do you want find by profile filter?
+    <input type="radio" id="yes" name="isFindByProfile" [(ngModel)]="profile.isFindByProfile" [value]="true">
+    <label for="yes">Yes</label>
+
+    <input type="radio" id="no" name="isFindByProfile" [(ngModel)]="profile.isFindByProfile" [value]="false">
+    <label for="no">No</label>
+  </div>
+
+  <ul>
+    <button>Delete profile</button>
+    <button>Change password</button>
+    <button>Save changes</button>
+  </ul>
+</form>

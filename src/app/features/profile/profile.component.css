@@ -1,0 +1,59 @@
+.page-container {
+  display: flex;
+  height: 100vh;
+  background-color: #0f0f2e;
+  color: white;
+  font-family: sans-serif;
+}
+
+.sidebar {
+  width: 200px;
+  padding: 20px;
+  background-color: #161640;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sidebar button {
+  background-color: #3d3d8c;
+  border: none;
+  padding: 10px;
+  color: white;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.sidebar button.active {
+  background-color: #c44f4f;
+}
+
+.main-content {
+  flex-grow: 1;
+  padding: 30px;
+  background-color: #1d1d3b;
+}
+
+.profile-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 500px;
+}
+
+.profile-form input[type="text"],
+.profile-form input[type="email"] {
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  width: 100%;
+}
+
+.profile-form button {
+  padding: 10px;
+  background-color: #3d3d8c;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
