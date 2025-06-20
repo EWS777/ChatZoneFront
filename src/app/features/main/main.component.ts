@@ -18,13 +18,13 @@ export class MainComponent implements OnInit{
 
 
   ngOnInit(){
-    this.profile.getProfile('ews777')
-      .subscribe({
-        next: value => {
-          console.log(value)
-          this.username = value.username
-        }
-      })
+    // this.profile.getProfile('ews777')
+    //   .subscribe({
+    //     next: value => {
+    //       console.log(value)
+    //       this.username = value.username
+    //     }
+    //   })
   }
 
   onClickLogin(){
@@ -32,6 +32,6 @@ export class MainComponent implements OnInit{
   }
 
   onClickProfile(){
-    this.router.navigate([`profile/${this.username}`])
+    this.router.navigate([`profile`])
   }
 }
