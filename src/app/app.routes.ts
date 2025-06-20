@@ -6,13 +6,16 @@ import {ResetPasswordComponent} from './features/reset-password/reset-password.c
 import {BlockedUsersComponent} from './features/profile/blocked-users/blocked-users.component';
 import {FilterComponent} from './features/profile/filter/filter.component';
 import {QuickMessagesComponent} from './features/profile/quick-messages/quick-messages.component';
+import {ProfileSideBarComponent} from './shared/profile-side-bar/profile-side-bar.component';
 
 export const routes: Routes = [
+  {path: 'profile', component: ProfileSideBarComponent, children: [
+      {path: '', component: ProfileComponent},
+      {path: 'filter', component: FilterComponent},
+      {path: 'blocked-users', component: BlockedUsersComponent},
+      {path: 'quick-messages', component: QuickMessagesComponent},
+    ]},
   {path: '', component: MainComponent},
   {path: 'login', component: AuthorizationComponent},
   {path: 'reset-password', component: ResetPasswordComponent},
-  {path: 'profile/:username', component: ProfileComponent},
-  {path: 'profile/:username/filter', component: FilterComponent},
-  {path: 'profile/:username/blocked-users', component: BlockedUsersComponent},
-  {path: 'profile/:username/quick-messages', component: QuickMessagesComponent},
 ];
