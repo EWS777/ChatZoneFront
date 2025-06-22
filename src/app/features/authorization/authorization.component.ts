@@ -15,10 +15,11 @@ import {Router, RouterLink} from '@angular/router';
 })
 
 export class AuthorizationComponent{
+  authService = inject(AuthorizationService)
+  route = inject(Router)
+
   isLogin = signal<boolean>(true)
-
   isConfirmEmailPage = signal<boolean>(false)
-
 
   loginForm = new FormGroup({
     usernameOrEmail: new FormControl(null, {validators: [Validators.required, Validators.minLength(8)]}),
@@ -32,14 +33,11 @@ export class AuthorizationComponent{
     confirmedPassword: new FormControl(null, {validators: [Validators.required, Validators.minLength(8)]})
   })
 
-  authService = inject(AuthorizationService)
-  route = inject(Router)
-
   onLoginSubmit(){
     if (this.loginForm.valid){
       //@ts-ignore
       this.authService.postLogin(this.loginForm.value).subscribe({
-        next: (response) => {
+        next: () => {
           console.log('Вход выполнен');
           this.route.navigate([''])
         },
@@ -49,6 +47,7 @@ export class AuthorizationComponent{
       })
     }
   }
+
   onRegistrationSubmit(){
     if (this.registrationForm.invalid) {
       this.registrationForm.markAllAsTouched();

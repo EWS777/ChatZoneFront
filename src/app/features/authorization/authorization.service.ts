@@ -8,6 +8,32 @@ export class AuthorizationService {
   http = inject(HttpClient)
   baseApiUrl = 'https://localhost:7212/'
 
+  private authState = new BehaviorSubject<boolean>(false)
+
+  checkAuth(){
+    return this.http.get<{username: string}>(`${this.baseApiUrl}authentication/me`, {
+      withCredentials: true
+    }).pipe(
+      map(() =>{
+        this.authState.next(true)
+        return true
+      }),
+      catchError(() => {
+        this.authState.next(false)
+        return of(false)
+      })
+    )
+  }
+
+  isAuthenticated()
+  {
+    return this.authState.asObservable();
+  }
+
+  clearAuth(){
+    this.authState.next(false)
+  }
+
   postLogin(payload: {usernameOrEmail: string, Password: string}){
     return this.http.post(`${this.baseApiUrl}/authentication/login`, payload,{
       withCredentials: true
