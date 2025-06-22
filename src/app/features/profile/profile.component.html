@@ -1,4 +1,4 @@
-<form class="profile-form">
+<form class="profile-form" (ngSubmit)="onClickUpdate()">
   <div>
     Email:
     <input type="email" [value]="profile.email" readonly>
@@ -18,8 +18,8 @@
   </div>
 
   <ul>
-    <button>Delete profile</button>
-    <button>Change password</button>
-    <button>Save changes</button>
+    <button (click)="onClickDeleteProfile()">Delete profile</button>
+    <button (click)="onClickUpdatePassword()">Change password</button>
+    <button type="submit">Save changes</button>
   </ul>
 </form>
