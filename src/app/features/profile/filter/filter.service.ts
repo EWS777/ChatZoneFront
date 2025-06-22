@@ -9,14 +9,14 @@ export class FilterService {
   http = inject(HttpClient)
   url = 'https://localhost:7212/filter'
 
-  getFilter(username: string){
-    return this.http.get<Filter>(`${this.url}/${username}`,{
+  getFilter(){
+    return this.http.get<Filter>(`${this.url}`,{
       withCredentials: true
     })
   }
 
-  updateFilter(username: string, filter: Filter){
-    return this.http.put<Filter>(`${this.url}/${username}`, filter,{
+  updateFilter(filter: Filter){
+    return this.http.put<Filter>(`${this.url}`, {filterRequest: filter},{
       withCredentials: true
     })
   }

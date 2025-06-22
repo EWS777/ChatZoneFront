@@ -1,3 +1,84 @@
 <!--<router-outlet></router-outlet>-->
 
-<p>filter works!</p>
+<div class="profile-container">
+  <h1>Profil</h1>
+
+
+  <div class="form-group">
+    <label for="theme">Theme:</label>
+    <select id="theme" [(ngModel)]="filter.themeList">
+      @for (theme of themeList; track $index) {
+        <option [ngValue]="$index">{{theme}}</option>
+      }
+    </select>
+  </div>
+
+
+
+
+  <div class="form-group">
+    <label for="country">Country:</label>
+    <select id="country" [(ngModel)]="filter.country">
+    @for (country of countryList; track $index) {
+      <option [value]="$index">{{country}}</option>
+    }
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label for="city">City:</label>
+    <select id="city" [(ngModel)]="filter.city">
+      @for (city of cityList; track $index) {
+        <option [value]="$index">{{city}}</option>
+      }
+    </select>
+  </div>
+
+
+
+
+  <label for="age">Возраст:</label>
+  <select id="age" name="age" [ngModel]="filter.Age" (ngModelChange)="filter.Age = $event ? +$event : null">
+    <option [value]="null">-- Не выбрано --</option>
+    @for (index of ageIndices; track index) {
+      <option [value]="index">{{ AgeList[index] }}</option>
+    }
+  </select>
+
+
+
+
+
+
+
+  <div class="form-group">
+    <label for="nativeLang">nativeLang:</label>
+    <select id="nativeLang" [(ngModel)]="filter.nativeLang">
+      @for (nativeLang of langList; track $index) {
+        <option [value]="$index">{{nativeLang}}</option>
+      }
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label for="learnLang">learnLang:</label>
+    <select id="learnLang" [(ngModel)]="filter.learnLang">
+      @for (learnLang of langList; track $index) {
+        <option [value]="$index">{{learnLang}}</option>
+      }
+    </select>
+  </div>
+
+
+  <div class="form-group">
+    <label for="gender">Gender:</label>
+    <select id="gender" [(ngModel)]="filter.gender">
+      @for (gender of genderList; track $index) {
+        <option [value]="$index">{{gender}}</option>
+      }
+    </select>
+  </div>
+
+
+  <button class="save-button" (click)="updateFilter()">Update</button>
+</div>
