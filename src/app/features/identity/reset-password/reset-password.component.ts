@@ -22,7 +22,7 @@ export class ResetPasswordComponent {
 
   onClick(){
     this.resetPasswordService.resetPassword({email: this.email}).subscribe({
-      next: value => {
+      next: () => {
         this.isSend.set(true);
       }
     });

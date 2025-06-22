@@ -14,5 +14,11 @@ export class ProfileService {
       withCredentials: true
     })
   }
+
+  updateProfile(oldUsername: string, profile: Profile){
+    return this.http.put<Profile>(`${this.url}/${oldUsername}`, profile,{
+      withCredentials: true
+    })
+  }
 }
 
