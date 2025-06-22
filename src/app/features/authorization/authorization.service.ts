@@ -1,5 +1,6 @@
 import {inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
+import {BehaviorSubject, catchError, map, of, tap} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -35,14 +36,38 @@ export class AuthorizationService {
   }
 
   postLogin(payload: {usernameOrEmail: string, Password: string}){
-    return this.http.post(`${this.baseApiUrl}/authentication/login`, payload,{
+    return this.http.post(`${this.baseApiUrl}authentication/login`, payload,{
       withCredentials: true
-    })
+    }).pipe(tap(() => this.authState.next(true)))
   }
 
   registerLogin(payload: {email: string, username: string, password: string}){
     return this.http.post(`${this.baseApiUrl}registration/register`, payload,{
       withCredentials: true
     })
+  }
+
+  refreshToken(){
+    return this.http.post(`${this.baseApiUrl}authentication/refresh`,{},
+      {withCredentials:true}).pipe(
+        tap(() => this.authState.next(true)),
+        map(() => true),
+        catchError(() => {
+          this.authState.next(false)
+          return of(false)
+        })
+    )
+  }
+
+  logout() {
+    return this.http.post(`${this.baseApiUrl}authentication/logout`, {}, { withCredentials: true })
+      .pipe(
+        tap(() => this.authState.next(false)),
+        map(() => true),
+        catchError(() => {
+          this.authState.next(false);
+          return of(false);
+        })
+      );
   }
 }
