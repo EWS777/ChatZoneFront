@@ -1,7 +1,7 @@
 import {Component, inject, OnInit} from '@angular/core';
 import {ProfileService} from '../profile/profile.service';
 import {Router} from '@angular/router';
-import {AuthorizationService} from '../authorization/authorization.service';
+import {AuthorizationService} from '../identity/authorization/authorization.service';
 
 @Component({
   selector: 'app-main',
@@ -33,7 +33,7 @@ export class MainComponent implements OnInit{
   }
 
   onClickProfile(){
-    this.router.navigate([`profile`])
+    this.router.navigate([`profile/me`])
   }
 
   onClickLogout(){

@@ -8,11 +8,6 @@ export class ResetPasswordService {
   http = inject(HttpClient)
   baseApiUrl = 'https://localhost:7212/'
 
-
- /* resetPassword(payload: {email: string}){
-    return this.http.post(`${this.baseApiUrl}reset-password`, payload)
-  }
-*/
   resetPassword(payload: {email: string}){
     return this.http.post(`${this.baseApiUrl}reset-password?email=${encodeURIComponent(payload.email)}`, {});
   }

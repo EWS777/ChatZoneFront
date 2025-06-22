@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import {AuthorizationService} from './features/authorization/authorization.service';
+import {AuthorizationService} from './features/identity/authorization/authorization.service';
 
 @Component({
   selector: 'app-root',
