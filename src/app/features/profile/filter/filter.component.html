@@ -7,8 +7,8 @@
   <div class="form-group">
     <label for="theme">Theme:</label>
     <select id="theme" [(ngModel)]="filter.themeList">
-      @for (theme of themeList; track $index) {
-        <option [ngValue]="$index">{{theme}}</option>
+      @for (theme of themeList; track theme) {
+        <option [ngValue]="theme">{{theme}}</option>
       }
     </select>
   </div>
@@ -19,43 +19,40 @@
   <div class="form-group">
     <label for="country">Country:</label>
     <select id="country" [(ngModel)]="filter.country">
-    @for (country of countryList; track $index) {
-      <option [value]="$index">{{country}}</option>
+    @for (country of countryList; track country) {
+      <option [ngValue]="country">{{country}}</option>
     }
     </select>
   </div>
 
+
+
+
+
+
   <div class="form-group">
     <label for="city">City:</label>
     <select id="city" [(ngModel)]="filter.city">
-      @for (city of cityList; track $index) {
-        <option [value]="$index">{{city}}</option>
+      @for (city of cityList; track city) {
+        <option [ngValue]="city">{{city}}</option>
       }
     </select>
   </div>
 
-
-
-
-  <label for="age">Возраст:</label>
-  <select id="age" name="age" [ngModel]="filter.Age" (ngModelChange)="filter.Age = $event ? +$event : null">
-    <option [value]="null">-- Не выбрано --</option>
-    @for (index of ageIndices; track index) {
-      <option [value]="index">{{ AgeList[index] }}</option>
-    }
-  </select>
-
-
-
-
-
-
+    <div class="form-group">
+      <label for="age">City:</label>
+      <select id="age" [(ngModel)]="filter.age">
+        @for (age of ageList; track age) {
+          <option [ngValue]="age">{{age}}</option>
+        }
+      </select>
+    </div>
 
   <div class="form-group">
     <label for="nativeLang">nativeLang:</label>
     <select id="nativeLang" [(ngModel)]="filter.nativeLang">
-      @for (nativeLang of langList; track $index) {
-        <option [value]="$index">{{nativeLang}}</option>
+      @for (nativeLang of langList; track nativeLang) {
+        <option [ngValue]="nativeLang">{{nativeLang}}</option>
       }
     </select>
   </div>
@@ -63,8 +60,8 @@
   <div class="form-group">
     <label for="learnLang">learnLang:</label>
     <select id="learnLang" [(ngModel)]="filter.learnLang">
-      @for (learnLang of langList; track $index) {
-        <option [value]="$index">{{learnLang}}</option>
+      @for (learnLang of langList; track learnLang) {
+        <option [ngValue]="learnLang">{{learnLang}}</option>
       }
     </select>
   </div>
@@ -73,8 +70,8 @@
   <div class="form-group">
     <label for="gender">Gender:</label>
     <select id="gender" [(ngModel)]="filter.gender">
-      @for (gender of genderList; track $index) {
-        <option [value]="$index">{{gender}}</option>
+      @for (gender of genderList; track gender) {
+        <option [value]="gender">{{gender}}</option>
       }
     </select>
   </div>

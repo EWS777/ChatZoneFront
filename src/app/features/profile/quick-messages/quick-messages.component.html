@@ -1,3 +1,43 @@
 <router-outlet></router-outlet>
 
-<p>quick-messages works!</p>
+<!--<p>quick-messages works!</p>-->
+
+
+@if(quickMessage === null){
+  You don't have any messages at this moment
+} @else {
+  @for (messages of quickMessageList; track messages.idQuickMessage){
+    <div>
+      Your message:
+      <input [(ngModel)]="messages.message">
+<!--      <button (click)="update()">Update message</button>-->
+<!--      <button (click)="delete()">Delete message</button>-->
+    </div>
+  }
+}
+
+<!--
+
+<button (click)="changeStatus()">Add message</button>
+@if (isCreateOn()){
+
+  <br><button (click)="create()">Now you can add</button>
+  <br><input type="text" [(ngModel)]="this.quickMessage?.message">
+}
+-->
+
+<button (click)="changeStatus()">Add message</button>
+
+@if (isCreateOn()){
+  <br>
+  <input type="text" [(ngModel)]="newQuickMessageContent" placeholder="Enter new message">
+  <br>
+  <button (click)="create()">Save new message</button>
+}
+
+<!--<h2>Quick Messages:</h2>-->
+<!--<ul>-->
+<!--  @for (message of quickMessageList; track message.id) {-->
+<!--    <li>{{ message.message }}</li>-->
+<!--  }-->
+<!--</ul>-->

@@ -9,26 +9,26 @@ export class QuickMessageService {
   http = inject(HttpClient)
   url = 'https://localhost:7212/QuickMessage'
 
-  getQuickMessages(username: string){
-    return this.http.get<QuickMessage[]>(`${this.url}/${username}`, {
+  getQuickMessages(){
+    return this.http.get<QuickMessage[]>(`${this.url}`, {
       withCredentials: true
     })
   }
 
-  createQuickMessage(username: string, quickMessage: QuickMessage){
-    return this.http.post<QuickMessage>(`${this.url}/${username}/add`, quickMessage, {
+  createQuickMessage(quickMessage: QuickMessage){
+    return this.http.post<QuickMessage>(`${this.url}/add`, quickMessage, {
       withCredentials: true
     })
   }
 
-  updateQuickMessage(username: string, quickMessage: QuickMessage){
-    return this.http.put<QuickMessage>(`${this.url}/${username}/${quickMessage.idQuickMessage}/update`, quickMessage, {
+  updateQuickMessage(quickMessage: QuickMessage){
+    return this.http.put<QuickMessage>(`${this.url}/${quickMessage.idQuickMessage}/update`, quickMessage, {
       withCredentials: true
     })
   }
 
-  deleteQuickMessage(username: string, quickMessage: QuickMessage){
-    return this.http.delete(`${this.url}/${username}/delete/${quickMessage.idQuickMessage}`, {
+  deleteQuickMessage(quickMessageId: number){
+    return this.http.delete(`${this.url}/delete/${quickMessageId}`, {
       withCredentials: true
     })
   }
