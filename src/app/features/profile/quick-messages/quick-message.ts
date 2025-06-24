@@ -1,4 +1,6 @@
 export interface QuickMessage {
   idQuickMessage: number,
-  message: string
+  message: string,
+  isEditing?: boolean,
+  originalMessage?: string
 }
