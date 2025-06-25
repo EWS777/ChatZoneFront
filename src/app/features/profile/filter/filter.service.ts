@@ -16,7 +16,7 @@ export class FilterService {
   }
 
   updateFilter(filter: Filter){
-    return this.http.put<Filter>(`${this.url}`, {filterRequest: filter},{
+    return this.http.put<Filter>(`${this.url}`, filter,{
       withCredentials: true
     })
   }
