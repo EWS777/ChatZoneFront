@@ -1,1 +1,11 @@
-<p>confirm works!</p>
+Confirm Email
+
+@if (!isConfirmed()){
+  Email hasn't confirmed
+
+  Please write our email to confirm again
+
+  <input type="text" [(ngModel)]="email">
+
+  <button (click)="reconfirm()">Confirm email</button>
+}
