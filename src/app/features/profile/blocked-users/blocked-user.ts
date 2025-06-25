@@ -1,5 +1,5 @@
 export interface BlockedUser {
-  idBlockedPerson: number,
-  blockedUsername: string,
-  createdAt: Date
+  idBlockedPerson: number | null,
+  blockedUsername: string | null,
+  createdAt: Date | null
 }

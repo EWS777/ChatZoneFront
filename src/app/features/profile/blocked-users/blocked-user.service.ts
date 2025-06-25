@@ -7,22 +7,22 @@ import {BlockedUser} from './blocked-user';
 })
 export class BlockedUserService {
   http = inject(HttpClient)
-  url = 'https://localhost:7212'
+  url = 'https://localhost:7212/blockPerson'
 
-  getBlockedPersons(username: string){
-    return this.http.get<BlockedUser[]>(`${this.url}/${username}/blockPerson`,{
+  getBlockedPersons(){
+    return this.http.get<BlockedUser[]>(`${this.url}`,{
       withCredentials: true
     })
   }
 
-  createBlockedPerson(username: string, idBlockedPerson: number){
-    return this.http.post(`${this.url}/${username}/blockPerson/add/${idBlockedPerson}`,{},{
+  createBlockedPerson(idBlockedPerson: number){
+    return this.http.post(`${this.url}/add/${idBlockedPerson}`,{},{
       withCredentials: true
     })
   }
 
-  deleteBlockedPerson(username: string, idBlockedPerson: number){
-    return this.http.delete(`${this.url}/${username}/blockPerson/delete/${idBlockedPerson}`,{
+  deleteBlockedPerson(idBlockedPerson: number){
+    return this.http.delete(`${this.url}/delete/${idBlockedPerson}`,{
       withCredentials: true
     })
   }

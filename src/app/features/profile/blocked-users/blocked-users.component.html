@@ -1,3 +1,13 @@
-<!--<router-outlet></router-outlet>-->
+Blocked Users
 
-<p>blocked-users works!</p>
+@if (blockedUser?.length === 0) {
+  You don't have any blocked users
+} @else {
+  @for (blockedUsers of blockedUser; track blockedUsers.idBlockedPerson) {
+    <ul>
+      <li>
+        <pre>{{ blockedUsers.blockedUsername }}    {{ blockedUsers.createdAt | date:'dd.MM.yyyy'}}    <button (click)="delete(blockedUsers.idBlockedPerson!)">Unblock</button></pre>
+      </li>
+    </ul>
+  }
+}
