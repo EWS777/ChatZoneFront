@@ -1,9 +1,13 @@
 <div class="container">
   <div class="header">
     <div class="username">
-      <button class="fa fa-user" (click)="onClickProfile()">{{ username || 'Profile'}}</button>
-      <button (click)="onClickLogin()">Login</button>
-      <button (click)="onClickLogout()">Logout</button>
+      @if (authService.isAuthenticatedValue){
+        <button class="fa fa-user" (click)="onClickProfile()">{{ username || 'Profile'}}</button>
+        <button (click)="onClickLogout()">Logout</button>
+      }@else{
+        <button (click)="onClickLogin()">Login</button>
+      }
+
     </div>
     <h1 class="title">ChatZone</h1>
     <div class="online">Online: {{ 1231 }}</div>
@@ -11,14 +15,14 @@
 
   <div class="chat-options">
     <div class="chat-card">
-      <h2>Czat indywidualny</h2>
+      <h2>Individual chat</h2>
       <p>Online: {{1231}}</p>
-      <button class="go-button">Przejdź</button>
+      <button class="go-button">Go</button>
     </div>
     <div class="chat-card">
-      <h2>Czat grupowy</h2>
+      <h2>Group chat</h2>
       <p>Online: {{ 1231 }}</p>
-      <button class="go-button">Przejdź</button>
+      <button class="go-button">Go</button>
     </div>
   </div>
 </div>

@@ -16,7 +16,7 @@ import {ChangeResetPasswordComponent} from './features/identity/change-reset-pas
 export const routes: Routes = [
   {
     path: 'profile', component: ProfileSideBarComponent, children: [
-      {path: 'me', component: ProfileComponent},
+      {path: '', component: ProfileComponent},
       {path: 'filter', component: FilterComponent},
       {path: 'blocked-users', component: BlockedUsersComponent},
       {path: 'quick-messages', component: QuickMessagesComponent}

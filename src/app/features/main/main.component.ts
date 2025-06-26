@@ -33,7 +33,7 @@ export class MainComponent implements OnInit{
   }
 
   onClickProfile(){
-    this.router.navigate([`profile/me`])
+    this.router.navigate([`profile`])
   }
 
   onClickLogout(){

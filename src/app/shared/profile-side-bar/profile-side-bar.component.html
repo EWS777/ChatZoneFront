@@ -1,6 +1,7 @@
 <div class="page-container">
   <nav class="sidebar">
     <ul>
+      <a [routerLink]="['/']">Main</a>
       @for (menuItem of menuItems; track menuItem.name) {
         <li>
           <button [routerLink]="menuItem.link">{{menuItem.name}}</button>

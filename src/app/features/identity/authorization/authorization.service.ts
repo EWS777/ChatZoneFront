@@ -26,6 +26,10 @@ export class AuthorizationService {
     )
   }
 
+  get isAuthenticatedValue(): boolean {
+    return this.authState.value;
+  }
+
   isAuthenticated()
   {
     return this.authState.asObservable();

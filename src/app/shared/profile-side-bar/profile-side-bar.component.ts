@@ -14,7 +14,7 @@ export class ProfileSideBarComponent {
   menuItems = [
     {
       name: 'Profile',
-      link: 'me'
+      link: '/profile'
     },
     {
       name: 'Filter',
