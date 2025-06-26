@@ -1,11 +1,13 @@
 import {Component, inject} from '@angular/core';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {PasswordService} from './password.service';
+import {RouterLink} from '@angular/router';
 
 @Component({
   selector: 'app-update-password',
   imports: [
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    RouterLink
   ],
   templateUrl: './update-password.component.html',
   styleUrl: './update-password.component.css'

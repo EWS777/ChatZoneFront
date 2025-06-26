@@ -21,9 +21,12 @@ export class ResetPasswordComponent {
   isSend = signal<boolean>(false)
 
   onClick(){
-    this.resetPasswordService.resetPassword({email: this.email}).subscribe({
+    this.resetPasswordService.resetPassword(this.email).subscribe({
       next: () => {
         this.isSend.set(true);
+      },
+      error: err => {
+        console.log('Can not competed successfully!', err)
       }
     });
 

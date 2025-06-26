@@ -1,14 +1,15 @@
 import {inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
+import {ResetPassword} from './resetPassword';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ResetPasswordService {
+export class ChangePasswordService {
   http = inject(HttpClient)
   baseApiUrl = 'https://localhost:7212/password/'
 
-  resetPassword(email: string){
-    return this.http.post(`${this.baseApiUrl}reset-password?email=${email}`, null)
+  resetPassword(payload: ResetPassword){
+    return this.http.put(`${this.baseApiUrl}set-password`, payload)
   }
 }
