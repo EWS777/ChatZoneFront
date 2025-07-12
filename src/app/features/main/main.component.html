@@ -17,7 +17,7 @@
     <div class="chat-card">
       <h2>Individual chat</h2>
       <p>Online: {{1231}}</p>
-      <button class="go-button">Go</button>
+      <button class="go-button" (click)="activateFilter()">Go</button>
     </div>
     <div class="chat-card">
       <h2>Group chat</h2>
@@ -26,3 +26,67 @@
     </div>
   </div>
 </div>
+
+@if (isFilterActivated()){
+  <div class="chat-filter">
+
+    <div class="profile-container">
+      <div class="form-group">
+        <label for="theme">Theme:</label>
+        <select id="theme" [(ngModel)]="filter.themeList">
+          @for (theme of themeList; track theme.value) {
+            <option [ngValue]="theme.value">{{theme.label}}</option>
+          }
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="country">Country:</label>
+        <select id="country" [(ngModel)]="filter.country">
+          @for (country of countryList; track country.value) {
+            <option [ngValue]="country.value">{{country.label}}</option>
+          }
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="city">City:</label>
+        <select id="city" [(ngModel)]="filter.city" >
+          @for (city of cityList; track city.value) {
+            <option [ngValue]="city.value">{{city.label}}</option>
+          }
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="age">Age:</label>
+        <select [(ngModel)]="filter.age">
+          @for (age of ageList; track age.value) {
+            <option [ngValue]="age.value">{{ age.label }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="nativeLang">Lang:</label>
+        <select id="nativeLang" [(ngModel)]="filter.lang">
+          @for (nativeLang of langList; track nativeLang.value) {
+            <option [ngValue]="nativeLang.value">{{nativeLang.label}}</option>
+          }
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="gender">Gender:</label>
+        <select id="gender" [(ngModel)]="filter.gender">
+          @for (gender of genderList; track gender.value) {
+            <option [ngValue]="gender.value">{{gender.label}}</option>
+          }
+        </select>
+      </div>
+    </div>
+
+      <button (click)="activateFilter()">Cancel</button>
+      <button (click)="findPerson()">Find</button>
+  </div>
+}

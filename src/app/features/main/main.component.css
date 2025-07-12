@@ -47,6 +47,14 @@
   box-shadow: 0 0 10px rgba(0,0,0,0.3);
 }
 
+.chat-filter {
+  margin-left: auto;
+  margin-right: auto;
+  width: 45%;
+  background-color: #6e6ecc;
+  padding: 40px;
+}
+
 .chat-card h2 {
   margin-top: 0;
 }
