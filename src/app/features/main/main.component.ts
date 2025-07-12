@@ -9,8 +9,9 @@ import {CityList} from '../profile/filter/enums/city-list';
 import {LangList} from '../profile/filter/enums/lang-list';
 import {ThemeList} from '../profile/filter/enums/theme-list';
 import {GenderList} from '../profile/filter/enums/gender-list';
-import {SignalRService} from '../../chat/signalR.service';
+import {SignalRService} from '../chat/signalR.service';
 import {FindPerson} from './find-person';
+import {MainService} from './main.service';
 
 @Component({
   selector: 'app-main',
@@ -26,6 +27,7 @@ export class MainComponent implements OnInit{
   router = inject(Router)
   authService = inject(AuthorizationService)
   signalRService = inject(SignalRService)
+  mainService = inject(MainService)
   profile = inject(ProfileService)
 
   username: string | null = null;
@@ -91,7 +93,7 @@ export class MainComponent implements OnInit{
   findPerson(){
     this.filter.connectionId = this.signalRService.connectionId
 
-    this.signalRService.findPerson(this.filter).subscribe({
+    this.mainService.findPerson(this.filter).subscribe({
       next: () => { },
       error: err => {
         console.error('Error', err)
