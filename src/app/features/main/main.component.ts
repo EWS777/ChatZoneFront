@@ -32,6 +32,7 @@ export class MainComponent implements OnInit{
 
   username: string | null = null;
   isFilterActivated = signal<boolean>(false)
+  isFindPerson = signal<boolean>(false)
 
   filter: FindPerson = {
     connectionId: '',
@@ -90,9 +91,22 @@ export class MainComponent implements OnInit{
     this.isFilterActivated.set(!this.isFilterActivated())
   }
 
+  cancelFindPerson(){
+    this.mainService.cancelFindPerson().subscribe({
+      next: () => {
+        this.isFindPerson.set(false)
+        this.isFilterActivated.set(true)
+      },
+      error: err => {
+        console.error('Error', err)
+      }
+    })
+  }
+
   findPerson(){
     this.filter.connectionId = this.signalRService.connectionId
-
+    this.isFindPerson.set(true)
+    this.isFilterActivated.set(false)
     this.mainService.findPerson(this.filter).subscribe({
       next: () => { },
       error: err => {

@@ -14,4 +14,10 @@ export class MainService {
       withCredentials: true
     })
   }
+
+  cancelFindPerson(){
+    return this.http.delete(`${this.url}cancel`, {
+      withCredentials: true
+    })
+  }
 }

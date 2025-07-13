@@ -86,7 +86,13 @@
       </div>
     </div>
 
-      <button (click)="activateFilter()">Cancel</button>
       <button (click)="findPerson()">Find</button>
+  </div>
+}
+
+@if (isFindPerson()){
+  <div class="chat-filter">
+    <h2>Waiting...</h2>
+    <button (click)="cancelFindPerson()">Cancel</button>
   </div>
 }
