@@ -1,0 +1,15 @@
+.mine {
+  text-align: right;
+  background-color: #d0f0c0;
+  padding: 5px;
+  border-radius: 10px;
+  margin-bottom: 5px;
+}
+
+.theirs {
+  text-align: left;
+  background-color: #f0f0f0;
+  padding: 5px;
+  border-radius: 10px;
+  margin-bottom: 5px;
+}

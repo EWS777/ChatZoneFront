@@ -1,0 +1,13 @@
+<div style="max-width: 500px; margin: auto;">
+  <h2>Single Chat</h2>
+  <input [(ngModel)]="message" placeholder="Message" class="form-control" />
+  <button (click)="sendMessage()" class="btn btn-primary mt-2">Send</button>
+
+  <ul class="mt-3">
+    @for (msg of messages; track $index) {
+      <li [ngClass]="{ 'mine': msg.user === username, 'theirs': msg.user !== username }">
+        <strong>{{msg.user === username ? 'Me' : msg.user}}</strong> {{ msg.message }}
+      </li>
+    }
+  </ul>
+</div>
