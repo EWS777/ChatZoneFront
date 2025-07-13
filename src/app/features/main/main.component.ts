@@ -12,6 +12,7 @@ import {GenderList} from '../profile/filter/enums/gender-list';
 import {SignalRService} from '../chat/signalR.service';
 import {FindPerson} from './find-person';
 import {MainService} from './main.service';
+import {FilterService} from '../profile/filter/filter.service';
 
 @Component({
   selector: 'app-main',
@@ -29,8 +30,10 @@ export class MainComponent implements OnInit{
   signalRService = inject(SignalRService)
   mainService = inject(MainService)
   profile = inject(ProfileService)
+  filterService = inject(FilterService)
 
   username: string | null = null;
+  isFindByProfile: boolean = false;
   isFilterActivated = signal<boolean>(false)
   isFindPerson = signal<boolean>(false)
 
@@ -70,13 +73,13 @@ export class MainComponent implements OnInit{
 
 
   ngOnInit(){
-    // this.profile.getProfile('ews777')
-    //   .subscribe({
-    //     next: value => {
-    //       console.log(value)
-    //       this.username = value.username
-    //     }
-    //   })
+    this.profile.getProfile()
+      .subscribe({
+        next: value => {
+          this.username = value.username
+          this.isFindByProfile = value.isFindByProfile
+        }
+      })
   }
 
   onClickLogin(){
@@ -89,6 +92,18 @@ export class MainComponent implements OnInit{
 
   activateFilter(){
     this.isFilterActivated.set(!this.isFilterActivated())
+    if (this.isFindByProfile){
+      this.filterService.getFilter().subscribe({
+        next: value => {
+          this.filter.country = value.country
+          this.filter.age = value.age
+          this.filter.themeList = value.themeList
+          this.filter.city = value.city
+          this.filter.gender = value.gender
+          this.filter.lang = value.learnLang
+        }
+      })
+    }
   }
 
   cancelFindPerson(){
