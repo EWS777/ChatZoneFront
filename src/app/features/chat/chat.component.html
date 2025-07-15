@@ -1,6 +1,13 @@
 <div class="chat">
   <h2>ChatZone</h2>
-  <button>Back</button>
+  <button (click)="changeIsDisconnectStatus('exit')">Back</button>
+  @if (isDisconnect() === 'exit'){
+    <div>
+      Do you want to quite chat?
+      <button (click)="exitChat(true)">Yes</button>
+      <button (click)="changeIsDisconnectStatus(null)">No</button>
+    </div>
+  }
   <div class="filter">
     <span>Username: qwerty123</span>
     <span>Age: 20-25</span>
@@ -22,11 +29,34 @@
     </ul>
   </div>
 
+  @if (!isSendQuickMessage()){
+    <div>
+      @for (quickMessage of quickMessageList;track quickMessage.idQuickMessage){
+        <button (click)="sendQuickMessage(quickMessage.message)">{{quickMessage.message}}</button>
+      }
+    </div>
+  }
 
   <div style="max-width: 500px; margin: auto;">
-    <button>Change</button>
+    <button (click)="changeIsDisconnectStatus('skip')">Skip</button>
     <input [(ngModel)]="message" placeholder="Message" class="form-control" />
     <button (click)="sendMessage()" class="btn btn-primary mt-2">Send</button>
   </div>
+  @if (isDisconnect() === 'skip'){
+    Do you want to skip person?
+    <button (click)="exitChat(false)">Yes</button>
+    <button (click)="changeIsDisconnectStatus(null)">No</button>
+  }
 
 </div>
+
+@if (isOtherPersonLeft()) {
+  <h2 class="person-disconnected">Person has disconnected!</h2>
+  Do you want to find new person?
+  <button (click)="findNewPerson()">Yes</button>
+  <button (click)="router.navigate(['/'])">No</button>
+}
+
+@if (isShowNewFinder()){
+  <h2>Waiting for new matching...</h2>
+}

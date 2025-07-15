@@ -13,3 +13,7 @@
   border-radius: 10px;
   margin-bottom: 5px;
 }
+
+.person-disconnected{
+  background-color: #a51717;
+}

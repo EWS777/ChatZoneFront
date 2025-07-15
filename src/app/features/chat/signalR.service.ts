@@ -30,8 +30,17 @@ export class SignalRService {
       .catch(error => console.error('Error', error))
 
     this.hubConnection.on("ChatCreated", ()=> {
-        this.router.navigate(['chat']);
+      if (this.router.url === '/chat'){
+        this.router.navigateByUrl('/', {skipLocationChange: true}).then(()=>{
+          this.router.navigate(['chat']);
+        })
+      }
+      else this.router.navigate(['chat']);
     });
+
+    this.hubConnection.on('Receive', (username: string, message: string) =>{
+      this.messageSubject.next({user: username, message: message})
+    })
   }
 
   public async ensureConnection(): Promise<void> {
@@ -47,13 +56,20 @@ export class SignalRService {
   }
 
   receiveMessage(): Observable<{ user: string, message: string }>{
-    this.hubConnection.on('Receive', (username: string, message: string) =>{
-      this.messageSubject.next({user: username, message: message})
-    })
     return this.messageSubject.asObservable();
   }
 
   async sendMessage(groupName: string, message: string) {
     await this.hubConnection.invoke('SendMessage', groupName, message)
+  }
+
+  async leaveChat(groupName: string){
+    await this.hubConnection.invoke('LeaveChat', groupName)
+  }
+
+  personLeftChat(result: ()=>void){
+    this.hubConnection.on('LeftChat', ()=>{
+      result()
+    })
   }
 }
