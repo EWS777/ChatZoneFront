@@ -50,12 +50,12 @@ export class SignalRService {
     return this.connectionPromise;
   }
 
-  async getPersonGroupAndUsername(): Promise<{username: string | null; groupName: string | null}> {
+  async getPersonGroupAndUsername(): Promise<{username: string | null; groupName: string | null; otherUsername: string | null}> {
     await this.ensureConnection();
     return await this.hubConnection.invoke('GetPersonGroupAndUsername');
   }
 
-  receiveMessage(): Observable<{ user: string, message: string }>{
+  receiveMessage(): Observable<{ user: string, message: string}>{
     return this.messageSubject.asObservable();
   }
 

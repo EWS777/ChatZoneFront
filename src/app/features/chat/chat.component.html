@@ -16,7 +16,16 @@
   </div>
 
   <div class="settings">
-    <button>⚙️</button>
+    <button (click)="isActivateSettings.set(true)">⚙️</button>
+    @if (isActivateSettings()){
+      <button (click)="blockPerson()">Block user</button>
+      @if (isPersonBlocked()){
+        <h2><span>Person has blocked!</span></h2>
+        Do you want to find a new person?
+        <button (click)="findNewPerson()">Yes</button>
+        <button (click)="router.navigate(['/'])">No</button>
+      }
+    }
   </div>
 
   <div style="max-width: 500px; margin: auto;">

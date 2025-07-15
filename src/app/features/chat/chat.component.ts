@@ -7,6 +7,7 @@ import {QuickMessage} from '../profile/quick-messages/quick-message';
 import {Router} from '@angular/router';
 import {FindPerson} from '../main/find-person';
 import {MainService} from '../main/main.service';
+import {BlockedUserService} from '../profile/blocked-users/blocked-user.service';
 
 @Component({
   selector: 'app-chat',
@@ -22,16 +23,21 @@ export class ChatComponent implements OnInit{
   router = inject(Router)
   private signalRService = inject(SignalRService)
   private quickMessageService = inject(QuickMessageService)
+  private blockedPersonService = inject(BlockedUserService)
 
   groupName: string | null = null
   username: string | null = null;
-  messages: { user: string, message: string }[] = [];
+  partnerUsername: string | null = null;
+  messages: { user: string, message: string}[] = [];
   message: string=''
   quickMessageList: QuickMessage[] | null = null
+
   isSendQuickMessage = signal<boolean>(false)
   isOtherPersonLeft = signal<boolean>(false)
   isShowNewFinder = signal<boolean>(false)
   isDisconnect = signal<'exit' | 'skip' | null>(null)
+  isActivateSettings = signal<boolean>(false)
+  isPersonBlocked = signal<boolean>(false)
 
   filter: FindPerson = {
     connectionId: '',
@@ -45,9 +51,10 @@ export class ChatComponent implements OnInit{
 
   async ngOnInit(){
     await this.signalRService.ensureConnection();
-    const {username, groupName} = await this.signalRService.getPersonGroupAndUsername()
+    const {username, groupName, otherUsername} = await this.signalRService.getPersonGroupAndUsername()
     this.username = username
     this.groupName = groupName
+    this.partnerUsername = otherUsername
 
     this.quickMessageService.getQuickMessages().subscribe({
       next: value => {
@@ -96,6 +103,17 @@ export class ChatComponent implements OnInit{
     this.mainService.findPerson(this.filter).subscribe({
       next: (res: any) => {
         if (res.message === 'Chat was created!') window.location.reload()
+      },
+      error: err => {
+        console.error('Error', err)
+      }
+    })
+  }
+
+  blockPerson(){
+    this.blockedPersonService.createBlockedPerson(this.partnerUsername!).subscribe({
+      next: () => {
+        this.isPersonBlocked.set(true)
       },
       error: err => {
         console.error('Error', err)
