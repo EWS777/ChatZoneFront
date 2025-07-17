@@ -1,9 +1,9 @@
 export interface Filter {
-  themeList: number | null,
+  theme: number | null,
   country: number | null,
   city: number | null,
   age: number | null,
-  gender: number | null,
-  nativeLang: number | null,
-  learnLang: number | null
+  yourGender: number | null,
+  partnerGender: number | null,
+  language: number | null
 }

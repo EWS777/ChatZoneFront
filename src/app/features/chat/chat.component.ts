@@ -41,12 +41,14 @@ export class ChatComponent implements OnInit{
 
   filter: FindPerson = {
     connectionId: '',
-    themeList: null,
+    theme: null,
     country: null,
     city: null,
     age: null,
-    gender: null,
-    lang: null
+    yourGender: null,
+    language: null,
+    partnerGender: null,
+    isSearchAgain: false
   }
 
   async ngOnInit(){
@@ -99,7 +101,7 @@ export class ChatComponent implements OnInit{
 
   findNewPerson(){
     this.filter.connectionId = this.signalRService.connectionId
-
+    this.filter.isSearchAgain = true
     this.mainService.findPerson(this.filter).subscribe({
       next: (res: any) => {
         if (res.message === 'Chat was created!') window.location.reload()

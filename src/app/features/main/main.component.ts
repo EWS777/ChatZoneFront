@@ -39,12 +39,14 @@ export class MainComponent implements OnInit{
 
   filter: FindPerson = {
     connectionId: '',
-    themeList: null,
+    theme: null,
     country: null,
     city: null,
     age: null,
-    gender: null,
-    lang: null
+    yourGender: null,
+    language: null,
+    partnerGender: null,
+    isSearchAgain: false
   }
 
   countryList = Object.keys(CountryList)
@@ -97,10 +99,11 @@ export class MainComponent implements OnInit{
         next: value => {
           this.filter.country = value.country
           this.filter.age = value.age
-          this.filter.themeList = value.themeList
+          this.filter.theme = value.theme
           this.filter.city = value.city
-          this.filter.gender = value.gender
-          this.filter.lang = value.learnLang
+          this.filter.yourGender = value.yourGender
+          this.filter.partnerGender = value.partnerGender
+          this.filter.language = value.language
         }
       })
     }
