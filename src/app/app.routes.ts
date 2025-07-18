@@ -13,6 +13,7 @@ import {UpdatePasswordComponent} from './features/identity/update-password/updat
 import {DeleteProfileComponent} from './features/identity/delete-profile/delete-profile.component';
 import {ChangeResetPasswordComponent} from './features/identity/change-reset-password/change-reset-password.component';
 import {ChatComponent} from './features/chat/chat.component';
+import {GroupComponent} from './features/chat/group/group.component';
 
 export const routes: Routes = [
   {
@@ -30,5 +31,6 @@ export const routes: Routes = [
   {path: 'confirm', component: ConfirmComponent},
   {path: 'update-password', component: UpdatePasswordComponent, canActivate: [guardGuard]},
   {path: 'delete-profile', component: DeleteProfileComponent, canActivate: [guardGuard]},
-  {path: 'chat', component: ChatComponent, canActivate: [guardGuard]}
+  {path: 'chat', component: ChatComponent, canActivate: [guardGuard]},
+  {path: 'groups', component: GroupComponent, canActivate: [guardGuard]}
 ];

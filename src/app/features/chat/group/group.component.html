@@ -1,0 +1,72 @@
+<h2>List of groups</h2>
+<button (click)="isCreateGroup.set(true)">Create group</button>
+
+<div>
+  @for (groups of groupList; track groups.idGroup) {
+    <div>
+      <span>{{groups.title}}</span>
+      @if (groups.country !== null){
+        <span>{{CountryList[groups.country]}}</span>
+      }
+
+      @if (groups.city !== null){
+        <span>{{CityList[groups.city]}}</span>
+      }
+
+      @if (groups.age !== null){
+        <span>{{AgeList[groups.age]}}</span>
+      }
+
+      @if (groups.lang !== null){
+        <span>{{LangList[groups.lang]}}</span>
+      }
+
+      Online: 1234
+      <button>Go</button>
+    </div>
+  }
+</div>
+
+@if (isCreateGroup()){
+  Create a group
+
+  Title:  <input [(ngModel)]="group.title">
+
+  <div class="form-group">
+    <label for="country">Country:</label>
+    <select id="country" [(ngModel)]="group.country">
+      @for (country of countryList; track country.value) {
+        <option [ngValue]="country.value">{{country.label}}</option>
+      }
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label for="city">City:</label>
+    <select id="city" [(ngModel)]="group.city" >
+      @for (city of cityList; track city.value) {
+        <option [ngValue]="city.value">{{city.label}}</option>
+      }
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label for="age">Age:</label>
+    <select id="age" [(ngModel)]="group.age">
+      @for (age of ageList; track age.value) {
+        <option [ngValue]="age.value">{{ age.label }}</option>
+      }
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label for="language">Language</label>
+    <select id="language" [(ngModel)]="group.lang">
+      @for (gender of langList; track gender.value) {
+        <option [ngValue]="gender.value">{{gender.label}}</option>
+      }
+    </select>
+  </div>
+
+  <button (click)="createGroup()">Create</button>
+}
