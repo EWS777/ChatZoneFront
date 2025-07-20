@@ -12,8 +12,8 @@ import {ConfirmComponent} from './features/identity/confirm/confirm.component';
 import {UpdatePasswordComponent} from './features/identity/update-password/update-password.component';
 import {DeleteProfileComponent} from './features/identity/delete-profile/delete-profile.component';
 import {ChangeResetPasswordComponent} from './features/identity/change-reset-password/change-reset-password.component';
-import {ChatComponent} from './features/chat/chat.component';
-import {GroupComponent} from './features/chat/group/group.component';
+import {ChatComponent} from './features/chat/common/chat.component';
+import {GroupChatMenuComponent} from './features/chat/group-chat-menu/group-chat-menu.component';
 
 export const routes: Routes = [
   {
@@ -32,5 +32,5 @@ export const routes: Routes = [
   {path: 'update-password', component: UpdatePasswordComponent, canActivate: [guardGuard]},
   {path: 'delete-profile', component: DeleteProfileComponent, canActivate: [guardGuard]},
   {path: 'chat', component: ChatComponent, canActivate: [guardGuard]},
-  {path: 'groups', component: GroupComponent, canActivate: [guardGuard]}
+  {path: 'groups', component: GroupChatMenuComponent, canActivate: [guardGuard]}
 ];

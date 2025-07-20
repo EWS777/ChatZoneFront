@@ -1,18 +1,17 @@
 import {inject, Injectable} from '@angular/core';
-import {HubConnection, HubConnectionBuilder, HubConnectionState} from '@microsoft/signalr';
 import {Router} from '@angular/router';
+import {HubConnection, HubConnectionBuilder, HubConnectionState} from '@microsoft/signalr';
 import {Observable, Subject} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
-export class SignalRService {
-  router = inject(Router)
-
-  private readonly hubConnection: HubConnection;
+export abstract class BaseChatService {
+  protected router = inject(Router)
   private messageSubject = new Subject<{user: string, message: string}>();
-  private connectionPromise: Promise<void>
-  public connectionId: string = '';
+  protected readonly hubConnection: HubConnection;
+  private readonly connectionPromise: Promise<void>
+  connectionId: string = ''
 
   constructor() {
     this.hubConnection = new HubConnectionBuilder()
@@ -43,33 +42,30 @@ export class SignalRService {
     })
   }
 
-  public async ensureConnection(): Promise<void> {
+  async startConnect(){
+    await this.ensureConnection()
+  }
+
+  async ensureConnection(): Promise<void> {
     if (this.hubConnection.state === HubConnectionState.Connected) {
-      return Promise.resolve();
+      return;
     }
     return this.connectionPromise;
-  }
-
-  async getPersonGroupAndUsername(): Promise<{username: string | null; groupName: string | null; otherUsername: string | null}> {
-    await this.ensureConnection();
-    return await this.hubConnection.invoke('GetPersonGroupAndUsername');
-  }
-
-  receiveMessage(): Observable<{ user: string, message: string}>{
-    return this.messageSubject.asObservable();
   }
 
   async sendMessage(groupName: string, message: string) {
     await this.hubConnection.invoke('SendMessage', groupName, message)
   }
 
-  async leaveChat(groupName: string){
-    await this.hubConnection.invoke('LeaveChat', groupName)
+  receiveMessage(): Observable<{ user: string, message: string}>{
+    return this.messageSubject.asObservable();
   }
 
-  personLeftChat(result: ()=>void){
-    this.hubConnection.on('LeftChat', ()=>{
-      result()
-    })
+  async leaveChat(groupName: string, isSingleChat: boolean){
+    await this.hubConnection.invoke('LeaveChat', groupName, isSingleChat)
+  }
+
+  async getPersonGroupAndUsername(): Promise<{username: string | null; groupName: string | null; isSingleChat: boolean}> {
+    return await this.hubConnection.invoke('GetPersonGroupAndUsername');
   }
 }

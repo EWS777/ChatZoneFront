@@ -22,7 +22,7 @@
       }
 
       Online: 1234
-      <button>Go</button>
+      <button (click)="connectToGroup(groups.idGroup!)">Go</button>
     </div>
   }
 </div>
@@ -30,7 +30,7 @@
 @if (isCreateGroup()){
   Create a group
 
-  Title:  <input [(ngModel)]="group.title">
+    Title:  <input [(ngModel)]="group.title">
 
   <div class="form-group">
     <label for="country">Country:</label>

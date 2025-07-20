@@ -1,13 +1,14 @@
 import {Component, inject, OnInit, signal} from '@angular/core';
-import {SignalRService} from './signalR.service';
 import {FormsModule} from '@angular/forms';
 import {NgClass} from '@angular/common';
-import {QuickMessageService} from '../profile/quick-messages/quick-message.service';
-import {QuickMessage} from '../profile/quick-messages/quick-message';
+import {QuickMessageService} from '../../profile/quick-messages/quick-message.service';
+import {QuickMessage} from '../../profile/quick-messages/quick-message';
 import {Router} from '@angular/router';
-import {FindPerson} from '../main/find-person';
-import {MainService} from '../main/main.service';
-import {BlockedUserService} from '../profile/blocked-users/blocked-user.service';
+import {FindPerson} from '../../main/find-person';
+import {MainService} from '../../main/main.service';
+import {BlockedUserService} from '../../profile/blocked-users/blocked-user.service';
+import {SingleChatService} from '../single-chat.service';
+import {BaseChatService} from '../abstract/base-chat.service';
 
 @Component({
   selector: 'app-chat',
@@ -19,11 +20,12 @@ import {BlockedUserService} from '../profile/blocked-users/blocked-user.service'
   styleUrl: './chat.component.css'
 })
 export class ChatComponent implements OnInit{
+  singleChatService = inject(SingleChatService)
+  baseChatService = inject(BaseChatService)
   mainService = inject(MainService)
-  router = inject(Router)
-  private signalRService = inject(SignalRService)
   private quickMessageService = inject(QuickMessageService)
   private blockedPersonService = inject(BlockedUserService)
+  router = inject(Router)
 
   groupName: string | null = null
   username: string | null = null;
@@ -31,6 +33,7 @@ export class ChatComponent implements OnInit{
   messages: { user: string, message: string}[] = [];
   message: string=''
   quickMessageList: QuickMessage[] | null = null
+  isSingleChat: boolean | null = null
 
   isSendQuickMessage = signal<boolean>(false)
   isOtherPersonLeft = signal<boolean>(false)
@@ -52,11 +55,12 @@ export class ChatComponent implements OnInit{
   }
 
   async ngOnInit(){
-    await this.signalRService.ensureConnection();
-    const {username, groupName, otherUsername} = await this.signalRService.getPersonGroupAndUsername()
+    await this.baseChatService.startConnect()
+
+    const {username, groupName, isSingleChat} = await this.baseChatService.getPersonGroupAndUsername()
     this.username = username
     this.groupName = groupName
-    this.partnerUsername = otherUsername
+    this.isSingleChat = isSingleChat
 
     this.quickMessageService.getQuickMessages().subscribe({
       next: value => {
@@ -67,31 +71,37 @@ export class ChatComponent implements OnInit{
       }
     })
 
-    if (this.groupName!==null){
-      this.signalRService.receiveMessage().subscribe(data =>{
-        this.messages.push(data)
-      })
-    }
+    this.baseChatService.receiveMessage().subscribe(data =>{
+      this.messages.push(data)
+    })
 
-    this.signalRService.personLeftChat(() => this.isOtherPersonLeft.set(true))
+    if (this.isSingleChat){
+      this.singleChatService.personLeftChat(() => this.isOtherPersonLeft.set(true))
+    }
   }
 
   async sendMessage(){
-    await this.signalRService.sendMessage(this.groupName!, this.message)
+    await this.baseChatService.sendMessage(this.groupName!, this.message)
     this.message = ''
   }
 
   async sendQuickMessage(message: string){
-    await this.signalRService.sendMessage(this.groupName!, message)
+    await this.baseChatService.sendMessage(this.groupName!, message)
     this.isSendQuickMessage.set(true)
   }
 
   async exitChat(isExit: boolean){
-    await this.signalRService.leaveChat(this.groupName!)
-    if (isExit) await this.router.navigate([''])
+    if (this.isSingleChat){
+      await this.baseChatService.leaveChat(this.groupName!, true)
+      if (isExit) await this.router.navigate([''])
+      else {
+        this.isShowNewFinder.set(true)
+        this.findNewPerson()
+      }
+    }
     else {
-      this.isShowNewFinder.set(true)
-      this.findNewPerson()
+      await this.baseChatService.leaveChat(this.groupName!, false)
+      await this.router.navigate(['/'])
     }
   }
 
@@ -100,7 +110,7 @@ export class ChatComponent implements OnInit{
   }
 
   findNewPerson(){
-    this.filter.connectionId = this.signalRService.connectionId
+    this.filter.connectionId = this.baseChatService.connectionId
     this.filter.isSearchAgain = true
     this.mainService.findPerson(this.filter).subscribe({
       next: (res: any) => {

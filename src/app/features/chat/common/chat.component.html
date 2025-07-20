@@ -38,6 +38,10 @@
     </ul>
   </div>
 
+  @if (!isSingleChat){
+    <h1>This is a group chat!!!</h1>
+  }
+
   @if (!isSendQuickMessage()){
     <div>
       @for (quickMessage of quickMessageList;track quickMessage.idQuickMessage){
@@ -47,7 +51,9 @@
   }
 
   <div style="max-width: 500px; margin: auto;">
-    <button (click)="changeIsDisconnectStatus('skip')">Skip</button>
+    @if (isSingleChat){
+      <button (click)="changeIsDisconnectStatus('skip')">Skip</button>
+    }
     <input [(ngModel)]="message" placeholder="Message" class="form-control" />
     <button (click)="sendMessage()" class="btn btn-primary mt-2">Send</button>
   </div>

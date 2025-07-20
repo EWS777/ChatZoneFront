@@ -1,22 +1,27 @@
 import {Component, inject, OnInit, signal} from '@angular/core';
-import {GroupService} from './group.service';
-import {Group} from './group';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {GroupService} from '../group.service';
+import {Group} from '../group';
 import {CountryList} from '../../profile/filter/enums/country-list';
 import {CityList} from '../../profile/filter/enums/city-list';
 import {AgeList} from '../../profile/filter/enums/age-list';
 import {LangList} from '../../profile/filter/enums/lang-list';
-import {FormsModule} from '@angular/forms';
+import {GroupChatService} from '../group-chat.service';
 
 @Component({
-  selector: 'app-group',
+  selector: 'app-chat-groupMenu-menu',
   imports: [
+    ReactiveFormsModule,
     FormsModule
   ],
-  templateUrl: './group.component.html',
-  styleUrl: './group.component.css'
+  standalone: true,
+  templateUrl: './group-chat-menu.component.html',
+  styleUrl: './group-chat-menu.component.css'
 })
-export class GroupComponent implements OnInit{
+
+export class GroupChatMenuComponent implements OnInit{
   groupService = inject(GroupService)
+  signalService = inject(GroupChatService)
 
   protected readonly CountryList = CountryList;
   protected readonly CityList = CityList;
@@ -31,7 +36,6 @@ export class GroupComponent implements OnInit{
     age: null,
     lang: null
   }
-
   isCreateGroup = signal<boolean>(false)
 
   countryList = Object.keys(CountryList)
@@ -59,14 +63,19 @@ export class GroupComponent implements OnInit{
     })
   }
 
-  createGroup(){
+  async createGroup(){
     this.groupService.createGroup(this.group).subscribe({
-      next: () =>{
-        //connection to SignalR
+      next: value =>{
+        console.log('IdGroup', value)
+        this.signalService.addToGroup(value)
       },
       error: err => {
         console.error('Error', err)
       }
     })
+  }
+
+  async connectToGroup(idGroup: number){
+    await this.signalService.addToGroup(idGroup)
   }
 }

@@ -10,7 +10,7 @@ export class GroupService {
   url = 'https://localhost:7212/group/'
 
   createGroup(request: Group){
-    return this.http.post(`${this.url}create`, request, {
+    return this.http.post<number>(`${this.url}create`, request, {
       withCredentials: true
     })
   }

@@ -9,10 +9,10 @@ import {CityList} from '../profile/filter/enums/city-list';
 import {LangList} from '../profile/filter/enums/lang-list';
 import {ThemeList} from '../profile/filter/enums/theme-list';
 import {GenderList} from '../profile/filter/enums/gender-list';
-import {SignalRService} from '../chat/signalR.service';
 import {FindPerson} from './find-person';
 import {MainService} from './main.service';
 import {FilterService} from '../profile/filter/filter.service';
+import {SingleChatService} from '../chat/single-chat.service';
 
 @Component({
   selector: 'app-main',
@@ -27,7 +27,7 @@ import {FilterService} from '../profile/filter/filter.service';
 export class MainComponent implements OnInit{
   router = inject(Router)
   authService = inject(AuthorizationService)
-  signalRService = inject(SignalRService)
+  signalService = inject(SingleChatService)
   mainService = inject(MainService)
   profile = inject(ProfileService)
   filterService = inject(FilterService)
@@ -122,7 +122,7 @@ export class MainComponent implements OnInit{
   }
 
   findPerson(){
-    this.filter.connectionId = this.signalRService.connectionId
+    this.filter.connectionId = this.signalService.connectionId
     this.isFindPerson.set(true)
     this.isFilterActivated.set(false)
     this.mainService.findPerson(this.filter).subscribe({
