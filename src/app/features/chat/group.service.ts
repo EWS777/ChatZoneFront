@@ -7,16 +7,28 @@ import {Group} from './group';
 })
 export class GroupService {
   http = inject(HttpClient)
-  url = 'https://localhost:7212/group/'
+  url = 'https://localhost:7212/'
 
   createGroup(request: Group){
-    return this.http.post<number>(`${this.url}create`, request, {
+    return this.http.post<number>(`${this.url}group/create`, request, {
       withCredentials: true
     })
   }
 
   getGroups(){
-    return this.http.get<Group[]>(`${this.url}get`,{
+    return this.http.get<Group[]>(`${this.url}group/get`,{
+      withCredentials: true
+    })
+  }
+
+  addToGroup(groupName: number){
+    return this.http.post(`${this.url}groupMember/add?groupName=${groupName}`, {},{
+      withCredentials: true
+    })
+  }
+
+  deleteFromGroup(){
+    return this.http.delete(`${this.url}groupMember/delete`,{
       withCredentials: true
     })
   }

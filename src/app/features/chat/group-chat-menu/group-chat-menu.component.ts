@@ -76,6 +76,13 @@ export class GroupChatMenuComponent implements OnInit{
   }
 
   async connectToGroup(idGroup: number){
-    await this.signalService.addToGroup(idGroup)
+    this.groupService.addToGroup(idGroup).subscribe({
+      next: async () =>{
+        await this.signalService.addToGroup(idGroup)
+      },
+      error: err => {
+        console.log('Error', err)
+      }
+    })
   }
 }

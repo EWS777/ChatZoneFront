@@ -9,6 +9,7 @@ import {MainService} from '../../main/main.service';
 import {BlockedUserService} from '../../profile/blocked-users/blocked-user.service';
 import {SingleChatService} from '../single-chat.service';
 import {BaseChatService} from '../abstract/base-chat.service';
+import {GroupService} from '../group.service';
 
 @Component({
   selector: 'app-chat',
@@ -26,6 +27,7 @@ export class ChatComponent implements OnInit{
   private quickMessageService = inject(QuickMessageService)
   private blockedPersonService = inject(BlockedUserService)
   router = inject(Router)
+  groupService = inject(GroupService)
 
   groupName: string | null = null
   username: string | null = null;
@@ -100,8 +102,15 @@ export class ChatComponent implements OnInit{
       }
     }
     else {
-      await this.baseChatService.leaveChat(this.groupName!, false)
-      await this.router.navigate(['/'])
+      this.groupService.deleteFromGroup().subscribe({
+        next: async () =>{
+          await this.baseChatService.leaveChat(this.groupName!, false)
+          await this.router.navigate(['/'])
+        },
+        error: err =>{
+          console.log('Error', err)
+        }
+      })
     }
   }
 
