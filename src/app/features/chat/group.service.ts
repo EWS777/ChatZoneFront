@@ -32,4 +32,16 @@ export class GroupService {
       withCredentials: true
     })
   }
+
+  getGroup(groupName: string){
+    return this.http.get<Group>(`${this.url}group/get-group?groupName=${groupName}`, {
+      withCredentials: true
+    })
+  }
+
+  updateGroup(group: Group){
+    return this.http.put<Group>(`${this.url}group/update`, group, {
+      withCredentials: true
+    })
+  }
 }

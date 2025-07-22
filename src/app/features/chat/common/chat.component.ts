@@ -10,6 +10,11 @@ import {BlockedUserService} from '../../profile/blocked-users/blocked-user.servi
 import {SingleChatService} from '../single-chat.service';
 import {BaseChatService} from '../abstract/base-chat.service';
 import {GroupService} from '../group.service';
+import {Group} from '../group';
+import {CountryList} from '../../profile/filter/enums/country-list';
+import {CityList} from '../../profile/filter/enums/city-list';
+import {AgeList} from '../../profile/filter/enums/age-list';
+import {LangList} from '../../profile/filter/enums/lang-list';
 
 @Component({
   selector: 'app-chat',
@@ -36,6 +41,17 @@ export class ChatComponent implements OnInit{
   message: string=''
   quickMessageList: QuickMessage[] | null = null
   isSingleChat: boolean | null = null
+  group: Group = {
+    idGroup: null,
+    title: '',
+    country: null,
+    city: null,
+    age: null,
+    lang: null,
+    isAdmin: null,
+    groupName: null
+  }
+  groupEditable: Group = { ...this.group }
 
   isSendQuickMessage = signal<boolean>(false)
   isOtherPersonLeft = signal<boolean>(false)
@@ -79,6 +95,17 @@ export class ChatComponent implements OnInit{
 
     if (this.isSingleChat){
       this.singleChatService.personLeftChat(() => this.isOtherPersonLeft.set(true))
+    }
+    else {
+      this.groupService.getGroup(this.groupName!).subscribe({
+        next: value => {
+          this.group = value
+          this.groupEditable = { ...value }
+        },
+        error: err => {
+          console.log('Error', err)
+        }
+      })
     }
   }
 
@@ -141,4 +168,37 @@ export class ChatComponent implements OnInit{
       }
     })
   }
+
+  updateGroupData(){
+    this.groupService.updateGroup(this.groupEditable).subscribe({
+      next: value=>{
+        this.group = value
+        this.groupEditable = { ...value }
+      },
+      error: err => {
+        console.log('Error', err)
+      }
+    })
+  }
+
+  protected readonly CountryList = CountryList;
+  protected readonly CityList = CityList;
+  protected readonly AgeList = AgeList;
+  protected readonly LangList = LangList;
+
+  countryList = Object.keys(CountryList)
+    .filter(k => isNaN(Number(k)))
+    .map(name => ({ label: name, value: (CountryList as any)[name] as number }));
+
+  cityList = Object.keys(CityList)
+    .filter(k => isNaN(Number(k)))
+    .map(name => ({ label: name, value: (CityList as any)[name] as number }));
+
+  ageList = Object.keys(AgeList)
+    .filter(k => isNaN(Number(k)))
+    .map(name => ({ label: name, value: (AgeList as any)[name] as number }));
+
+  langList = Object.keys(LangList)
+    .filter(k => isNaN(Number(k)))
+    .map(name => ({ label: name, value: (LangList as any)[name] as number }));
 }

@@ -5,4 +5,6 @@ export interface Group {
   city: number | null
   age: number | null
   lang: number | null
+  isAdmin: boolean | null
+  groupName: string | null
 }

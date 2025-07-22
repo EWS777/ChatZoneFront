@@ -8,24 +8,86 @@
       <button (click)="changeIsDisconnectStatus(null)">No</button>
     </div>
   }
-  <div class="filter">
-    <span>Username: qwerty123</span>
-    <span>Age: 20-25</span>
-    <span>Gender: Man</span>
-    <span>Country: Poland</span>
-  </div>
+
+  @if (isSingleChat){
+    <div class="filter">
+      <span>Username: qwerty123</span>
+      <span>Age: 20-25</span>
+      <span>Gender: Man</span>
+      <span>Country: Poland</span>
+    </div>
+  } @else {
+    <span>GroupName: {{group.title}}</span>
+    @if (group.country !== null){
+      <span>Country: {{CountryList[group.country]}}</span>
+    }
+    @if (group.city !== null){
+      <span>City: {{CityList[group.city]}}</span>
+    }
+    @if (group.age !== null){
+      <span>Age: {{AgeList[group.age]}}</span>
+    }
+    @if (group.lang !== null){
+      <span>Lang: {{LangList[group.lang]}}</span>
+    }
+  }
 
   <div class="settings">
-    <button (click)="isActivateSettings.set(true)">⚙️</button>
-    @if (isActivateSettings()){
-      <button (click)="blockPerson()">Block user</button>
-      @if (isPersonBlocked()){
-        <h2><span>Person has blocked!</span></h2>
-        Do you want to find a new person?
-        <button (click)="findNewPerson()">Yes</button>
-        <button (click)="router.navigate(['/'])">No</button>
+    <button (click)="isActivateSettings.set(!isActivateSettings())">⚙️</button>
+      @if (isActivateSettings()){
+        @if (isSingleChat){
+          <button (click)="blockPerson()">Block user</button>
+          @if (isPersonBlocked()){
+            <h2><span>Person has blocked!</span></h2>
+            Do you want to find a new person?
+            <button (click)="findNewPerson()">Yes</button>
+            <button (click)="router.navigate(['/'])">No</button>
+          }
+        }
+        @if (!isSingleChat && group.isAdmin) {
+          <button>Leave group</button>
+          <button>List of users</button>
+
+          <br>Title:  <input [(ngModel)]="groupEditable.title">
+
+          <div class="form-group">
+            <label for="country">Country:</label>
+            <select id="country" [(ngModel)]="groupEditable.country">
+              @for (country of countryList; track country.value) {
+                <option [ngValue]="country.value">{{country.label}}</option>
+              }
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="city">City:</label>
+            <select id="city" [(ngModel)]="groupEditable.city" >
+              @for (city of cityList; track city.value) {
+                <option [ngValue]="city.value">{{city.label}}</option>
+              }
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="age">Age:</label>
+            <select id="age" [(ngModel)]="groupEditable.age">
+              @for (age of ageList; track age.value) {
+                <option [ngValue]="age.value">{{ age.label }}</option>
+              }
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="language">Language</label>
+            <select id="language" [(ngModel)]="groupEditable.lang">
+              @for (gender of langList; track gender.value) {
+                <option [ngValue]="gender.value">{{gender.label}}</option>
+              }
+            </select>
+          </div>
+          <button (click)="updateGroupData()">Update info</button>
+        }
       }
-    }
   </div>
 
   <div style="max-width: 500px; margin: auto;">

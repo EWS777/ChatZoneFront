@@ -34,7 +34,9 @@ export class GroupChatMenuComponent implements OnInit{
     country: null,
     city: null,
     age: null,
-    lang: null
+    lang: null,
+    isAdmin: null,
+    groupName: null
   }
   isCreateGroup = signal<boolean>(false)
 
