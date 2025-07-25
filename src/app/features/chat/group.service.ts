@@ -28,7 +28,7 @@ export class GroupService {
   }
 
   deleteFromGroup(){
-    return this.http.delete(`${this.url}groupMember/delete`,{
+    return this.http.delete(`${this.url}groupMember/leave`,{
       withCredentials: true
     })
   }
