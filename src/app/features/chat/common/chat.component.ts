@@ -15,6 +15,8 @@ import {CountryList} from '../../profile/filter/enums/country-list';
 import {CityList} from '../../profile/filter/enums/city-list';
 import {AgeList} from '../../profile/filter/enums/age-list';
 import {LangList} from '../../profile/filter/enums/lang-list';
+import {GroupMemberService} from '../group-member/group-member.service';
+import {GroupMember} from '../group-member/group-member';
 
 @Component({
   selector: 'app-chat',
@@ -23,9 +25,11 @@ import {LangList} from '../../profile/filter/enums/lang-list';
     NgClass
   ],
   templateUrl: './chat.component.html',
+  standalone: true,
   styleUrl: './chat.component.css'
 })
 export class ChatComponent implements OnInit{
+  groupMemberService = inject(GroupMemberService)
   singleChatService = inject(SingleChatService)
   baseChatService = inject(BaseChatService)
   mainService = inject(MainService)
@@ -52,6 +56,7 @@ export class ChatComponent implements OnInit{
     groupName: null
   }
   groupEditable: Group = { ...this.group }
+  groupMembers!: GroupMember[]
 
   isSendQuickMessage = signal<boolean>(false)
   isOtherPersonLeft = signal<boolean>(false)
@@ -59,6 +64,7 @@ export class ChatComponent implements OnInit{
   isDisconnect = signal<'exit' | 'skip' | null>(null)
   isActivateSettings = signal<boolean>(false)
   isPersonBlocked = signal<boolean>(false)
+  isGroupMember = signal<boolean>(false)
 
   filter: FindPerson = {
     connectionId: '',
@@ -174,6 +180,18 @@ export class ChatComponent implements OnInit{
       next: value=>{
         this.group = value
         this.groupEditable = { ...value }
+      },
+      error: err => {
+        console.log('Error', err)
+      }
+    })
+  }
+
+  getGroupMembers(){
+    this.groupMemberService.getUsers(this.groupName!).subscribe({
+      next: value => {
+        this.groupMembers = value
+        this.isGroupMember.set(true)
       },
       error: err => {
         console.log('Error', err)

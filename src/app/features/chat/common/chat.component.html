@@ -46,7 +46,7 @@
         }
         @if (!isSingleChat && group.isAdmin) {
           <button>Leave group</button>
-          <button>List of users</button>
+          <button (click)="getGroupMembers()">List of users</button>
 
           <br>Title:  <input [(ngModel)]="groupEditable.title">
 
@@ -136,4 +136,14 @@
 
 @if (isShowNewFinder()){
   <h2>Waiting for new matching...</h2>
+}
+
+@if (isGroupMember()){
+  <h2>List of groups</h2>
+  @for (members of groupMembers; track members.idPerson){
+    <div>
+      <span>{{members.username}}</span>
+      <button>Block user</button>
+    </div>
+  }
 }
