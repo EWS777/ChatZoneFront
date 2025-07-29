@@ -45,9 +45,39 @@
 }
 
 .chat-filter {
-  margin-left: auto;
-  margin-right: auto;
-  width: 45%;
+  position: fixed;
+  top: 15%;
+  left: 25%;
+  width: 50%;
   background-color: #6e6ecc;
-  padding: 40px;
+}
+
+.profile-container{
+  text-align: center;
+}
+
+.form-group{
+  margin-top: 7px;
+}
+
+label{
+  margin-right: 10px;
+}
+
+select {
+  border-radius: 6px;
+  border: 1px solid #000000;
+  background-color: #212173;
+}
+
+.filter-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px;
+}
+
+.button-back {
+  position: absolute;
+  left: 10%;
 }

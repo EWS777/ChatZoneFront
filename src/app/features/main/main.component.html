@@ -28,6 +28,10 @@
 
 @if (isFilterActivated()){
   <div class="chat-filter">
+    <div class="filter-header">
+      <button class="button-back" (click)="activateFilter()">Back</button>
+      <h2>Choose parameters to find person</h2>
+    </div>
 
     <div class="profile-container">
       <div class="form-group">
@@ -93,9 +97,7 @@
         </select>
       </div>
     </div>
-
       <button (click)="findPerson()">Find</button>
-      <button (click)="activateFilter()">Back</button>
   </div>
 }
 
