@@ -1,131 +1,136 @@
-<div class="chat">
-  <h2>ChatZone</h2>
-  <button (click)="changeIsDisconnectStatus('exit')">Back</button>
-  @if (isDisconnect() === 'exit'){
-    <div>
-      Do you want to quite chat?
-      <button (click)="exitChat(true)">Yes</button>
-      <button (click)="changeIsDisconnectStatus(null)">No</button>
-    </div>
-  }
-
-  @if (isSingleChat){
-    <div class="filter">
-      <span>Username: qwerty123</span>
-      <span>Age: 20-25</span>
-      <span>Gender: Man</span>
-      <span>Country: Poland</span>
-    </div>
-  } @else {
-    <span>GroupName: {{group.title}}</span>
-    @if (group.country !== null){
-      <span>Country: {{CountryList[group.country]}}</span>
+<div class="container">
+  <div class="chat-header">
+    <button (click)="changeIsDisconnectStatus('exit')">Back</button>
+    @if (isSingleChat) {
+      <div class="chat-param">
+        <span>Username: qwerty123</span>
+        <span>Age: 20-25</span>
+        <span>Gender: Man</span>
+        <span>Country: Poland</span>
+      </div>
+    } @else {
+      <div class="chat-param">
+        <span>GroupName: {{ group.title }}</span>
+        @if (group.country !== null) {
+          <span>Country: {{ CountryList[group.country] }}</span>
+        }
+        @if (group.city !== null) {
+          <span>City: {{ CityList[group.city] }}</span>
+        }
+        @if (group.age !== null) {
+          <span>Age: {{ AgeList[group.age] }}</span>
+        }
+        @if (group.lang !== null) {
+          <span>Lang: {{ LangList[group.lang] }}</span>
+        }
+      </div>
     }
-    @if (group.city !== null){
-      <span>City: {{CityList[group.city]}}</span>
-    }
-    @if (group.age !== null){
-      <span>Age: {{AgeList[group.age]}}</span>
-    }
-    @if (group.lang !== null){
-      <span>Lang: {{LangList[group.lang]}}</span>
-    }
-  }
-
-  <div class="settings">
     <button (click)="isActivateSettings.set(!isActivateSettings())">⚙️</button>
-      @if (isActivateSettings()){
-        @if (isSingleChat){
-          <button (click)="blockPerson()">Block user</button>
-          @if (isPersonBlocked()){
-            <h2><span>Person has blocked!</span></h2>
-            Do you want to find a new person?
-            <button (click)="findNewPerson()">Yes</button>
-            <button (click)="router.navigate(['/'])">No</button>
-          }
-        }
-        @if (!isSingleChat && group.isAdmin) {
-          <button>Leave group</button>
-          <button (click)="getGroupMembers()">List of users</button>
-
-          <br>Title:  <input [(ngModel)]="groupEditable.title">
-
-          <div class="form-group">
-            <label for="country">Country:</label>
-            <select id="country" [(ngModel)]="groupEditable.country">
-              @for (country of countryList; track country.value) {
-                <option [ngValue]="country.value">{{country.label}}</option>
-              }
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label for="city">City:</label>
-            <select id="city" [(ngModel)]="groupEditable.city" >
-              @for (city of cityList; track city.value) {
-                <option [ngValue]="city.value">{{city.label}}</option>
-              }
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label for="age">Age:</label>
-            <select id="age" [(ngModel)]="groupEditable.age">
-              @for (age of ageList; track age.value) {
-                <option [ngValue]="age.value">{{ age.label }}</option>
-              }
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label for="language">Language</label>
-            <select id="language" [(ngModel)]="groupEditable.lang">
-              @for (gender of langList; track gender.value) {
-                <option [ngValue]="gender.value">{{gender.label}}</option>
-              }
-            </select>
-          </div>
-          <button (click)="updateGroupData()">Update info</button>
-        }
-      }
   </div>
 
-  <div style="max-width: 500px; margin: auto;">
-    <ul class="mt-3">
+  <div class="chat-messages">
+    <ul>
       @for (msg of messages; track $index) {
-        <li [ngClass]="{ 'mine': msg.user === username, 'theirs': msg.user !== username }">
-          <strong>{{msg.user === username ? 'Me' : msg.user}}</strong> {{ msg.message }}
+        <li [ngClass]="{ 'mine-message': msg.user === username, 'another-message': msg.user !== username }">
+          {{msg.message}}
         </li>
       }
     </ul>
   </div>
 
-  @if (!isSingleChat){
-    <h1>This is a group chat!!!</h1>
-  }
-
-  @if (!isSendQuickMessage()){
-    <div>
-      @for (quickMessage of quickMessageList;track quickMessage.idQuickMessage){
-        <button (click)="sendQuickMessage(quickMessage.message)">{{quickMessage.message}}</button>
-      }
-    </div>
-  }
-
-  <div style="max-width: 500px; margin: auto;">
+  <div class="chat-footer-wrapper">
     @if (isSingleChat){
+      <h2>SINGLE CHAT</h2>
+    } @else {
+      <h2>GROUP CHAT</h2>
+    }
+    @if (!isSendQuickMessage()) {
+      <div class="chat-quick-message">
+        @for (quickMessage of quickMessageList; track quickMessage.idQuickMessage) {
+          <button (click)="sendQuickMessage(quickMessage.message)">{{ quickMessage.message }}</button>
+        }
+      </div>
+    }
+  </div>
+
+  <div class="chat-footer">
+    @if (isSingleChat) {
       <button (click)="changeIsDisconnectStatus('skip')">Skip</button>
     }
-    <input [(ngModel)]="message" placeholder="Message" class="form-control" />
-    <button (click)="sendMessage()" class="btn btn-primary mt-2">Send</button>
+    <input [(ngModel)]="message" placeholder="Message"/>
+    <button (click)="sendMessage()">Send</button>
   </div>
-  @if (isDisconnect() === 'skip'){
+
+  @if (isDisconnect() === 'skip') {
     Do you want to skip person?
     <button (click)="exitChat(false)">Yes</button>
     <button (click)="changeIsDisconnectStatus(null)">No</button>
   }
 
+  @if (isActivateSettings()) {
+    @if (isSingleChat) {
+      <button (click)="blockPerson()">Block user</button>
+      @if (isPersonBlocked()) {
+        <h2><span>Person has blocked!</span></h2>
+        Do you want to find a new person?
+        <button (click)="findNewPerson()">Yes</button>
+        <button (click)="router.navigate(['/'])">No</button>
+      }
+    }
+    @if (!isSingleChat && group.isAdmin) {
+      <button>Leave group</button>
+      <button (click)="getGroupMembers()">List of users</button>
+
+      <br>Title:  <input [(ngModel)]="groupEditable.title">
+
+      <div class="form-group">
+        <label for="country">Country:</label>
+        <select id="country" [(ngModel)]="groupEditable.country">
+          @for (country of countryList; track country.value) {
+            <option [ngValue]="country.value">{{ country.label }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="city">City:</label>
+        <select id="city" [(ngModel)]="groupEditable.city">
+          @for (city of cityList; track city.value) {
+            <option [ngValue]="city.value">{{ city.label }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="age">Age:</label>
+        <select id="age" [(ngModel)]="groupEditable.age">
+          @for (age of ageList; track age.value) {
+            <option [ngValue]="age.value">{{ age.label }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="language">Language</label>
+        <select id="language" [(ngModel)]="groupEditable.lang">
+          @for (gender of langList; track gender.value) {
+            <option [ngValue]="gender.value">{{ gender.label }}</option>
+          }
+        </select>
+      </div>
+      <button (click)="updateGroupData()">Update info</button>
+    }
+  }
 </div>
+
+
+@if (isDisconnect() === 'exit') {
+  <div>
+    Do you want to quite chat?
+    <button (click)="exitChat(true)">Yes</button>
+    <button (click)="changeIsDisconnectStatus(null)">No</button>
+  </div>
+}
 
 @if (isOtherPersonLeft()) {
   <h2 class="person-disconnected">Person has disconnected!</h2>

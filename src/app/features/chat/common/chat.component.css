@@ -1,19 +1,85 @@
-.mine {
-  text-align: right;
+.container{
+  height: 450px;
+  margin: 10px auto;
+  padding-top: 14px;
+  overflow: hidden; /* messages can't be out of box */
+  display: flex;
+  flex-direction: column;
+}
+
+.chat-header{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.chat-param{
+  background-color: #8884d8;
+  border-radius: 10px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+span{
+  background-color: #173c97;
+  margin-left: 10px;
+  border-radius: 8px;
+  padding: 3px;
+}
+
+.mine-message {
+  max-width: 60%;
   background-color: #d0f0c0;
-  padding: 5px;
+  padding: 5px 5px;
   border-radius: 10px;
-  margin-bottom: 5px;
-}
-
-.theirs {
+  margin-left: auto;
+  width: fit-content;
   text-align: left;
-  background-color: #f0f0f0;
-  padding: 5px;
-  border-radius: 10px;
-  margin-bottom: 5px;
+  overflow-wrap: break-word;
+  margin-bottom: 4px;
 }
 
-.person-disconnected{
-  background-color: #a51717;
+.another-message {
+  max-width: 60%;
+  background-color: #d0f0c0;
+  padding: 5px 5px;
+  border-radius: 10px;
+  margin-right: auto;
+  width: fit-content;
+  text-align: left;
+  overflow-wrap: break-word;
+  margin-bottom: 4px;
+}
+
+.chat-messages {
+  flex: 1;   /* be on the bottom */
+  overflow-y: auto; /* scroll by Y */
+  -ms-overflow-style: none;     /* IE и Edge */
+  scrollbar-width: none;        /* Firefox */
+}
+
+.chat-messages::-webkit-scrollbar {
+  display: none;                /* Chrome, Safari and WebKit */
+}
+
+.chat-quick-message button{
+  background-color: #602424;
+  align-items: center;
+  justify-content: space-between;
+  margin-inline: 4px;
+  margin-bottom: 8px;
+}
+
+.chat-footer{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.chat-footer input{
+  width: 80%;
+  padding: 3px;
+  border-radius: 50px;
+  border: none;
 }
