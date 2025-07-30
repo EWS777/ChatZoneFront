@@ -7,6 +7,7 @@ import {CityList} from '../../profile/filter/enums/city-list';
 import {AgeList} from '../../profile/filter/enums/age-list';
 import {LangList} from '../../profile/filter/enums/lang-list';
 import {GroupChatService} from '../group-chat.service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-chat-groupMenu-menu',
@@ -20,6 +21,7 @@ import {GroupChatService} from '../group-chat.service';
 })
 
 export class GroupChatMenuComponent implements OnInit{
+  router = inject(Router)
   groupService = inject(GroupService)
   signalService = inject(GroupChatService)
 

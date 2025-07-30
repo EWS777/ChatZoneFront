@@ -1,27 +1,31 @@
-<h2>List of groups</h2>
-<button (click)="isCreateGroup.set(true)">Create group</button>
+<div class="container">
+  <div class="group-header">
+    <button (click)="router.navigate(['/'])">Back</button>
+    <h2>List of groups</h2>
+    <button (click)="isCreateGroup.set(true)">Create group</button>
+  </div>
 
-<div>
   @for (groups of groupList; track groups.idGroup) {
-    <div>
-      <span>{{groups.title}}</span>
-      @if (groups.country !== null){
-        <span>{{CountryList[groups.country]}}</span>
-      }
+    <div class="group-block">
+      <div class="group-info">
+        <span>{{groups.title}}</span>
+        @if (groups.country !== null){
+          <span>{{CountryList[groups.country]}}</span>
+        }
 
-      @if (groups.city !== null){
-        <span>{{CityList[groups.city]}}</span>
-      }
+        @if (groups.city !== null){
+          <span>{{CityList[groups.city]}}</span>
+        }
 
-      @if (groups.age !== null){
-        <span>{{AgeList[groups.age]}}</span>
-      }
+        @if (groups.age !== null){
+          <span>{{AgeList[groups.age]}}</span>
+        }
 
-      @if (groups.lang !== null){
-        <span>{{LangList[groups.lang]}}</span>
-      }
-
-      Online: 1234
+        @if (groups.lang !== null){
+          <span>{{LangList[groups.lang]}}</span>
+        }
+        Online: 1234
+      </div>
       <button (click)="connectToGroup(groups.idGroup!)">Go</button>
     </div>
   }

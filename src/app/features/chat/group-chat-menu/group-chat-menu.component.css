@@ -1,0 +1,26 @@
+.group-header{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.group-block{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #20203a;
+  margin: 5px;
+  border-radius: 10px;
+}
+
+.group-block span{
+  background-color: #1c3677;
+  margin: 5px;
+  color: black;
+  border-radius: 6px;
+}
+
+.group-block button{
+  margin-right: 10px;
+  width: 50px;
+}

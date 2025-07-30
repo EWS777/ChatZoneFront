@@ -22,3 +22,13 @@ button{
 button:hover {
   background-color: #292967;
 }
+
+.container {
+  background-color: #0b0b2d;
+  color: #c14a4a;
+  border-radius: 20px;
+  padding: 40px;
+  max-width: 600px;
+  margin: 50px auto;
+  text-align: center;
+}
