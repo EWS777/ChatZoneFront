@@ -83,3 +83,16 @@ span{
   border-radius: 50px;
   border: none;
 }
+
+.leave-chat-block,
+.skip-person,
+.person-disconnected,
+.chat-block-user,
+.waiting-partner {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #d0d0d0;
+  padding: 30px;
+}

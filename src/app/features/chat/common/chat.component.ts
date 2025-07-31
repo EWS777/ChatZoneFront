@@ -130,6 +130,7 @@ export class ChatComponent implements OnInit{
       await this.baseChatService.leaveChat(this.groupName!, true)
       if (isExit) await this.router.navigate([''])
       else {
+        this.isDisconnect.set(null)
         this.isShowNewFinder.set(true)
         this.findNewPerson()
       }
