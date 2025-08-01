@@ -53,19 +53,19 @@ export abstract class BaseChatService {
     return this.connectionPromise;
   }
 
-  async sendMessage(groupName: string, message: string) {
-    await this.hubConnection.invoke('SendMessage', groupName, message)
+  async sendMessage(idGroup: number, message: string, isSingleChat: boolean) {
+    await this.hubConnection.invoke('SendMessage', idGroup, message, isSingleChat)
   }
 
   receiveMessage(): Observable<{ user: string, message: string}>{
     return this.messageSubject.asObservable();
   }
 
-  async leaveChat(groupName: string, isSingleChat: boolean){
-    await this.hubConnection.invoke('LeaveChat', groupName, isSingleChat)
+  async leaveChat(idGroup: number, isSingleChat: boolean){
+    await this.hubConnection.invoke('LeaveChat', idGroup, isSingleChat)
   }
 
-  async getPersonGroupAndUsername(): Promise<{username: string | null; groupName: string | null; isSingleChat: boolean}> {
+  async getPersonGroupAndUsername(): Promise<{username: string | null; idPerson: number | null; idGroup: number | null; isSingleChat: boolean; idPartnerPerson: number | null}> {
     return await this.hubConnection.invoke('GetPersonGroupAndUsername');
   }
 }

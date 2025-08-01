@@ -11,6 +11,7 @@ export class GroupMemberService {
 
   getUsers(groupName: string){
     return this.http.get<GroupMember[]>(`${this.url}/get-list?groupName=${groupName}`,{
+  getUsers(idGroup: number){
       withCredentials: true
     })
   }

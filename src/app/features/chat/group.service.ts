@@ -21,8 +21,8 @@ export class GroupService {
     })
   }
 
-  addToGroup(groupName: number){
-    return this.http.post(`${this.url}groupMember/add?groupName=${groupName}`, {},{
+  addToGroup(idGroup: number){
+    return this.http.post(`${this.url}groupMember/add?idGroup=${idGroup}`, {},{
       withCredentials: true
     })
   }
@@ -33,8 +33,8 @@ export class GroupService {
     })
   }
 
-  getGroup(groupName: string){
-    return this.http.get<Group>(`${this.url}group/get-group?groupName=${groupName}`, {
+  getGroup(idGroup: number){
+    return this.http.get<Group>(`${this.url}group/get-group?idGroup=${idGroup}`, {
       withCredentials: true
     })
   }

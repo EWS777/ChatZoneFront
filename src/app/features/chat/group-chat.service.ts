@@ -12,5 +12,7 @@ export class GroupChatService extends BaseChatService{
 
   async addToGroup(groupName: number) {
     await this.hubConnection.invoke('AddToGroup', groupName)
+  async addToGroup(idGroup: number) {
+    await this.hubConnection.invoke('AddToGroup', idGroup)
   }
 }

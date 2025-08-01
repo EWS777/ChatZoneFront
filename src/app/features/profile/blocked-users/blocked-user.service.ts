@@ -15,8 +15,8 @@ export class BlockedUserService {
     })
   }
 
-  createBlockedPerson(blockedPersonUsername: string){
-    return this.http.post(`${this.url}/add/${blockedPersonUsername}`,{},{
+  createBlockedPerson(idPartnerPerson: number){
+    return this.http.post(`${this.url}/add/${idPartnerPerson}`,{},{
       withCredentials: true
     })
   }
