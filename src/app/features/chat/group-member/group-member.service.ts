@@ -9,9 +9,8 @@ export class GroupMemberService {
   http = inject(HttpClient)
   url = 'https://localhost:7212/groupMember'
 
-  getUsers(groupName: string){
-    return this.http.get<GroupMember[]>(`${this.url}/get-list?groupName=${groupName}`,{
   getUsers(idGroup: number){
+    return this.http.get<GroupMember[]>(`${this.url}/get-list?idGroup=${idGroup}`,{
       withCredentials: true
     })
   }
