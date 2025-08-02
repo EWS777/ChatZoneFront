@@ -11,6 +11,7 @@ import {ChangePasswordService} from './change-password.service';
     RouterLink
   ],
   templateUrl: './change-reset-password.component.html',
+  standalone: true,
   styleUrl: './change-reset-password.component.css'
 })
 export class ChangeResetPasswordComponent implements OnInit {

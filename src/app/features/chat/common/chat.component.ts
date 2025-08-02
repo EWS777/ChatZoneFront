@@ -38,13 +38,14 @@ export class ChatComponent implements OnInit{
   router = inject(Router)
   groupService = inject(GroupService)
 
-  groupName: string | null = null
-  username: string | null = null;
-  partnerUsername: string | null = null;
+  username: string | null = null
+  idPerson: number | null = null
+  idGroup: number | null = null
+  isSingleChat: boolean | null = null
+  idPartnerPerson: number | null = null
   messages: { user: string, message: string}[] = [];
   message: string=''
   quickMessageList: QuickMessage[] | null = null
-  isSingleChat: boolean | null = null
   group: Group = {
     idGroup: null,
     title: '',
@@ -81,10 +82,12 @@ export class ChatComponent implements OnInit{
   async ngOnInit(){
     await this.baseChatService.startConnect()
 
-    const {username, groupName, isSingleChat} = await this.baseChatService.getPersonGroupAndUsername()
+    const {username, idPerson, idGroup, isSingleChat, idPartnerPerson} = await this.baseChatService.getPersonGroupAndUsername()
     this.username = username
-    this.groupName = groupName
+    this.idPerson = idPerson
+    this.idGroup = idGroup
     this.isSingleChat = isSingleChat
+    this.idPartnerPerson = idPartnerPerson
 
     this.quickMessageService.getQuickMessages().subscribe({
       next: value => {
@@ -103,7 +106,7 @@ export class ChatComponent implements OnInit{
       this.singleChatService.personLeftChat(() => this.isOtherPersonLeft.set(true))
     }
     else {
-      this.groupService.getGroup(this.groupName!).subscribe({
+      this.groupService.getGroup(this.idGroup!).subscribe({
         next: value => {
           this.group = value
           this.groupEditable = { ...value }
@@ -116,18 +119,18 @@ export class ChatComponent implements OnInit{
   }
 
   async sendMessage(){
-    await this.baseChatService.sendMessage(this.groupName!, this.message)
+    await this.baseChatService.sendMessage(this.idGroup!, this.message, this.isSingleChat!)
     this.message = ''
   }
 
   async sendQuickMessage(message: string){
-    await this.baseChatService.sendMessage(this.groupName!, message)
+    await this.baseChatService.sendMessage(this.idGroup!, message, this.isSingleChat!)
     this.isSendQuickMessage.set(true)
   }
 
   async exitChat(isExit: boolean){
     if (this.isSingleChat){
-      await this.baseChatService.leaveChat(this.groupName!, true)
+      await this.baseChatService.leaveChat(this.idGroup!, true)
       if (isExit) await this.router.navigate([''])
       else {
         this.isDisconnect.set(null)
@@ -138,7 +141,7 @@ export class ChatComponent implements OnInit{
     else {
       this.groupService.deleteFromGroup().subscribe({
         next: async () =>{
-          await this.baseChatService.leaveChat(this.groupName!, false)
+          await this.baseChatService.leaveChat(this.idGroup!, false)
           await this.router.navigate(['/'])
         },
         error: err =>{
@@ -166,7 +169,7 @@ export class ChatComponent implements OnInit{
   }
 
   blockPerson(){
-    this.blockedPersonService.createBlockedPerson(this.partnerUsername!).subscribe({
+    this.blockedPersonService.createBlockedPerson(this.idPartnerPerson!).subscribe({
       next: () => {
         this.isPersonBlocked.set(true)
       },
@@ -189,7 +192,7 @@ export class ChatComponent implements OnInit{
   }
 
   getGroupMembers(){
-    this.groupMemberService.getUsers(this.groupName!).subscribe({
+    this.groupMemberService.getUsers(this.idGroup!).subscribe({
       next: value => {
         this.groupMembers = value
         this.isGroupMember.set(true)
