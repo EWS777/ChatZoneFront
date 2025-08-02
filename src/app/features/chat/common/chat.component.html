@@ -62,7 +62,7 @@
   </div>
 
   @if (isDisconnect() === 'skip') {
-    <div class="skip-person">
+    <div class="common-information">
       Do you want to skip person?
       <button (click)="exitChat(false)">Yes</button>
       <button (click)="changeIsDisconnectStatus(null)">No</button>
@@ -71,7 +71,7 @@
 
   @if (isActivateSettings()) {
     @if (isSingleChat) {
-      <div class="chat-block-user">
+      <div class="common-information">
         <button (click)="blockPerson()">Block user</button>
         @if (isPersonBlocked()) {
           <h2><span>Person has blocked!</span></h2>
@@ -82,7 +82,7 @@
       </div>
     }
     @if (!isSingleChat && group.isAdmin) {
-      <div class="group-chat-manager">
+      <div class="common-information">
         <button (click)="isActivateSettings.set(false)">Back</button>
         <button (click)="getGroupMembers()">List of users</button>
         <div class="update-group-params">
@@ -133,7 +133,7 @@
 
 
 @if (isDisconnect() === 'exit') {
-  <div class="leave-chat-block">
+  <div class="common-information">
     Do you want to quite chat?
     <button (click)="exitChat(true)">Yes</button>
     <button (click)="changeIsDisconnectStatus(null)">No</button>
@@ -141,7 +141,7 @@
 }
 
 @if (isOtherPersonLeft()) {
-  <div class="person-disconnected">
+  <div class="common-information">
     <h2>Person has disconnected!</h2>
     Do you want to find new person?
     <button (click)="findNewPerson()">Yes</button>
@@ -150,13 +150,13 @@
 }
 
 @if (isShowNewFinder()){
-  <div class="waiting-partner">
+  <div class="common-information">
     <h2>Waiting for new matching...</h2>
   </div>
 }
 
 @if (isGroupMember()){
-  <div class="group-member-list">
+  <div class="common-information">
     <button (click)="isGroupMember.set(false)">Back</button>
     <h2>List of group members</h2>
     @for (members of groupMembers; track members.idPerson){

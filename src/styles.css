@@ -36,3 +36,12 @@ button:hover {
 ul {
   list-style-type: none;
 }
+
+.common-information {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #d0d0d0;
+  padding: 30px;
+}
