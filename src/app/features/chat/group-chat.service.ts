@@ -6,24 +6,20 @@ import {Observable, Subject} from 'rxjs';
   providedIn: 'root'
 })
 export class GroupChatService extends BaseChatService{
-  private adminSubject = new Subject<{isAdmin: boolean}>();
+  private adminSubject = new Subject<boolean>();
 
   constructor() {
     super();
 
     this.hubConnection.on('AdminChanged', (isAdmin: boolean)=>{
-      this.adminSubject.next({isAdmin: isAdmin})
+      this.adminSubject.next(isAdmin)
     })
   }
   async addToGroup(groupName: number) {
     await this.hubConnection.invoke('AddToGroup', groupName)
   }
 
-  setNewAdmin(): Observable<{ isAdmin: boolean }>{
+  setNewAdmin(): Observable<boolean>{
     return this.adminSubject.asObservable();
   }
-
-  // async getPersonGroupAndUsername(): Promise<{idPerson: number | null; idGroup: number | null; isSingleChat: boolean; username: string | null}> {
-  //   return await this.hubConnection.invoke('GetPersonGroupAndUsername');
-  // }
 }

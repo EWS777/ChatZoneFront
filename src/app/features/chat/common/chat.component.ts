@@ -17,6 +17,7 @@ import {AgeList} from '../../profile/filter/enums/age-list';
 import {LangList} from '../../profile/filter/enums/lang-list';
 import {GroupMemberService} from '../group-member/group-member.service';
 import {GroupMember} from '../group-member/group-member';
+import {GroupChatService} from '../group-chat.service';
 
 @Component({
   selector: 'app-chat',
@@ -30,6 +31,7 @@ import {GroupMember} from '../group-member/group-member';
 })
 export class ChatComponent implements OnInit{
   groupMemberService = inject(GroupMemberService)
+  groupChatService = inject(GroupChatService)
   singleChatService = inject(SingleChatService)
   baseChatService = inject(BaseChatService)
   mainService = inject(MainService)
@@ -114,6 +116,11 @@ export class ChatComponent implements OnInit{
         error: err => {
           console.log('Error', err)
         }
+      })
+
+      this.groupChatService.setNewAdmin().subscribe(isAdmin => {
+        this.isGroupMember.set(false)
+        this.group.isAdmin = isAdmin
       })
     }
   }
@@ -204,13 +211,11 @@ export class ChatComponent implements OnInit{
   }
 
   setNewAdmin(idPerson: number){
-    // const payload = {
-    //   IdNewAdminPerson: idPerson,
-    //   IdGroup: this.idGroup!
-    // };
-    // this.groupMemberService.setNewAdmin(payload).subscribe({
-    //
-    // })
+    const payload = {
+      IdNewAdminPerson: idPerson,
+      IdGroup: this.idGroup!
+    };
+    this.groupMemberService.setNewAdmin(payload).subscribe({})
   }
 
   protected readonly CountryList = CountryList;

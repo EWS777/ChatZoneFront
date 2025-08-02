@@ -14,4 +14,10 @@ export class GroupMemberService {
       withCredentials: true
     })
   }
+
+  setNewAdmin(payload: {IdNewAdminPerson: number, IdGroup: number}){
+    return this.http.put(`${this.url}/change-admin`, payload, {
+      withCredentials: true
+    })
+  }
 }
