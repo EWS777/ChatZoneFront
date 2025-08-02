@@ -162,7 +162,7 @@
     @for (members of groupMembers; track members.idPerson){
       <div>
         <span>{{members.username}}</span>
-        <button>Block user</button>
+        <button (click)="blockFromGroupChat(members.idPerson)">Block user</button>
         <button (click)="setNewAdmin(members.idPerson)">Set admin</button>
       </div>
     }

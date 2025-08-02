@@ -44,4 +44,10 @@ export class GroupService {
       withCredentials: true
     })
   }
+
+  blockGroupMember(payload: {IdBlockedPerson: number; IdChat: number}){
+    return this.http.post(`${this.url}BlockedGroupMember/block`, payload, {
+      withCredentials: true
+    })
+  }
 }

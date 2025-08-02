@@ -122,6 +122,14 @@ export class ChatComponent implements OnInit{
         this.isGroupMember.set(false)
         this.group.isAdmin = isAdmin
       })
+
+      this.groupChatService.blockedGroupMember().subscribe({
+        next: () =>{
+          this.router.navigate(['/groups'], {
+            state: {isGroupMemberBlocked: true}
+          })
+        }
+      })
     }
   }
 
@@ -216,6 +224,21 @@ export class ChatComponent implements OnInit{
       IdGroup: this.idGroup!
     };
     this.groupMemberService.setNewAdmin(payload).subscribe({})
+  }
+
+  blockFromGroupChat(idPerson: number){
+    const payload = {
+      IdBlockedPerson: idPerson,
+      IdChat: this.idGroup!
+    };
+    this.groupService.blockGroupMember(payload).subscribe({
+      next: () => {
+        this.groupMembers = this.groupMembers.filter(member => member.idPerson !== idPerson)
+      },
+      error: err => {
+        console.log('Error', err)
+      }
+    })
   }
 
   protected readonly CountryList = CountryList;

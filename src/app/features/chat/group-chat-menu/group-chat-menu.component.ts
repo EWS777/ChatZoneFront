@@ -22,6 +22,13 @@ import {Router} from '@angular/router';
 
 export class GroupChatMenuComponent implements OnInit{
   router = inject(Router)
+  isGroupMemberBlocked = false;
+
+  constructor() {
+    const state = this.router.getCurrentNavigation()?.extras.state
+    this.isGroupMemberBlocked = state?.['isGroupMemberBlocked']
+  }
+
   groupService = inject(GroupService)
   signalService = inject(GroupChatService)
 

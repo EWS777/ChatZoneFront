@@ -75,3 +75,10 @@
     <button (click)="createGroup()">Create</button>
   </div>
 }
+
+@if (isGroupMemberBlocked){
+  <div class="common-information">
+    You've been blocked in group!!!
+    <button>Ok</button>
+  </div>
+}

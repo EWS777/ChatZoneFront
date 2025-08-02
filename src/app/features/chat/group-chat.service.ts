@@ -7,12 +7,17 @@ import {Observable, Subject} from 'rxjs';
 })
 export class GroupChatService extends BaseChatService{
   private adminSubject = new Subject<boolean>();
+  private blockedMember = new Subject();
 
   constructor() {
     super();
 
     this.hubConnection.on('AdminChanged', (isAdmin: boolean)=>{
       this.adminSubject.next(isAdmin)
+    })
+
+    this.hubConnection.on('BlockedIntoGroupChat', ()=>{
+      this.blockedMember.next(()=>{})
     })
   }
   async addToGroup(groupName: number) {
@@ -21,5 +26,9 @@ export class GroupChatService extends BaseChatService{
 
   setNewAdmin(): Observable<boolean>{
     return this.adminSubject.asObservable();
+  }
+
+  blockedGroupMember(){
+    return this.blockedMember.asObservable();
   }
 }
