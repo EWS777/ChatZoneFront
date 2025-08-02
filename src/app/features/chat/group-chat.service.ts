@@ -15,6 +15,9 @@ export class GroupChatService extends BaseChatService{
       this.adminSubject.next({isAdmin: isAdmin})
     })
   }
+  async addToGroup(groupName: number) {
+    await this.hubConnection.invoke('AddToGroup', groupName)
+  }
 
   setNewAdmin(): Observable<{ isAdmin: boolean }>{
     return this.adminSubject.asObservable();
