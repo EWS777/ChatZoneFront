@@ -200,6 +200,16 @@ export class ChatComponent implements OnInit{
     })
   }
 
+  setNewAdmin(idPerson: number){
+    // const payload = {
+    //   IdNewAdminPerson: idPerson,
+    //   IdGroup: this.idGroup!
+    // };
+    // this.groupMemberService.setNewAdmin(payload).subscribe({
+    //
+    // })
+  }
+
   protected readonly CountryList = CountryList;
   protected readonly CityList = CityList;
   protected readonly AgeList = AgeList;
