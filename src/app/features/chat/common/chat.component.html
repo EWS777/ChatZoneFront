@@ -28,7 +28,7 @@
     <button (click)="isActivateSettings.set(!isActivateSettings())">⚙️</button>
   </div>
 
-  <div class="chat-messages">
+  <div #chatContainer class="chat-messages" (scroll)="onScroll()">
     <ul>
       @for (msg of messages; track $index) {
         <li [ngClass]="{ 'mine-message': msg.user === username, 'another-message': msg.user !== username }">

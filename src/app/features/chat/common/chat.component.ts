@@ -1,4 +1,4 @@
-import {Component, inject, OnInit, signal} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, inject, OnInit, signal, ViewChild} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {NgClass} from '@angular/common';
 import {QuickMessageService} from '../../profile/quick-messages/quick-message.service';
@@ -29,7 +29,7 @@ import {GroupChatService} from '../group-chat.service';
   standalone: true,
   styleUrl: './chat.component.css'
 })
-export class ChatComponent implements OnInit{
+export class ChatComponent implements OnInit, AfterViewInit{
   groupMemberService = inject(GroupMemberService)
   groupChatService = inject(GroupChatService)
   singleChatService = inject(SingleChatService)
@@ -102,6 +102,12 @@ export class ChatComponent implements OnInit{
 
     this.baseChatService.receiveMessage().subscribe(data =>{
       this.messages.push(data)
+
+      requestAnimationFrame( () => {
+        if (this.isUserAtBottom) {
+          this.scrollToBottom();
+        }
+      })
     })
 
     if (this.isSingleChat){
@@ -133,9 +139,35 @@ export class ChatComponent implements OnInit{
     }
   }
 
+  isUserAtBottom = true;
+  @ViewChild('chatContainer') private chatContainer!: ElementRef
+  ngAfterViewInit(): void {
+    this.scrollToBottom()
+  }
+
+  onScroll(){
+    const el = this.chatContainer.nativeElement;
+
+    const threshold = 150;
+    const position = el.scrollTop + el.clientHeight;
+    const height = el.scrollHeight;
+
+    this.isUserAtBottom = (height - position) <= threshold;
+  }
+
+  private scrollToBottom(){
+    const el = this.chatContainer.nativeElement;
+    el.scrollTop = el.scrollHeight;
+  }
+
   async sendMessage(){
     await this.baseChatService.sendMessage(this.idGroup!, this.message, this.isSingleChat!)
     this.message = ''
+    requestAnimationFrame( () => {
+      if (this.isUserAtBottom) {
+        this.scrollToBottom();
+      }
+    })
   }
 
   async sendQuickMessage(message: string){
