@@ -31,7 +31,7 @@
   <div #chatContainer class="chat-messages" (scroll)="onScroll()">
     <ul>
       @for (msg of messages; track $index) {
-        <li [ngClass]="{ 'mine-message': msg.user === username, 'another-message': msg.user !== username }">
+        <li [ngClass]="{ 'mine-message': msg.idSender === idPerson, 'another-message': msg.idSender !== idPerson }">
           {{msg.message}}
         </li>
       }
@@ -57,7 +57,7 @@
     @if (isSingleChat) {
       <button (click)="changeIsDisconnectStatus('skip')">Skip</button>
     }
-    <input [(ngModel)]="message" placeholder="Message"/>
+    <input [(ngModel)]="currentMessage" placeholder="Message"/>
     <button (click)="sendMessage()">Send</button>
   </div>
 

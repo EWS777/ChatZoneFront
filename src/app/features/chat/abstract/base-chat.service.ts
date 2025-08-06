@@ -8,7 +8,7 @@ import {Observable, Subject} from 'rxjs';
 })
 export abstract class BaseChatService {
   protected router = inject(Router)
-  private messageSubject = new Subject<{user: string, message: string}>();
+  private messageSubject = new Subject<{idSender: number, message: string, createdAt: Date}>();
   protected readonly hubConnection: HubConnection;
   private readonly connectionPromise: Promise<void>
   connectionId: string = ''
@@ -37,8 +37,8 @@ export abstract class BaseChatService {
       else this.router.navigate(['chat']);
     });
 
-    this.hubConnection.on('Receive', (username: string, message: string) =>{
-      this.messageSubject.next({user: username, message: message})
+    this.hubConnection.on('Receive', (idSender: number, message: string, createdAt: Date) =>{
+      this.messageSubject.next({idSender: idSender, message: message, createdAt: createdAt})
     })
   }
 
@@ -57,7 +57,7 @@ export abstract class BaseChatService {
     await this.hubConnection.invoke('SendMessage', idGroup, message, isSingleChat)
   }
 
-  receiveMessage(): Observable<{ user: string, message: string}>{
+  receiveMessage(): Observable<{ idSender: number, message: string, createdAt: Date}>{
     return this.messageSubject.asObservable();
   }
 

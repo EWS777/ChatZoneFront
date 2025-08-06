@@ -45,8 +45,8 @@ export class ChatComponent implements OnInit, AfterViewInit{
   idGroup: number | null = null
   isSingleChat: boolean | null = null
   idPartnerPerson: number | null = null
-  messages: { user: string, message: string}[] = [];
-  message: string=''
+  messages: { idSender: number, message: string, createdAt: Date}[] = [];
+  currentMessage: string=''
   quickMessageList: QuickMessage[] | null = null
   group: Group = {
     idGroup: null,
@@ -161,8 +161,8 @@ export class ChatComponent implements OnInit, AfterViewInit{
   }
 
   async sendMessage(){
-    await this.baseChatService.sendMessage(this.idGroup!, this.message, this.isSingleChat!)
-    this.message = ''
+    await this.baseChatService.sendMessage(this.idGroup!, this.currentMessage, this.isSingleChat!)
+    this.currentMessage = ''
     requestAnimationFrame( () => {
       if (this.isUserAtBottom) {
         this.scrollToBottom();
