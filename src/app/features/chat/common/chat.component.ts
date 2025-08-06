@@ -18,6 +18,9 @@ import {LangList} from '../../profile/filter/enums/lang-list';
 import {GroupMemberService} from '../group-member/group-member.service';
 import {GroupMember} from '../group-member/group-member';
 import {GroupChatService} from '../group-chat.service';
+import {MessageService} from '../messages/message.service';
+import {GetMessageRequest} from '../messages/get-message-request';
+import {firstValueFrom} from 'rxjs';
 
 @Component({
   selector: 'app-chat',
@@ -39,6 +42,7 @@ export class ChatComponent implements OnInit, AfterViewInit{
   private blockedPersonService = inject(BlockedUserService)
   router = inject(Router)
   groupService = inject(GroupService)
+  messageService = inject(MessageService)
 
   username: string | null = null
   idPerson: number | null = null
@@ -91,6 +95,9 @@ export class ChatComponent implements OnInit, AfterViewInit{
     this.isSingleChat = isSingleChat
     this.idPartnerPerson = idPartnerPerson
 
+    await this.loadPreviousMessages();
+    this.scrollToBottom()
+
     this.quickMessageService.getQuickMessages().subscribe({
       next: value => {
         this.quickMessageList = value
@@ -139,14 +146,23 @@ export class ChatComponent implements OnInit, AfterViewInit{
     }
   }
 
+  isLoadingHistory: boolean = false
+  isAllMessagesLoaded: boolean = false
+  skipMessage: number = 0
+
   isUserAtBottom = true;
   @ViewChild('chatContainer') private chatContainer!: ElementRef
   ngAfterViewInit(): void {
     this.scrollToBottom()
   }
 
-  onScroll(){
+  async onScroll(){
     const el = this.chatContainer.nativeElement;
+    const scrollTop = el.scrollTop;
+
+    if (scrollTop < 100 && !this.isLoadingHistory && !this.isAllMessagesLoaded) {
+      await this.loadPreviousMessages();
+    }
 
     const threshold = 150;
     const position = el.scrollTop + el.clientHeight;
@@ -158,6 +174,35 @@ export class ChatComponent implements OnInit, AfterViewInit{
   private scrollToBottom(){
     const el = this.chatContainer.nativeElement;
     el.scrollTop = el.scrollHeight;
+  }
+
+  private async loadPreviousMessages(){
+    if (this.isLoadingHistory || this.isAllMessagesLoaded) return;
+
+    this.isLoadingHistory = true
+
+    const container = this.chatContainer.nativeElement
+    const previousHeight = container.scrollHeight
+
+    const messageRequest: GetMessageRequest = {
+      IdPerson: this.idPerson!,
+      IdChat: this.idGroup!,
+      IsSingleChat: this.isSingleChat!,
+      SkipMessage: this.skipMessage
+    }
+
+    const messages = await firstValueFrom(this.messageService.getMessages(messageRequest))
+    if (messages.message.length < 40) this.isAllMessagesLoaded = true
+
+    this.skipMessage += messages.message.length
+
+    this.messages = [...messages.message.reverse(), ...this.messages]
+
+    setTimeout(() => {
+      const newHeight = container.scrollHeight;
+      container.scrollTop = newHeight - previousHeight;
+      this.isLoadingHistory = false;
+    });
   }
 
   async sendMessage(){
