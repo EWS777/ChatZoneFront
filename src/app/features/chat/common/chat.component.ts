@@ -44,7 +44,6 @@ export class ChatComponent implements OnInit, AfterViewInit{
   groupService = inject(GroupService)
   messageService = inject(MessageService)
 
-  username: string | null = null
   idPerson: number | null = null
   idGroup: number | null = null
   isSingleChat: boolean | null = null
@@ -88,8 +87,7 @@ export class ChatComponent implements OnInit, AfterViewInit{
   async ngOnInit(){
     await this.baseChatService.startConnect()
 
-    const {username, idPerson, idGroup, isSingleChat, idPartnerPerson} = await this.baseChatService.getPersonGroupAndUsername()
-    this.username = username
+    const {idPerson, idGroup, isSingleChat, idPartnerPerson} = await this.baseChatService.getPersonGroupAndUsername()
     this.idPerson = idPerson
     this.idGroup = idGroup
     this.isSingleChat = isSingleChat
