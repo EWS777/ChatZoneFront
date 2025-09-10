@@ -231,15 +231,23 @@ export class ChatComponent implements OnInit, AfterViewInit{
       }
     }
     else {
-      this.groupService.deleteFromGroup().subscribe({
-        next: async () =>{
-          await this.baseChatService.leaveChat(this.idGroup!, false)
-          await this.router.navigate(['/'])
-        },
-        error: err =>{
-          console.log('Error', err)
-        }
-      })
+      if (!this.group.isAdmin){
+        this.groupService.deleteFromGroup(this.idGroup!).subscribe({
+          next: async () =>{
+            await this.baseChatService.leaveChat(this.idGroup!, false)
+            await this.router.navigate(['/'])
+          },
+          error: err =>{
+            console.log('Error', err)
+          }
+        })
+      }
+
+
+
+      else {
+        this.isAdminStatusInfo.set(true)
+      }
     }
   }
 

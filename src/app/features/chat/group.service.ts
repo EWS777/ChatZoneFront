@@ -27,8 +27,8 @@ export class GroupService {
     })
   }
 
-  deleteFromGroup(){
-    return this.http.delete(`${this.url}groupMember/leave`,{
+  deleteFromGroup(idChat: number){
+    return this.http.delete(`${this.url}groupMember/leave?idChat=${idChat}`,{
       withCredentials: true
     })
   }
