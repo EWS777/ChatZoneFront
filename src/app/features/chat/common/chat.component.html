@@ -25,7 +25,10 @@
         }
       </div>
     }
-    <button (click)="isActivateSettings.set(!isActivateSettings())">⚙️</button>
+    @if (isSingleChat || (!isSingleChat && group.isAdmin)) {
+      <button (click)="isActivateSettings.set(!isActivateSettings())">⚙️</button>
+    }
+
   </div>
 
   <div #chatContainer class="chat-messages" (scroll)="onScroll()">
