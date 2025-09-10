@@ -87,11 +87,12 @@ export class ChatComponent implements OnInit, AfterViewInit{
   async ngOnInit(){
     await this.baseChatService.startConnect()
 
-    const {idPerson, idGroup, isSingleChat, idPartnerPerson} = await this.baseChatService.getPersonGroupAndUsername()
+    const {idPerson, idGroup, isSingleChat, idPartnerPerson, isSentMessage} = await this.baseChatService.getPersonGroupAndUsername()
     this.idPerson = idPerson
     this.idGroup = idGroup
     this.isSingleChat = isSingleChat
     this.idPartnerPerson = idPartnerPerson
+    this.isSendQuickMessage.set(isSentMessage)
 
     await this.loadPreviousMessages();
     this.scrollToBottom()
@@ -206,6 +207,7 @@ export class ChatComponent implements OnInit, AfterViewInit{
   async sendMessage(){
     await this.baseChatService.sendMessage(this.idGroup!, this.currentMessage, this.isSingleChat!)
     this.currentMessage = ''
+    this.isSendQuickMessage.set(true)
     requestAnimationFrame( () => {
       if (this.isUserAtBottom) {
         this.scrollToBottom();
