@@ -143,6 +143,14 @@
   </div>
 }
 
+@if(isAdminStatusInfo()){
+  <div class="common-information">
+    You are an admin. What action do you prefer?
+<!--    <button (click)="">Delete group</button>-->
+<!--    <button (click)="">Change admin</button>-->
+  </div>
+}
+
 @if (isOtherPersonLeft()) {
   <div class="common-information">
     <h2>Person has disconnected!</h2>

@@ -71,6 +71,7 @@ export class ChatComponent implements OnInit, AfterViewInit{
   isActivateSettings = signal<boolean>(false)
   isPersonBlocked = signal<boolean>(false)
   isGroupMember = signal<boolean>(false)
+  isAdminStatusInfo = signal<boolean>(false)
 
   filter: FindPerson = {
     connectionId: '',
@@ -93,6 +94,8 @@ export class ChatComponent implements OnInit, AfterViewInit{
     this.isSingleChat = isSingleChat
     this.idPartnerPerson = idPartnerPerson
     this.isSendQuickMessage.set(isSentMessage)
+
+    if (this.idGroup === null) this.router.navigate([''])
 
     await this.loadPreviousMessages();
     this.scrollToBottom()
