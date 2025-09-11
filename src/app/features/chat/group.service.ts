@@ -46,7 +46,7 @@ export class GroupService {
   }
 
   blockGroupMember(payload: {IdBlockedPerson: number; IdChat: number}){
-    return this.http.post(`${this.url}BlockedGroupMember/block`, payload, {
+    return this.http.post(`${this.url}BlockedGroupMember/add`, payload, {
       withCredentials: true
     })
   }
