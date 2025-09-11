@@ -20,4 +20,16 @@ export class GroupMemberService {
       withCredentials: true
     })
   }
+
+  addToGroup(idGroup: number){
+    return this.http.post(`${this.url}/add?idGroup=${idGroup}`, {},{
+      withCredentials: true
+    })
+  }
+
+  deleteFromGroup(idChat: number){
+    return this.http.delete(`${this.url}/leave?idChat=${idChat}`,{
+      withCredentials: true
+    })
+  }
 }

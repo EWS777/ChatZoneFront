@@ -7,7 +7,7 @@ import {BlockedUser} from './blocked-user';
 })
 export class BlockedUserService {
   http = inject(HttpClient)
-  url = 'https://localhost:7212/blockPerson'
+  url = 'https://localhost:7212/blockedPerson'
 
   getBlockedPersons(){
     return this.http.get<BlockedUser[]>(`${this.url}`,{

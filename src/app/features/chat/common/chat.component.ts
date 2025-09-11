@@ -21,6 +21,7 @@ import {GroupChatService} from '../group-chat.service';
 import {MessageService} from '../messages/message.service';
 import {GetMessageRequest} from '../messages/get-message-request';
 import {firstValueFrom} from 'rxjs';
+import {BlockedGroupMemberService} from '../blocked-group-member.service';
 
 @Component({
   selector: 'app-chat',
@@ -33,6 +34,7 @@ import {firstValueFrom} from 'rxjs';
   styleUrl: './chat.component.css'
 })
 export class ChatComponent implements OnInit, AfterViewInit{
+  blockedGroupMemberService = inject(BlockedGroupMemberService)
   groupMemberService = inject(GroupMemberService)
   groupChatService = inject(GroupChatService)
   singleChatService = inject(SingleChatService)
@@ -235,7 +237,7 @@ export class ChatComponent implements OnInit, AfterViewInit{
     }
     else {
       if (!this.group.isAdmin){
-        this.groupService.deleteFromGroup(this.idGroup!).subscribe({
+        this.groupMemberService.deleteFromGroup(this.idGroup!).subscribe({
           next: async () =>{
             await this.baseChatService.leaveChat(this.idGroup!, false)
             await this.router.navigate(['/'])
@@ -319,7 +321,7 @@ export class ChatComponent implements OnInit, AfterViewInit{
       IdBlockedPerson: idPerson,
       IdChat: this.idGroup!
     };
-    this.groupService.blockGroupMember(payload).subscribe({
+    this.blockedGroupMemberService.blockGroupMember(payload).subscribe({
       next: () => {
         this.groupMembers = this.groupMembers.filter(member => member.idPerson !== idPerson)
       },

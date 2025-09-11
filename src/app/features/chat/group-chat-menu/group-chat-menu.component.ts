@@ -8,6 +8,7 @@ import {AgeList} from '../../profile/filter/enums/age-list';
 import {LangList} from '../../profile/filter/enums/lang-list';
 import {GroupChatService} from '../group-chat.service';
 import {Router} from '@angular/router';
+import {GroupMemberService} from '../group-member/group-member.service';
 
 @Component({
   selector: 'app-chat-groupMenu-menu',
@@ -31,6 +32,7 @@ export class GroupChatMenuComponent implements OnInit{
 
   groupService = inject(GroupService)
   signalService = inject(GroupChatService)
+  groupMemberService = inject(GroupMemberService)
 
   protected readonly CountryList = CountryList;
   protected readonly CityList = CityList;
@@ -87,7 +89,7 @@ export class GroupChatMenuComponent implements OnInit{
   }
 
   async connectToGroup(idGroup: number){
-    this.groupService.addToGroup(idGroup).subscribe({
+    this.groupMemberService.addToGroup(idGroup).subscribe({
       next: async () =>{
         await this.signalService.addToGroup(idGroup)
       },
