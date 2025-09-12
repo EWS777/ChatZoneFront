@@ -64,8 +64,4 @@ export abstract class BaseChatService {
   async leaveChat(idGroup: number, isSingleChat: boolean){
     await this.hubConnection.invoke('LeaveChat', idGroup, isSingleChat)
   }
-
-  async getPersonGroupAndUsername(): Promise<{idPerson: number | null; idGroup: number | null; isSingleChat: boolean; idPartnerPerson: number | null; isSentMessage: boolean}> {
-    return await this.hubConnection.invoke('GetPersonGroupAndUsername');
-  }
 }

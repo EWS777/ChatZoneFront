@@ -49,10 +49,6 @@ export class ChatComponent implements OnInit, AfterViewInit{
   groupService = inject(GroupService)
   messageService = inject(MessageService)
 
-  idPerson: number | null = null
-  idGroup: number | null = null
-  isSingleChat: boolean | null = null
-  idPartnerPerson: number | null = null
   messages: { idSender: number, message: string, createdAt: Date}[] = [];
   currentMessage: string=''
   quickMessageList: QuickMessage[] | null = null
@@ -77,7 +73,6 @@ export class ChatComponent implements OnInit, AfterViewInit{
   groupEditable: Group = { ...this.group }
   groupMembers!: GroupMember[]
 
-  isSendQuickMessage = signal<boolean>(false)
   isOtherPersonLeft = signal<boolean>(false)
   isShowNewFinder = signal<boolean>(false)
   isDisconnect = signal<'exit' | 'skip' | null>(null)
@@ -100,14 +95,6 @@ export class ChatComponent implements OnInit, AfterViewInit{
 
   async ngOnInit(){
     await this.baseChatService.startConnect()
-
-    const {idPerson, idGroup, isSingleChat, idPartnerPerson, isSentMessage} = await this.baseChatService.getPersonGroupAndUsername()
-    this.idPerson = idPerson
-    this.idGroup = idGroup
-    this.isSingleChat = isSingleChat
-    this.idPartnerPerson = idPartnerPerson
-    this.isSendQuickMessage.set(isSentMessage)
-
 
     this.chatPersonInfo = await firstValueFrom(this.chatPersonInfoService.getChatPersonInfo())
     if (this.chatPersonInfo.idGroup === null) this.router.navigate([''])
