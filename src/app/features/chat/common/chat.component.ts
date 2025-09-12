@@ -323,7 +323,11 @@ export class ChatComponent implements OnInit, AfterViewInit{
       IdNewAdminPerson: idPerson,
       IdGroup: this.chatPersonInfo.idGroup!
     };
-    this.groupMemberService.setNewAdmin(payload).subscribe({})
+    this.groupMemberService.setNewAdmin(payload).subscribe({
+      next: () => {
+        this.isActivateSettings.set(false)
+      }
+    })
   }
 
   blockFromGroupChat(idPerson: number){
