@@ -24,7 +24,7 @@
         @if (groups.lang !== null){
           <span>{{LangList[groups.lang]}}</span>
         }
-        Online: 1234
+        Online: {{groups.userCount}}
       </div>
       <button (click)="connectToGroup(groups.idGroup!)">Go</button>
     </div>
