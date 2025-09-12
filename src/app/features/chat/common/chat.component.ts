@@ -253,6 +253,19 @@ export class ChatComponent implements OnInit, AfterViewInit{
     }
   }
 
+  deleteGroupChat(){
+
+  }
+
+  changeNewAdminAuto(){
+    if (this.group.userCount == 1){
+      //delete group
+    }
+    else {
+      //change
+    }
+  }
+
   changeIsDisconnectStatus(type: 'exit' | 'skip' | null) {
     this.isDisconnect.set(type)
   }
