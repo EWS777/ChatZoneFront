@@ -61,7 +61,8 @@ export class ChatComponent implements OnInit, AfterViewInit{
     age: null,
     lang: null,
     isAdmin: null,
-    groupName: null
+    groupName: null,
+    userCount: null
   }
   groupEditable: Group = { ...this.group }
   groupMembers!: GroupMember[]
