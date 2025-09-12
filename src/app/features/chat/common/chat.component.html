@@ -1,7 +1,7 @@
 <div class="container">
   <div class="chat-header">
     <button (click)="changeIsDisconnectStatus('exit')">Back</button>
-    @if (isSingleChat) {
+    @if (chatPersonInfo.isSingleChat) {
       <div class="chat-param">
         <span>Username: qwerty123</span>
         <span>Age: 20-25</span>
@@ -25,7 +25,7 @@
         }
       </div>
     }
-    @if (isSingleChat || (!isSingleChat && group.isAdmin)) {
+    @if (chatPersonInfo.isSingleChat || (!chatPersonInfo.isSingleChat && group.isAdmin)) {
       <button (click)="isActivateSettings.set(!isActivateSettings())">⚙️</button>
     }
 
@@ -34,7 +34,7 @@
   <div #chatContainer class="chat-messages" (scroll)="onScroll()">
     <ul>
       @for (msg of messages; track $index) {
-        <li [ngClass]="{ 'mine-message': msg.idSender === idPerson, 'another-message': msg.idSender !== idPerson }">
+        <li [ngClass]="{ 'mine-message': msg.idSender === chatPersonInfo.idPerson, 'another-message': msg.idSender !== chatPersonInfo.idPerson }">
           {{msg.message}}
         </li>
       }
@@ -42,12 +42,12 @@
   </div>
 
   <div class="chat-footer-wrapper">
-    @if (isSingleChat){
+    @if (chatPersonInfo.isSingleChat){
       <h2>SINGLE CHAT</h2>
     } @else {
       <h2>GROUP CHAT</h2>
     }
-    @if (!isSendQuickMessage()) {
+    @if (!chatPersonInfo.isSentMessage) {
       <div class="chat-quick-message">
         @for (quickMessage of quickMessageList; track quickMessage.idQuickMessage) {
           <button (click)="sendQuickMessage(quickMessage.message)">{{ quickMessage.message }}</button>
@@ -57,7 +57,7 @@
   </div>
 
   <div class="chat-footer">
-    @if (isSingleChat) {
+    @if (chatPersonInfo.isSingleChat) {
       <button (click)="changeIsDisconnectStatus('skip')">Skip</button>
     }
     <input [(ngModel)]="currentMessage" placeholder="Message"/>
@@ -73,7 +73,7 @@
   }
 
   @if (isActivateSettings()) {
-    @if (isSingleChat) {
+    @if (chatPersonInfo.isSingleChat) {
       <div class="common-information">
         <button (click)="blockPerson()">Block user</button>
         @if (isPersonBlocked()) {
@@ -84,7 +84,7 @@
         }
       </div>
     }
-    @if (!isSingleChat && group.isAdmin) {
+    @if (!chatPersonInfo.isSingleChat && group.isAdmin) {
       <div class="common-information">
         <button (click)="isActivateSettings.set(false)">Back</button>
         <button (click)="getGroupMembers()">List of users</button>
@@ -146,8 +146,8 @@
 @if(isAdminStatusInfo()){
   <div class="common-information">
     You are an admin. What action do you prefer?
-<!--    <button (click)="">Delete group</button>-->
-<!--    <button (click)="">Change admin</button>-->
+    <button (click)="deleteGroupChat()">Delete group</button>
+    <button (click)="changeNewAdminAuto()">Leave group</button>
   </div>
 }
 

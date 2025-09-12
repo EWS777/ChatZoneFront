@@ -22,6 +22,8 @@ import {MessageService} from '../messages/message.service';
 import {GetMessageRequest} from '../messages/get-message-request';
 import {firstValueFrom} from 'rxjs';
 import {BlockedGroupMemberService} from '../blocked-group-member.service';
+import {ChatPersonInfoService} from '../chat-person-info.service';
+import {ChatPersonInfo} from '../chat-person-info';
 
 @Component({
   selector: 'app-chat',
@@ -34,6 +36,7 @@ import {BlockedGroupMemberService} from '../blocked-group-member.service';
   styleUrl: './chat.component.css'
 })
 export class ChatComponent implements OnInit, AfterViewInit{
+  chatPersonInfoService = inject(ChatPersonInfoService)
   blockedGroupMemberService = inject(BlockedGroupMemberService)
   groupMemberService = inject(GroupMemberService)
   groupChatService = inject(GroupChatService)
@@ -63,6 +66,13 @@ export class ChatComponent implements OnInit, AfterViewInit{
     isAdmin: null,
     groupName: null,
     userCount: null
+  }
+  chatPersonInfo: ChatPersonInfo = {
+    idPerson: null,
+    idGroup: null,
+    isSingleChat: null,
+    idPartnerPerson: null,
+    isSentMessage: null
   }
   groupEditable: Group = { ...this.group }
   groupMembers!: GroupMember[]
@@ -98,8 +108,9 @@ export class ChatComponent implements OnInit, AfterViewInit{
     this.idPartnerPerson = idPartnerPerson
     this.isSendQuickMessage.set(isSentMessage)
 
-    if (this.idGroup === null) this.router.navigate([''])
 
+    this.chatPersonInfo = await firstValueFrom(this.chatPersonInfoService.getChatPersonInfo())
+    if (this.chatPersonInfo.idGroup === null) this.router.navigate([''])
     await this.loadPreviousMessages();
     this.scrollToBottom()
 
@@ -122,11 +133,11 @@ export class ChatComponent implements OnInit, AfterViewInit{
       })
     })
 
-    if (this.isSingleChat){
+    if (this.chatPersonInfo.isSingleChat){
       this.singleChatService.personLeftChat(() => this.isOtherPersonLeft.set(true))
     }
     else {
-      this.groupService.getGroup(this.idGroup!).subscribe({
+      this.groupService.getGroup(this.chatPersonInfo.idGroup!).subscribe({
         next: value => {
           this.group = value
           this.groupEditable = { ...value }
@@ -190,9 +201,9 @@ export class ChatComponent implements OnInit, AfterViewInit{
     const previousHeight = container.scrollHeight
 
     const messageRequest: GetMessageRequest = {
-      IdPerson: this.idPerson!,
-      IdChat: this.idGroup!,
-      IsSingleChat: this.isSingleChat!,
+      IdPerson: this.chatPersonInfo.idPerson!,
+      IdChat: this.chatPersonInfo.idGroup!,
+      IsSingleChat: this.chatPersonInfo.isSingleChat!,
       SkipMessage: this.skipMessage
     }
 
@@ -211,9 +222,9 @@ export class ChatComponent implements OnInit, AfterViewInit{
   }
 
   async sendMessage(){
-    await this.baseChatService.sendMessage(this.idGroup!, this.currentMessage, this.isSingleChat!)
+    await this.baseChatService.sendMessage(this.chatPersonInfo.idGroup!, this.currentMessage, this.chatPersonInfo.isSingleChat!)
     this.currentMessage = ''
-    this.isSendQuickMessage.set(true)
+    this.chatPersonInfo.isSentMessage = true
     requestAnimationFrame( () => {
       if (this.isUserAtBottom) {
         this.scrollToBottom();
@@ -222,13 +233,13 @@ export class ChatComponent implements OnInit, AfterViewInit{
   }
 
   async sendQuickMessage(message: string){
-    await this.baseChatService.sendMessage(this.idGroup!, message, this.isSingleChat!)
-    this.isSendQuickMessage.set(true)
+    await this.baseChatService.sendMessage(this.chatPersonInfo.idGroup!, message, this.chatPersonInfo.isSingleChat!)
+    this.chatPersonInfo.isSentMessage = true
   }
 
   async exitChat(isExit: boolean){
-    if (this.isSingleChat){
-      await this.baseChatService.leaveChat(this.idGroup!, true)
+    if (this.chatPersonInfo.isSingleChat){
+      await this.baseChatService.leaveChat(this.chatPersonInfo.idGroup!, true)
       if (isExit) await this.router.navigate([''])
       else {
         this.isDisconnect.set(null)
@@ -238,9 +249,9 @@ export class ChatComponent implements OnInit, AfterViewInit{
     }
     else {
       if (!this.group.isAdmin){
-        this.groupMemberService.deleteFromGroup(this.idGroup!).subscribe({
+        this.groupMemberService.deleteFromGroup(this.chatPersonInfo.idGroup!).subscribe({
           next: async () =>{
-            await this.baseChatService.leaveChat(this.idGroup!, false)
+            await this.baseChatService.leaveChat(this.chatPersonInfo.idGroup!, false)
             await this.router.navigate(['/'])
           },
           error: err =>{
@@ -248,8 +259,6 @@ export class ChatComponent implements OnInit, AfterViewInit{
           }
         })
       }
-
-
 
       else {
         this.isAdminStatusInfo.set(true)
@@ -275,7 +284,7 @@ export class ChatComponent implements OnInit, AfterViewInit{
   }
 
   blockPerson(){
-    this.blockedPersonService.createBlockedPerson(this.idPartnerPerson!).subscribe({
+    this.blockedPersonService.createBlockedPerson(this.chatPersonInfo.idPartnerPerson!).subscribe({
       next: () => {
         this.isPersonBlocked.set(true)
       },
@@ -298,7 +307,7 @@ export class ChatComponent implements OnInit, AfterViewInit{
   }
 
   getGroupMembers(){
-    this.groupMemberService.getUsers(this.idGroup!).subscribe({
+    this.groupMemberService.getUsers(this.chatPersonInfo.idGroup!).subscribe({
       next: value => {
         this.groupMembers = value
         this.isGroupMember.set(true)
@@ -312,7 +321,7 @@ export class ChatComponent implements OnInit, AfterViewInit{
   setNewAdmin(idPerson: number){
     const payload = {
       IdNewAdminPerson: idPerson,
-      IdGroup: this.idGroup!
+      IdGroup: this.chatPersonInfo.idGroup!
     };
     this.groupMemberService.setNewAdmin(payload).subscribe({})
   }
@@ -320,7 +329,7 @@ export class ChatComponent implements OnInit, AfterViewInit{
   blockFromGroupChat(idPerson: number){
     const payload = {
       IdBlockedPerson: idPerson,
-      IdChat: this.idGroup!
+      IdChat: this.chatPersonInfo.idGroup!
     };
     this.blockedGroupMemberService.blockGroupMember(payload).subscribe({
       next: () => {
