@@ -32,4 +32,10 @@ export class GroupService {
       withCredentials: true
     })
   }
+
+  deleteGroup(idGroup: number){
+    return this.http.delete(`${this.url}/delete?idGroup=${idGroup}`,{
+      withCredentials: true
+    })
+  }
 }

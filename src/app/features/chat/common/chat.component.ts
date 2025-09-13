@@ -253,7 +253,14 @@ export class ChatComponent implements OnInit, AfterViewInit{
   }
 
   deleteGroupChat(){
-
+    this.groupService.deleteGroup(this.group.idGroup!).subscribe({
+      next: () => {
+        this.router.navigate(['/'])
+      },
+      error: err => {
+        console.log('Error', err)
+      }
+    })
   }
 
   changeIsDisconnectStatus(type: 'exit' | 'skip' | null) {
