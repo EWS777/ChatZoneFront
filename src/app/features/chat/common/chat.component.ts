@@ -238,7 +238,6 @@ export class ChatComponent implements OnInit, AfterViewInit{
       if (!this.group.isAdmin){
         this.groupMemberService.deleteFromGroup(this.chatPersonInfo.idGroup!).subscribe({
           next: async () =>{
-            await this.baseChatService.leaveChat(this.chatPersonInfo.idGroup!, false)
             await this.router.navigate(['/'])
           },
           error: err =>{
