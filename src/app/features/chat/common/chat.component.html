@@ -151,6 +151,13 @@
   </div>
 }
 
+@if (isDeleteGroupStatus()) {
+  <div class="common-information">
+    The group was deleted!
+    <button (click)="router.navigate(['/'])">Okay</button>
+  </div>
+}
+
 @if (isOtherPersonLeft()) {
   <div class="common-information">
     <h2>Person has disconnected!</h2>

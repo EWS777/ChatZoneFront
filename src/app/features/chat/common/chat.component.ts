@@ -80,6 +80,7 @@ export class ChatComponent implements OnInit, AfterViewInit{
   isPersonBlocked = signal<boolean>(false)
   isGroupMember = signal<boolean>(false)
   isAdminStatusInfo = signal<boolean>(false)
+  isDeleteGroupStatus = signal<boolean>(false)
 
   filter: FindPerson = {
     connectionId: '',
@@ -137,6 +138,12 @@ export class ChatComponent implements OnInit, AfterViewInit{
       this.groupChatService.setNewAdmin().subscribe(isAdmin => {
         this.isGroupMember.set(false)
         this.group.isAdmin = isAdmin
+      })
+
+      this.groupChatService.notifyDeleteGroup().subscribe({
+        next: () => {
+          this.isDeleteGroupStatus.set(true)
+        }
       })
 
       this.groupChatService.blockedGroupMember().subscribe({

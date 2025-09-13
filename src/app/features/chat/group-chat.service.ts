@@ -8,6 +8,7 @@ import {Observable, Subject} from 'rxjs';
 export class GroupChatService extends BaseChatService{
   private adminSubject = new Subject<boolean>();
   private blockedMember = new Subject();
+  private deleteGroup = new Subject();
 
   constructor() {
     super();
@@ -18,6 +19,10 @@ export class GroupChatService extends BaseChatService{
 
     this.hubConnection.on('BlockedIntoGroupChat', ()=>{
       this.blockedMember.next(()=>{})
+    })
+
+    this.hubConnection.on('NotifyDeleteGroup', ()=>{
+      this.deleteGroup.next(()=>{})
     })
   }
   async addToGroup(groupName: number) {
@@ -30,5 +35,9 @@ export class GroupChatService extends BaseChatService{
 
   blockedGroupMember(){
     return this.blockedMember.asObservable();
+  }
+
+  notifyDeleteGroup(){
+    return this.deleteGroup.asObservable();
   }
 }
