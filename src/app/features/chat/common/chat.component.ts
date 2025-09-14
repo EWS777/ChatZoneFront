@@ -60,7 +60,6 @@ export class ChatComponent implements OnInit, AfterViewInit{
     age: null,
     lang: null,
     isAdmin: null,
-    groupName: null,
     userCount: null
   }
   chatPersonInfo: ChatPersonInfo = {
