@@ -76,12 +76,6 @@
     @if (chatPersonInfo.isSingleChat) {
       <div class="common-information">
         <button (click)="blockPerson()">Block user</button>
-        @if (isPersonBlocked()) {
-          <h2><span>Person has blocked!</span></h2>
-          Do you want to find a new person?
-          <button (click)="findNewPerson()">Yes</button>
-          <button (click)="router.navigate(['/'])">No</button>
-        }
       </div>
     }
     @if (!chatPersonInfo.isSingleChat && group.isAdmin) {
@@ -148,6 +142,13 @@
     You are an admin. What action do you prefer?
     <button (click)="deleteGroupChat()">Delete group</button>
     <button (click)="getGroupMembers()">Set another admin</button>
+  </div>
+}
+
+@if (isPersonBlocked()) {
+  <div class="common-information">
+    <h2><span>Person has blocked!</span></h2>
+    <button (click)="isPersonBlocked.set(false)">Ok</button>
   </div>
 }
 

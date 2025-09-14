@@ -293,6 +293,7 @@ export class ChatComponent implements OnInit, AfterViewInit{
     this.blockedPersonService.createBlockedPerson(this.chatPersonInfo.idPartnerPerson!).subscribe({
       next: () => {
         this.isPersonBlocked.set(true)
+        this.isActivateSettings.set(false)
       },
       error: err => {
         console.error('Error', err)
