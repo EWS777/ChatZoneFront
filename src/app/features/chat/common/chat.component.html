@@ -84,11 +84,11 @@
         <button (click)="getGroupMembers()">List of users</button>
         <div class="update-group-params">
           <b>Change group params</b>
-          <br>Title:  <input [(ngModel)]="groupEditable.title">
+          <br>Title:  <input [(ngModel)]="group.title">
 
           <div class="form-group">
             <label for="country">Country:</label>
-            <select id="country" [(ngModel)]="groupEditable.country">
+            <select id="country" [(ngModel)]="group.country">
               @for (country of countryList; track country.value) {
                 <option [ngValue]="country.value">{{ country.label }}</option>
               }
@@ -97,7 +97,7 @@
 
           <div class="form-group">
             <label for="city">City:</label>
-            <select id="city" [(ngModel)]="groupEditable.city">
+            <select id="city" [(ngModel)]="group.city">
               @for (city of cityList; track city.value) {
                 <option [ngValue]="city.value">{{ city.label }}</option>
               }
@@ -106,7 +106,7 @@
 
           <div class="form-group">
             <label for="age">Age:</label>
-            <select id="age" [(ngModel)]="groupEditable.age">
+            <select id="age" [(ngModel)]="group.age">
               @for (age of ageList; track age.value) {
                 <option [ngValue]="age.value">{{ age.label }}</option>
               }
@@ -115,7 +115,7 @@
 
           <div class="form-group">
             <label for="language">Language</label>
-            <select id="language" [(ngModel)]="groupEditable.lang">
+            <select id="language" [(ngModel)]="group.lang">
               @for (gender of langList; track gender.value) {
                 <option [ngValue]="gender.value">{{ gender.label }}</option>
               }

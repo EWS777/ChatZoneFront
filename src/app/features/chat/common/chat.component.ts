@@ -128,7 +128,6 @@ export class ChatComponent implements OnInit, AfterViewInit{
       this.groupService.getGroup(this.chatPersonInfo.idGroup!).subscribe({
         next: value => {
           this.group = value
-          this.groupEditable = { ...value }
         },
         error: err => {
           console.log('Error', err)
@@ -301,10 +300,12 @@ export class ChatComponent implements OnInit, AfterViewInit{
   }
 
   updateGroupData(){
-    this.groupService.updateGroup(this.groupEditable).subscribe({
+    this.groupService.updateGroup(this.group).subscribe({
       next: value=>{
+        const isAdmin = this.group.isAdmin
+
         this.group = value
-        this.groupEditable = { ...value }
+        this.group.isAdmin = isAdmin
       },
       error: err => {
         console.log('Error', err)
