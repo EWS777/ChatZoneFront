@@ -77,6 +77,11 @@ export class GroupChatMenuComponent implements OnInit{
     })
   }
 
+  clearBlockState(){
+    this.isGroupMemberBlocked = false
+    window.history.replaceState({...window.history.state, isGroupMemberBlocked: false}, '')
+  }
+
   async createGroup(){
     this.groupService.createGroup(this.group).subscribe({
       next: value =>{
