@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {BaseChatService} from './abstract/base-chat.service';
 import {Observable, Subject} from 'rxjs';
+import {Group} from './group';
 
 @Injectable({
   providedIn: 'root'
@@ -9,6 +10,7 @@ export class GroupChatService extends BaseChatService{
   private adminSubject = new Subject<boolean>();
   private blockedMember = new Subject();
   private deleteGroup = new Subject();
+  private updateGroupChatParam = new Subject<Group>();
 
   constructor() {
     super();
@@ -23,6 +25,10 @@ export class GroupChatService extends BaseChatService{
 
     this.hubConnection.on('NotifyDeleteGroup', ()=>{
       this.deleteGroup.next(()=>{})
+    })
+
+    this.hubConnection.on('UpdateGroupChatParam', (result: Group) =>{
+      this.updateGroupChatParam.next(result)
     })
   }
   async addToGroup(groupName: number) {
@@ -39,5 +45,9 @@ export class GroupChatService extends BaseChatService{
 
   notifyDeleteGroup(){
     return this.deleteGroup.asObservable();
+  }
+
+  updateGroupChat(): Observable<Group>{
+    return this.updateGroupChatParam.asObservable();
   }
 }

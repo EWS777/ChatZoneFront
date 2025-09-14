@@ -152,6 +152,16 @@ export class ChatComponent implements OnInit, AfterViewInit{
           })
         }
       })
+
+      this.groupChatService.updateGroupChat().subscribe({
+        next: value => {
+          this.group.title = value.title
+          this.group.country = value.country
+          this.group.city = value.city
+          this.group.age = value.age
+          this.group.lang = value.lang
+        }
+      })
     }
   }
 
