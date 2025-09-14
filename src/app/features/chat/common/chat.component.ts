@@ -332,6 +332,8 @@ export class ChatComponent implements OnInit, AfterViewInit{
     this.groupMemberService.setNewAdmin(payload).subscribe({
       next: () => {
         this.isActivateSettings.set(false)
+        this.isAdminStatusInfo.set(false)
+        this.isDisconnect.set(null)
       }
     })
   }
