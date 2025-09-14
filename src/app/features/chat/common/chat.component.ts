@@ -69,7 +69,6 @@ export class ChatComponent implements OnInit, AfterViewInit{
     idPartnerPerson: null,
     isSentMessage: null
   }
-  groupEditable: Group = { ...this.group }
   groupMembers!: GroupMember[]
 
   isOtherPersonLeft = signal<boolean>(false)
