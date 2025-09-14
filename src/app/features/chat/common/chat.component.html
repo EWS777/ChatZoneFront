@@ -151,6 +151,13 @@
   </div>
 }
 
+@if(isNewAdminNotification() && group.isAdmin){
+  <div class="common-information">
+    You are a new admin of this group!
+    <button (click)="isNewAdminNotification.set(false)">Great!</button>
+  </div>
+}
+
 @if (isDeleteGroupStatus()) {
   <div class="common-information">
     The group was deleted!
