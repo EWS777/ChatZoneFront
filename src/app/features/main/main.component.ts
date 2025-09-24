@@ -1,4 +1,4 @@
-import {Component, inject, OnInit, signal} from '@angular/core';
+import {Component, HostListener, inject, OnInit, signal} from '@angular/core';
 import {ProfileService} from '../profile/profile.service';
 import {Router} from '@angular/router';
 import {AuthorizationService} from '../identity/authorization/authorization.service';
@@ -13,6 +13,7 @@ import {FindPerson} from './find-person';
 import {MainService} from './main.service';
 import {FilterService} from '../profile/filter/filter.service';
 import {SingleChatService} from '../chat/single-chat.service';
+import {environment} from '../../../environments/enviroment';
 
 @Component({
   selector: 'app-main',
@@ -25,6 +26,17 @@ import {SingleChatService} from '../chat/single-chat.service';
   styleUrl: './main.component.css'
 })
 export class MainComponent implements OnInit{
+  isStartFindPerson = signal<boolean>(false)
+
+  @HostListener('window:beforeunload', ['$event'])
+  unloadHandler() {
+    if (this.isStartFindPerson()){
+      const url = environment.cancelFindPersonAPI
+      const data = JSON.stringify("")
+      navigator.sendBeacon(url, data);
+    }
+  }
+
   router = inject(Router)
   authService = inject(AuthorizationService)
   signalService = inject(SingleChatService)
@@ -126,7 +138,9 @@ export class MainComponent implements OnInit{
     this.isFindPerson.set(true)
     this.isFilterActivated.set(false)
     this.mainService.findPerson(this.filter).subscribe({
-      next: () => { },
+      next: () => {
+        this.isStartFindPerson.set(true)
+      },
       error: err => {
         console.error('Error', err)
       }
