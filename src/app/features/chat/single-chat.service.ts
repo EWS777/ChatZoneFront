@@ -15,4 +15,8 @@ export class SingleChatService extends BaseChatService{
       result()
     })
   }
+
+  offPersonLeftChat(){
+    this.hubConnection.off('LeftChat')
+  }
 }

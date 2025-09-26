@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ElementRef, inject, OnInit, signal, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, inject, OnDestroy, OnInit, signal, ViewChild} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {NgClass} from '@angular/common';
 import {QuickMessageService} from '../../profile/quick-messages/quick-message.service';
@@ -35,7 +35,7 @@ import {ChatPersonInfo} from '../chat-person-info';
   standalone: true,
   styleUrl: './chat.component.css'
 })
-export class ChatComponent implements OnInit, AfterViewInit{
+export class ChatComponent implements OnInit, AfterViewInit, OnDestroy{
   chatPersonInfoService = inject(ChatPersonInfoService)
   blockedGroupMemberService = inject(BlockedGroupMemberService)
   groupMemberService = inject(GroupMemberService)
@@ -163,6 +163,10 @@ export class ChatComponent implements OnInit, AfterViewInit{
         }
       })
     }
+  }
+
+  ngOnDestroy(): void {
+    this.singleChatService.offPersonLeftChat()
   }
 
   isLoadingHistory: boolean = false
