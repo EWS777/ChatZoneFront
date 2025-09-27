@@ -1,6 +1,5 @@
 import {Component, inject, OnInit, signal} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {GroupService} from '../group.service';
 import {Group} from '../group';
 import {CountryList} from '../../profile/filter/enums/country-list';
 import {CityList} from '../../profile/filter/enums/city-list';
@@ -9,6 +8,7 @@ import {LangList} from '../../profile/filter/enums/lang-list';
 import {GroupChatService} from '../group-chat.service';
 import {Router} from '@angular/router';
 import {GroupMemberService} from '../group-member/group-member.service';
+import {ChatService} from '../chat.service';
 
 @Component({
   selector: 'app-chat-groupMenu-menu',
@@ -30,7 +30,7 @@ export class GroupChatMenuComponent implements OnInit{
     this.isGroupMemberBlocked = state?.['isGroupMemberBlocked']
   }
 
-  groupService = inject(GroupService)
+  chatService = inject(ChatService)
   signalService = inject(GroupChatService)
   groupMemberService = inject(GroupMemberService)
 
@@ -69,7 +69,7 @@ export class GroupChatMenuComponent implements OnInit{
 
 
   ngOnInit(): void {
-    this.groupService.getGroups().subscribe({
+    this.chatService.getGroups().subscribe({
       next: value => {
         this.groupList = value
       }
@@ -82,7 +82,7 @@ export class GroupChatMenuComponent implements OnInit{
   }
 
   async createGroup(){
-    this.groupService.createGroup(this.group).subscribe({
+    this.chatService.createGroup(this.group).subscribe({
       next: value =>{
         console.log('IdGroup', value)
         this.signalService.addToGroup(value)

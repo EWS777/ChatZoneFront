@@ -1,13 +1,20 @@
 import {inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
+import {ChatPersonInfo} from './chat-person-info';
 import {Group} from './group';
 
 @Injectable({
   providedIn: 'root'
 })
-export class GroupService {
+export class ChatService {
   http = inject(HttpClient)
   url = 'https://localhost:7212/Chat'
+
+  getChatPersonInfo(){
+    return this.http.get<ChatPersonInfo>(`${this.url}`, {
+      withCredentials: true
+    })
+  }
 
   createGroup(request: Group){
     return this.http.post<number>(`${this.url}/create`, request, {

@@ -9,7 +9,6 @@ import {MainService} from '../../main/main.service';
 import {BlockedUserService} from '../../profile/blocked-users/blocked-user.service';
 import {SingleChatService} from '../single-chat.service';
 import {BaseChatService} from '../abstract/base-chat.service';
-import {GroupService} from '../group.service';
 import {Group} from '../group';
 import {CountryList} from '../../profile/filter/enums/country-list';
 import {CityList} from '../../profile/filter/enums/city-list';
@@ -22,8 +21,8 @@ import {MessageService} from '../messages/message.service';
 import {GetMessageRequest} from '../messages/get-message-request';
 import {firstValueFrom} from 'rxjs';
 import {BlockedGroupMemberService} from '../blocked-group-member.service';
-import {ChatPersonInfoService} from '../chat-person-info.service';
 import {ChatPersonInfo} from '../chat-person-info';
+import {ChatService} from '../chat.service';
 
 @Component({
   selector: 'app-chat',
@@ -36,7 +35,7 @@ import {ChatPersonInfo} from '../chat-person-info';
   styleUrl: './chat.component.css'
 })
 export class ChatComponent implements OnInit, AfterViewInit, OnDestroy{
-  chatPersonInfoService = inject(ChatPersonInfoService)
+  chatService = inject(ChatService)
   blockedGroupMemberService = inject(BlockedGroupMemberService)
   groupMemberService = inject(GroupMemberService)
   groupChatService = inject(GroupChatService)
@@ -46,7 +45,6 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy{
   private quickMessageService = inject(QuickMessageService)
   private blockedPersonService = inject(BlockedUserService)
   router = inject(Router)
-  groupService = inject(GroupService)
   messageService = inject(MessageService)
 
   messages: { idSender: number, message: string, createdAt: Date}[] = [];
@@ -96,7 +94,7 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy{
   async ngOnInit(){
     await this.baseChatService.startConnect()
 
-    this.chatPersonInfo = await firstValueFrom(this.chatPersonInfoService.getChatPersonInfo())
+    this.chatPersonInfo = await firstValueFrom(this.chatService.getChatPersonInfo())
     if (this.chatPersonInfo.idGroup === null) this.router.navigate([''])
     await this.loadPreviousMessages();
     this.scrollToBottom()
@@ -124,7 +122,7 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy{
       this.singleChatService.personLeftChat(() => this.isOtherPersonLeft.set(true))
     }
     else {
-      this.groupService.getGroup(this.chatPersonInfo.idGroup!).subscribe({
+      this.chatService.getGroup(this.chatPersonInfo.idGroup!).subscribe({
         next: value => {
           this.group = value
         },
@@ -273,7 +271,7 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy{
   }
 
   deleteGroupChat(){
-    this.groupService.deleteGroup(this.group.idGroup!).subscribe({
+    this.chatService.deleteGroup(this.group.idGroup!).subscribe({
       next: () => {
         this.router.navigate(['/'])
       },
@@ -313,7 +311,7 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy{
   }
 
   updateGroupData(){
-    this.groupService.updateGroup(this.group).subscribe({
+    this.chatService.updateGroup(this.group).subscribe({
       next: value=>{
         const isAdmin = this.group.isAdmin
 
