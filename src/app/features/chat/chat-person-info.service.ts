@@ -7,7 +7,7 @@ import {ChatPersonInfo} from './chat-person-info';
 })
 export class ChatPersonInfoService {
   http = inject(HttpClient)
-  url = 'https://localhost:7212/ChatInfo'
+  url = 'https://localhost:7212/Chat'
 
   getChatPersonInfo(){
     return this.http.get<ChatPersonInfo>(`${this.url}`, {

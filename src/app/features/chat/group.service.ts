@@ -7,7 +7,7 @@ import {Group} from './group';
 })
 export class GroupService {
   http = inject(HttpClient)
-  url = 'https://localhost:7212/GroupChat'
+  url = 'https://localhost:7212/Chat'
 
   createGroup(request: Group){
     return this.http.post<number>(`${this.url}/create`, request, {
