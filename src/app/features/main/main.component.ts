@@ -157,7 +157,11 @@ export class MainComponent implements OnInit{
 
   leavePreviousChat(){
     if(this.activeChat.IsSingleChat === true){
-      //TODO add REST API leave single chat
+      this.chatService.finishSingleChat().subscribe({
+        next: () => {
+          this.startFindPerson()
+        }
+      })
     }
     else{
       //TODO add REST API leave group chat
