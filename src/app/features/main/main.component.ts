@@ -14,6 +14,7 @@ import {MainService} from './main.service';
 import {FilterService} from '../profile/filter/filter.service';
 import {SingleChatService} from '../chat/single-chat.service';
 import {environment} from '../../../environments/enviroment';
+import {ChatService} from '../chat/chat.service';
 
 @Component({
   selector: 'app-main',
@@ -43,11 +44,13 @@ export class MainComponent implements OnInit{
   mainService = inject(MainService)
   profile = inject(ProfileService)
   filterService = inject(FilterService)
+  chatService = inject(ChatService)
 
   username: string | null = null;
   isFindByProfile: boolean = false;
   isFilterActivated = signal<boolean>(false)
   isFindPerson = signal<boolean>(false)
+  isAnyActiveChat = signal<boolean>(false)
 
   filter: FindPerson = {
     connectionId: '',
@@ -59,6 +62,11 @@ export class MainComponent implements OnInit{
     language: null,
     partnerGender: null,
     isSearchAgain: false
+  }
+
+  activeChat!: {
+    IdChat: number | null
+    IsSingleChat: boolean | null
   }
 
   countryList = Object.keys(CountryList)
@@ -134,6 +142,29 @@ export class MainComponent implements OnInit{
   }
 
   findPerson(){
+    this.chatService.getActiveChat().subscribe({
+      next: value => {
+        this.activeChat = value
+        if(value.IsSingleChat!==null){
+          this.isAnyActiveChat.set(true)
+        }
+        else {
+          this.startFindPerson()
+        }
+      }
+    })
+  }
+
+  leavePreviousChat(){
+    if(this.activeChat.IsSingleChat === true){
+      //TODO add REST API leave single chat
+    }
+    else{
+      //TODO add REST API leave group chat
+    }
+  }
+
+  startFindPerson(){
     this.filter.connectionId = this.signalService.connectionId
     this.isFindPerson.set(true)
     this.isFilterActivated.set(false)

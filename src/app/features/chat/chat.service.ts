@@ -10,6 +10,12 @@ export class ChatService {
   http = inject(HttpClient)
   url = 'https://localhost:7212/Chat'
 
+  getActiveChat(){
+    return this.http.get<{IdChat: number | null, IsSingleChat: boolean | null}>(`${this.url}/active-chat`,{
+      withCredentials: true
+    })
+  }
+
   getChatPersonInfo(){
     return this.http.get<ChatPersonInfo>(`${this.url}`, {
       withCredentials: true
