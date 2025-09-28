@@ -145,7 +145,7 @@ export class MainComponent implements OnInit{
     this.chatService.getActiveChat().subscribe({
       next: value => {
         this.activeChat = value
-        if(value.IsSingleChat!==null){
+        if(value.isSingleChat!==null){
           this.isAnyActiveChat.set(true)
         }
         else {

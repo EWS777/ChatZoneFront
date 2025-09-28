@@ -11,7 +11,7 @@ export class ChatService {
   url = 'https://localhost:7212/Chat'
 
   getActiveChat(){
-    return this.http.get<{IdChat: number | null, IsSingleChat: boolean | null}>(`${this.url}/active-chat`,{
+    return this.http.get<{idChat: number | null, isSingleChat: boolean | null}>(`${this.url}/active-chat`,{
       withCredentials: true
     })
   }
