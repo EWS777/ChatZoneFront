@@ -51,10 +51,4 @@ export class ChatService {
       withCredentials: true
     })
   }
-
-  finishSingleChat(){
-    return this.http.put(`${this.url}/finish`,{}, {
-      withCredentials: true
-    })
-  }
 }

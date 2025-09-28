@@ -64,11 +64,6 @@ export class MainComponent implements OnInit{
     isSearchAgain: false
   }
 
-  activeChat!: {
-    IdChat: number | null
-    IsSingleChat: boolean | null
-  }
-
   countryList = Object.keys(CountryList)
     .filter(k => isNaN(Number(k)))
     .map(name => ({ label: name, value: (CountryList as any)[name] as number }));
@@ -144,7 +139,6 @@ export class MainComponent implements OnInit{
   findPerson(){
     this.chatService.getActiveChat().subscribe({
       next: value => {
-        this.activeChat = value
         if(value.isSingleChat!==null){
           this.isAnyActiveChat.set(true)
         }
