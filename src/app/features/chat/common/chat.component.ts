@@ -244,13 +244,16 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy{
 
   async exitChat(isExit: boolean){
     if (this.chatPersonInfo.isSingleChat){
-      await this.baseChatService.leaveChat(this.chatPersonInfo.idGroup!, true)
-      if (isExit) await this.router.navigate([''])
-      else {
-        this.isDisconnect.set(null)
-        this.isShowNewFinder.set(true)
-        this.findNewPerson()
-      }
+      this.chatService.finishSingleChat(this.chatPersonInfo.idGroup!).subscribe({
+        next: () => {
+          if (isExit) this.router.navigate([''])
+          else {
+            this.isDisconnect.set(null)
+            this.isShowNewFinder.set(true)
+            this.findNewPerson()
+          }
+        }
+      })
     }
     else {
       if (!this.group.isAdmin){

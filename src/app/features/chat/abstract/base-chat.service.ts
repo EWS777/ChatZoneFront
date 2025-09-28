@@ -60,8 +60,4 @@ export abstract class BaseChatService {
   receiveMessage(): Observable<{ idSender: number, message: string, createdAt: Date}>{
     return this.messageSubject.asObservable();
   }
-
-  async leaveChat(idGroup: number, isSingleChat: boolean){
-    await this.hubConnection.invoke('LeaveChat', idGroup, isSingleChat)
-  }
 }

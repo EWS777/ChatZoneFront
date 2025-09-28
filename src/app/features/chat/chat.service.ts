@@ -51,4 +51,10 @@ export class ChatService {
       withCredentials: true
     })
   }
+
+  finishSingleChat(idGroup: number){
+    return this.http.put(`${this.url}/finish?idChat=${idGroup}`,{},{
+      withCredentials: true
+    })
+  }
 }
