@@ -50,6 +50,7 @@ export class GroupChatMenuComponent implements OnInit{
     userCount: null
   }
   isCreateGroup = signal<boolean>(false)
+  isAnyActiveChat = signal<boolean>(false)
 
   countryList = Object.keys(CountryList)
     .filter(k => isNaN(Number(k)))
@@ -82,24 +83,41 @@ export class GroupChatMenuComponent implements OnInit{
   }
 
   async createGroup(){
-    this.chatService.createGroup(this.group).subscribe({
-      next: value =>{
-        console.log('IdGroup', value)
-        this.signalService.addToGroup(value)
-      },
-      error: err => {
-        console.error('Error', err)
+    this.chatService.getActiveChat().subscribe({
+      next: value => {
+        if (value.isSingleChat!==null){
+          this.isAnyActiveChat.set(true)
+        }
+        else {
+          this.chatService.createGroup(this.group).subscribe({
+            next: value =>{
+              this.signalService.addToGroup(value)
+            },
+            error: err => {
+              console.error('Error', err)
+            }
+          })
+        }
       }
     })
   }
 
   async connectToGroup(idGroup: number){
-    this.groupMemberService.addToGroup(idGroup).subscribe({
-      next: async () =>{
-        await this.signalService.addToGroup(idGroup)
-      },
-      error: err => {
-        console.log('Error', err)
+    this.chatService.getActiveChat().subscribe({
+      next: value => {
+        if (value.isSingleChat!==null){
+          this.isAnyActiveChat.set(true)
+        }
+        else {
+          this.groupMemberService.addToGroup(idGroup).subscribe({
+            next: async () =>{
+              await this.signalService.addToGroup(idGroup)
+            },
+            error: err => {
+              console.log('Error', err)
+            }
+          })
+        }
       }
     })
   }

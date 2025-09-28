@@ -82,3 +82,10 @@
     <button (click)="clearBlockState()">Ok</button>
   </div>
 }
+
+@if (isAnyActiveChat()){
+  <div class="common-information">
+    You have an active chat.
+    <button (click)="router.navigate(['/chat'])">Come back</button>
+  </div>
+}
