@@ -26,6 +26,7 @@
       }
       @else {
         <form class="login-form" [formGroup]="registrationForm" (ngSubmit)="onRegistrationSubmit()">
+          <div>{{commonError}}</div>
           <label class="auth-labels">
             Email
             <input formControlName = "email" class="auth-inputs" type="text" placeholder="example123">
@@ -36,6 +37,9 @@
               @if(registrationForm.controls.email.errors?.["email"]){
                 <small>Email is not valid</small>
               }
+            }
+            @for (err of registrationForm.controls.email.errors?.['backend']; track err){
+              <small>{{err}}</small>
             }
           </label>
 
@@ -50,6 +54,9 @@
                 <small>Username min length is 8</small>
               }
             }
+            @for (err of registrationForm.controls.username.errors?.['backend']; track err){
+              <small>{{err}}</small>
+            }
           </label>
 
           <label class="auth-labels">
@@ -62,6 +69,9 @@
               @if(registrationForm.controls.password.errors?.["minLength"]){
                 <small>password min length is 8</small>
               }
+            }
+            @for (err of registrationForm.controls.password.errors?.['backend']; track err){
+              <small>{{err}}</small>
             }
           </label>
 
@@ -86,8 +96,4 @@
     Proszę podtwierdzić email żeby aktywować konto. Link został wysłany mailowo
     <a [routerLink]="['/']">Przejdź do strony głównej</a>
   }
-
-
-
-
 </div>

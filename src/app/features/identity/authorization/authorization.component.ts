@@ -20,6 +20,7 @@ export class AuthorizationComponent{
 
   isLogin = signal<boolean>(true)
   isConfirmEmailPage = signal<boolean>(false)
+  commonError: string = ''
 
   loginForm = new FormGroup({
     usernameOrEmail: new FormControl(null, {validators: [Validators.required, Validators.minLength(8)]}),
@@ -67,7 +68,19 @@ export class AuthorizationComponent{
         this.isConfirmEmailPage.set(true)
       },
       error: (err) => {
-        console.error('Ошибка входа:', err);
+        if(err.status === 400 && err.error && err.error.errors){
+          const errors = err.error.errors;
+
+          Object.keys(errors).forEach(field => {
+            const control = this.registrationForm.get(field.toLowerCase());
+            if (control) {
+              control.setErrors({ backend: errors[field] });
+            }
+          });
+        }
+        else{
+          this.commonError = err.error.title || 'Unhandled exception. To repair'
+        }
       }
     });
   }
