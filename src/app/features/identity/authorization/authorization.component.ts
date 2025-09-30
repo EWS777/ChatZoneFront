@@ -28,10 +28,24 @@ export class AuthorizationComponent{
   })
 
   registrationForm = new FormGroup({
-    username: new FormControl(null, {validators: [Validators.required, Validators.minLength(8)]}),
-    email: new FormControl(null, {validators: [Validators.required, Validators.email]}),
-    password: new FormControl(null, {validators: [Validators.required, Validators.minLength(8)]}),
-    confirmedPassword: new FormControl(null, {validators: [Validators.required, Validators.minLength(8)]})
+    username: new FormControl(null, {validators: [
+      Validators.required,
+      Validators.minLength(8),
+      Validators.maxLength(30),
+      Validators.pattern(/^[^@]*$/)]}),
+    email: new FormControl(null, {validators: [
+      Validators.required,
+      Validators.email,
+      Validators.minLength(5),
+      Validators.maxLength(254)]}),
+    password: new FormControl(null, {validators: [
+      Validators.required,
+      Validators.minLength(8),
+      Validators.maxLength(64)]}),
+    confirmedPassword: new FormControl(null, {validators: [
+      Validators.required,
+      Validators.minLength(8),
+      Validators.maxLength(64)]})
   })
 
   onLoginSubmit(){
