@@ -1,5 +1,5 @@
 import {Component, inject, OnInit, signal} from '@angular/core';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {Group} from '../group';
 import {CountryList} from '../../profile/filter/enums/country-list';
 import {CityList} from '../../profile/filter/enums/city-list';
@@ -51,6 +51,10 @@ export class GroupChatMenuComponent implements OnInit{
   }
   isCreateGroup = signal<boolean>(false)
   isAnyActiveChat = signal<boolean>(false)
+  commonError: string = ''
+  createGroupForm = new FormGroup({
+    title: new FormControl(null)
+  })
 
   countryList = Object.keys(CountryList)
     .filter(k => isNaN(Number(k)))
@@ -83,6 +87,7 @@ export class GroupChatMenuComponent implements OnInit{
   }
 
   async createGroup(){
+    this.commonError = ''
     this.chatService.getActiveChat().subscribe({
       next: value => {
         if (value.isSingleChat!==null){
@@ -93,8 +98,21 @@ export class GroupChatMenuComponent implements OnInit{
             next: value =>{
               this.signalService.addToGroup(value)
             },
-            error: err => {
-              console.error('Error', err)
+            error: (err) => {
+              if(err.status === 400 && err.error && err.error.errors){
+                const errors = err.error.errors;
+
+                Object.keys(errors).forEach(key => {
+                  const control = this.createGroupForm.get(key.charAt(0).toLowerCase() + key.slice(1))
+                  if (control) {
+                    control.setErrors({ backend: errors[key] });
+                    control.markAsTouched()
+                  }
+                });
+              }
+              else{
+                this.commonError = err.error.title || 'Unhandled exception. To repair'
+              }
             }
           })
         }

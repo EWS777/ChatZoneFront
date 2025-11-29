@@ -1,7 +1,7 @@
 import {Component, inject, OnInit, signal} from '@angular/core';
 import {ActivatedRoute, RouterLink} from '@angular/router';
 import {ResetPassword} from './resetPassword';
-import {FormsModule} from '@angular/forms';
+import {FormControl, FormGroup, FormsModule} from '@angular/forms';
 import {ChangePasswordService} from './change-password.service';
 
 @Component({
@@ -17,6 +17,12 @@ import {ChangePasswordService} from './change-password.service';
 export class ChangeResetPasswordComponent implements OnInit {
   route = inject(ActivatedRoute)
   service = inject(ChangePasswordService)
+  commonError: string = ''
+
+  resetPasswordForm = new FormGroup({
+    email: new FormControl(null),
+    password: new FormControl(null)
+  })
 
   resetPassword: ResetPassword = {
     token: '',
@@ -31,12 +37,26 @@ export class ChangeResetPasswordComponent implements OnInit {
   }
 
   update(){
+    this.commonError = ''
     this.service.resetPassword(this.resetPassword).subscribe({
       next: () => {
         this.isPasswordChanged.set(true)
       },
-      error: err => {
-        console.error('Error is exists!', err)
+      error: (err) => {
+        if(err.status === 400 && err.error && err.error.errors){
+          const errors = err.error.errors;
+
+          Object.keys(errors).forEach(key => {
+            const control = this.resetPasswordForm.get(key.charAt(0).toLowerCase() + key.slice(1))
+            if (control) {
+              control.setErrors({ backend: errors[key] });
+              control.markAsTouched()
+            }
+          });
+        }
+        else{
+          this.commonError = err.error.title || 'Unhandled exception. To repair'
+        }
       }
     })
   }

@@ -10,14 +10,27 @@
 
       @if(isLogin()){
         <form class="login-form" [formGroup]="loginForm" (ngSubmit)="onLoginSubmit()">
+          @if (commonErrorLogin) {
+            <div> {{ commonErrorLogin }} </div>
+          }
           <label class="login-labels">
             Username/Email
             <input formControlName = "usernameOrEmail" class="login-inputs" type="text" placeholder="example123">
+            @if (loginForm.controls.usernameOrEmail.errors?.['backend']; as backendErrors) {
+              @for (err of backendErrors; track err) {
+                <small>{{ err }}</small>
+              }
+            }
           </label>
 
           <label class="login-labels">
             Password
             <input formControlName = "password" class="login-inputs" type="text" placeholder="example123">
+            @if (loginForm.controls.password.errors?.['backend']; as backendErrors) {
+              @for (err of backendErrors; track err) {
+                <small>{{ err }}</small>
+              }
+            }
           </label>
 
           <button type="submit">Login</button>
@@ -26,56 +39,64 @@
       }
       @else {
         <form class="login-form" [formGroup]="registrationForm" (ngSubmit)="onRegistrationSubmit()">
-          <div>{{commonError}}</div>
+          @if (commonError) {
+            <div>{{ commonError }}</div>
+          }
           <label class="auth-labels">
             Email
             <input formControlName = "email" class="auth-inputs" type="text" placeholder="example123">
-              @if (registrationForm.controls.email.touched && registrationForm.controls.email.invalid){
-                @if(registrationForm.controls.email.errors?.["required"]) {<small>Email is required</small>}
-                @if(registrationForm.controls.email.errors?.["email"]) {<small>Email is not valid</small>}
-                @if(registrationForm.controls.email.errors?.["minlength"]) {<small>Min length is 5</small>}
-                @if(registrationForm.controls.email.errors?.["maxlength"]) {<small>Max length is 254</small>}
+<!--            @if (registrationForm.controls.email.invalid && registrationForm.controls.email.touched) {-->
+<!--              @if (registrationForm.controls.email.hasError('required')) { <small>Email is required</small> }-->
+<!--              @if (registrationForm.controls.email.hasError('email')) { <small>Email is not valid</small> }-->
+<!--              @if (registrationForm.controls.email.hasError('minlength')) { <small>Min length is 5</small> }-->
+<!--              @if (registrationForm.controls.email.hasError('maxlength')) { <small>Max length is 254</small> }-->
+<!--            }-->
+            @if (registrationForm.controls.email.errors?.['backend']; as backendErrors) {
+              @for (err of backendErrors; track err) {
+                <small>{{ err }}</small>
               }
-              @for (err of registrationForm.controls.email.errors?.['backend']; track err){
-                <small>{{err}}</small>
-              }
+            }
           </label>
 
           <label class="auth-labels">
             Username
             <input formControlName = "username" class="auth-inputs" type="text" placeholder="example123">
-              @if (registrationForm.controls.username.touched && registrationForm.controls.username.invalid){
-                @if(registrationForm.controls.username.errors?.["required"]) {<small>username is required</small>}
-                @if(registrationForm.controls.username.errors?.["minlength"]) {<small>Min length is 8</small>}
-                @if(registrationForm.controls.username.errors?.["maxlength"]) {<small>Max length is 40</small>}
-                @if(registrationForm.controls.username.errors?.["pattern"]) {<small>Username can not contains {{'@'}}</small>}
+<!--              @if (registrationForm.controls.username.touched && registrationForm.controls.username.invalid){-->
+<!--                @if(registrationForm.controls.username.errors?.["required"]) {<small>username is required</small>}-->
+<!--                @if(registrationForm.controls.username.errors?.["minlength"]) {<small>Min length is 8</small>}-->
+<!--                @if(registrationForm.controls.username.errors?.["maxlength"]) {<small>Max length is 40</small>}-->
+<!--                @if(registrationForm.controls.username.errors?.["pattern"]) {<small>Username can not contains {{'@'}}</small>}-->
+<!--              }-->
+            @if (registrationForm.controls.username.errors?.['backend']; as backendErrors) {
+              @for (err of backendErrors; track err) {
+                <small>{{ err }}</small>
               }
-              @for (err of registrationForm.controls.username.errors?.['backend']; track err){
-                <small>{{err}}</small>
-              }
+            }
           </label>
 
           <label class="auth-labels">
             Password
             <input formControlName = "password" class="auth-inputs" type="text" placeholder="example123">
-              @if (registrationForm.controls.password.touched && registrationForm.controls.password.invalid){
-                @if(registrationForm.controls.password.errors?.["required"]) {<small>password is required</small>}
-                @if(registrationForm.controls.password.errors?.["minlength"]) {<small>Min length is 8</small>}
-                @if(registrationForm.controls.password.errors?.["maxlength"]) {<small>Max length is 64</small>}
+<!--              @if (registrationForm.controls.password.touched && registrationForm.controls.password.invalid){-->
+<!--                @if(registrationForm.controls.password.errors?.["required"]) {<small>password is required</small>}-->
+<!--                @if(registrationForm.controls.password.errors?.["minlength"]) {<small>Min length is 8</small>}-->
+<!--                @if(registrationForm.controls.password.errors?.["maxlength"]) {<small>Max length is 64</small>}-->
+<!--              }-->
+            @if (registrationForm.controls.password.errors?.['backend']; as backendErrors) {
+              @for (err of backendErrors; track err) {
+                <small>{{ err }}</small>
               }
-              @for (err of registrationForm.controls.password.errors?.['backend']; track err){
-                <small>{{err}}</small>
-              }
+            }
           </label>
 
           <label class="auth-labels">
             Confirm Password
             <input formControlName = "confirmedPassword" class="auth-inputs" type="text" placeholder="example123">
-              @if (registrationForm.controls.confirmedPassword.touched && registrationForm.controls.confirmedPassword.invalid){
-                @if(registrationForm.controls.confirmedPassword.errors?.["required"]) {<small>password is required</small>}
-                @if(registrationForm.controls.confirmedPassword.errors?.["minlength"]) {<small>Min length is 8</small>}
-                @if(registrationForm.controls.confirmedPassword.errors?.["maxlength"]) {<small>Max length is 64</small>}
-              }
+<!--              @if (registrationForm.controls.confirmedPassword.touched && registrationForm.controls.confirmedPassword.invalid){-->
+<!--                @if(registrationForm.controls.confirmedPassword.errors?.["required"]) {<small>password is required</small>}-->
+<!--                @if(registrationForm.controls.confirmedPassword.errors?.["minlength"]) {<small>Min length is 8</small>}-->
+<!--                @if(registrationForm.controls.confirmedPassword.errors?.["maxlength"]) {<small>Max length is 64</small>}-->
+<!--              }-->
           </label>
 
           <button type="submit">Zarejestruj się</button>

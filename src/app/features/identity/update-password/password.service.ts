@@ -8,7 +8,7 @@ export class PasswordService {
   http = inject(HttpClient)
   baseApiUrl = 'https://localhost:7212/password'
 
-  updatePassword(payload: { oldPassword: string, newPassword: string }) {
+  updatePassword(payload: { oldPassword: string | null, newPassword: string | null }) {
     return this.http.put(
       `${this.baseApiUrl}/change-password`, payload, {
         withCredentials: true

@@ -34,8 +34,16 @@
 @if (isCreateGroup()){
   <div class="create-group">
     <button (click)="isCreateGroup.set(false)">Back</button>
+    @if (commonError) {
+      <div>{{ commonError }}</div>
+    }
     <h2>Create a group</h2>
     Title:  <input [(ngModel)]="group.title">
+    @if (createGroupForm.controls.title.errors?.['backend']; as backendErrors) {
+      @for (err of backendErrors; track err) {
+        <small>{{ err }}</small>
+      }
+    }
     <div class="form-group">
       <label for="country">Country:</label>
       <select id="country" [(ngModel)]="group.country">

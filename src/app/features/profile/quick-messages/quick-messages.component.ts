@@ -1,7 +1,7 @@
 import {Component, inject, OnInit, signal} from '@angular/core';
 import {QuickMessageService} from './quick-message.service';
 import {QuickMessage} from './quick-message';
-import {FormsModule} from '@angular/forms';
+import {FormControl, FormGroup, FormsModule} from '@angular/forms';
 import {map} from 'rxjs';
 
 @Component({
@@ -19,6 +19,11 @@ export class QuickMessagesComponent implements OnInit{
   quickMessageList: QuickMessage[] | null = null
   quickMessage: QuickMessage = { idQuickMessage: 0, message: '' };
   isCreateOn = signal<boolean>(false)
+  commonError: string = ''
+
+  messageForm = new FormGroup({
+    message: new FormControl(null)
+  })
 
   changeStatus = () => this.isCreateOn.update(x=> !x)
 
@@ -34,19 +39,38 @@ export class QuickMessagesComponent implements OnInit{
   }
 
   create(){
+    this.commonError = ''
+    this.messageForm.get('message')?.setErrors(null)
+
     this.quickMessageService.createQuickMessage(this.quickMessage).subscribe({
       next: value => {
         this.quickMessageList = [...this.quickMessageList??[], value]
         this.isCreateOn.set(false)
         this.quickMessage.message = ''
+        this.messageForm.reset()
       },
-      error: err => {
-        console.error('Create quick message has not completed!', err)
+      error: (err) => {
+        if(err.status === 400 && err.error && err.error.errors){
+          const errors = err.error.errors;
+
+          Object.keys(errors).forEach(key => {
+            const control = this.messageForm.get(key.charAt(0).toLowerCase() + key.slice(1))
+            if (control) {
+              control.setErrors({ backend: errors[key] });
+              control.markAsTouched()
+            }
+          });
+        }
+        else{
+          this.commonError = err.error.title || 'Unhandled exception. To repair'
+        }
       }
     })
   }
 
   update(message: QuickMessage) {
+    this.commonError = ''
+    this.messageForm.get('message')?.setErrors(null)
     this.quickMessageService.updateQuickMessage(message).subscribe({
       next: value => {
         const index = this.quickMessageList?.
@@ -56,6 +80,23 @@ export class QuickMessagesComponent implements OnInit{
         }
         message.isEditing = false;
         delete message.originalMessage;
+        this.messageForm.reset()
+      },
+      error: (err) => {
+        if(err.status === 400 && err.error && err.error.errors){
+          const errors = err.error.errors;
+
+          Object.keys(errors).forEach(key => {
+            const control = this.messageForm.get(key.charAt(0).toLowerCase() + key.slice(1))
+            if (control) {
+              control.setErrors({ backend: errors[key] });
+              control.markAsTouched()
+            }
+          });
+        }
+        else{
+          this.commonError = err.error.title || 'Unhandled exception. To repair'
+        }
       }
     })
   }

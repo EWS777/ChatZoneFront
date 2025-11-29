@@ -47,6 +47,9 @@
     } @else {
       <h2>GROUP CHAT</h2>
     }
+    @if (commonError) {
+      {{commonError}}
+    }
     @if (!chatPersonInfo.isSentMessage) {
       <div class="chat-quick-message">
         @for (quickMessage of quickMessageList; track quickMessage.idQuickMessage) {
@@ -60,7 +63,7 @@
     @if (chatPersonInfo.isSingleChat) {
       <button (click)="changeIsDisconnectStatus('skip')">Skip</button>
     }
-    <input [(ngModel)]="currentMessage" placeholder="Message"/>
+    <input [(ngModel)]="currentMessage" (input)="commonError=''" placeholder="Message"/>
     <button (click)="sendMessage()">Send</button>
   </div>
 
@@ -84,7 +87,13 @@
         <button (click)="getGroupMembers()">List of users</button>
         <div class="update-group-params">
           <b>Change group params</b>
-          <br>Title:  <input [(ngModel)]="group.title">
+          @if (commonErrorUpdateChat){
+            <div>{{commonErrorUpdateChat}}</div>
+          }
+          <br>Title:  <input [(ngModel)]="group.title" (input)="titleError=''">
+          @if (titleError) {
+            <div>{{ titleError }}</div>
+          }
 
           <div class="form-group">
             <label for="country">Country:</label>

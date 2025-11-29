@@ -21,6 +21,7 @@ export class AuthorizationComponent{
   isLogin = signal<boolean>(true)
   isConfirmEmailPage = signal<boolean>(false)
   commonError: string = ''
+  commonErrorLogin: string = ''
 
   loginForm = new FormGroup({
     usernameOrEmail: new FormControl(null, {validators: [Validators.required, Validators.minLength(8)]}),
@@ -49,7 +50,8 @@ export class AuthorizationComponent{
   })
 
   onLoginSubmit(){
-    if (this.loginForm.valid){
+    this.commonErrorLogin = ''
+    // if (this.loginForm.valid){
       //@ts-ignore
       this.authService.postLogin(this.loginForm.value).subscribe({
         next: () => {
@@ -57,17 +59,31 @@ export class AuthorizationComponent{
           this.route.navigate([''])
         },
         error: (err) => {
-          console.error('Ошибка входа:', err);
+          if(err.status === 400 && err.error && err.error.errors){
+            const errors = err.error.errors;
+
+            Object.keys(errors).forEach(key => {
+              const control = this.loginForm.get(key.charAt(0).toLowerCase() + key.slice(1))
+              if (control) {
+                control.setErrors({ backend: errors[key] });
+                control.markAsTouched()
+              }
+            });
+          }
+          else{
+            this.commonErrorLogin = err.error.title || 'Unhandled exception. To repair'
+          }
         }
       })
-    }
+    // }
   }
 
   onRegistrationSubmit(){
-    if (this.registrationForm.invalid) {
-      this.registrationForm.markAllAsTouched();
-      return;
-    }
+    this.commonError = ''
+    // if (this.registrationForm.invalid) {
+    //   this.registrationForm.markAllAsTouched();
+    //   return;
+    // }
 
     const dataToSend = {
       email: this.registrationForm.get('email')?.value,
@@ -85,10 +101,11 @@ export class AuthorizationComponent{
         if(err.status === 400 && err.error && err.error.errors){
           const errors = err.error.errors;
 
-          Object.keys(errors).forEach(field => {
-            const control = this.registrationForm.get(field.toLowerCase());
+          Object.keys(errors).forEach(key => {
+            const control = this.loginForm.get(key.charAt(0).toLowerCase() + key.slice(1))
             if (control) {
-              control.setErrors({ backend: errors[field] });
+              control.setErrors({ backend: errors[key] });
+              control.markAsTouched()
             }
           });
         }

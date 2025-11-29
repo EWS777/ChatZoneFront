@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, ElementRef, inject, OnDestroy, OnInit, signal, ViewChild} from '@angular/core';
-import {FormsModule} from '@angular/forms';
+import {FormControl, FormGroup, FormsModule} from '@angular/forms';
 import {NgClass} from '@angular/common';
 import {QuickMessageService} from '../../profile/quick-messages/quick-message.service';
 import {QuickMessage} from '../../profile/quick-messages/quick-message';
@@ -46,6 +46,9 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy{
   private blockedPersonService = inject(BlockedUserService)
   router = inject(Router)
   messageService = inject(MessageService)
+  commonError: string = ''
+  commonErrorUpdateChat: string = ''
+  titleError: string = ''
 
   messages: { idSender: number, message: string, createdAt: Date}[] = [];
   currentMessage: string=''
@@ -227,14 +230,32 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy{
   }
 
   async sendMessage(){
-    await this.baseChatService.sendMessage(this.chatPersonInfo.idGroup!, this.currentMessage, this.chatPersonInfo.isSingleChat!)
-    this.currentMessage = ''
-    this.chatPersonInfo.isSentMessage = true
-    requestAnimationFrame( () => {
-      if (this.isUserAtBottom) {
-        this.scrollToBottom();
+    this.commonError = ''
+
+    try {
+      await this.baseChatService.sendMessage(this.chatPersonInfo.idGroup!, this.currentMessage, this.chatPersonInfo.isSingleChat!)
+      this.currentMessage = ''
+      this.chatPersonInfo.isSentMessage = true
+      requestAnimationFrame( () => {
+        if (this.isUserAtBottom) {
+          this.scrollToBottom();
+        }
+      })
+    }
+    catch (err: any){
+      if (err.message) {
+        const prefix = "HubException: "
+        const index = err.message.indexOf(prefix)
+
+        if (index !== -1) {
+          this.commonError = err.message.substring(index + prefix.length)
+        } else {
+          this.commonError = err.message.replace('Error: ', '')
+        }
+      } else {
+        this.commonError = 'Unhandled exception. To repair'
       }
-    })
+    }
   }
 
   async sendQuickMessage(message: string){
@@ -314,6 +335,7 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy{
   }
 
   updateGroupData(){
+    this.commonErrorUpdateChat = ''
     this.chatService.updateGroup(this.group).subscribe({
       next: value=>{
         const isAdmin = this.group.isAdmin
@@ -321,8 +343,12 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy{
         this.group = value
         this.group.isAdmin = isAdmin
       },
-      error: err => {
-        console.log('Error', err)
+      error: (err) => {
+        if (err.status === 400 && err.error && err.error.errors) {
+          if (err.error.errors['Title']) this.titleError = err.error.errors['Title'][0]
+        } else {
+          this.commonErrorUpdateChat = err.error.title || 'Unhandled exception. To repair'
+        }
       }
     })
   }

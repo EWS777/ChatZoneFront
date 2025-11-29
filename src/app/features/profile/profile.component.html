@@ -1,4 +1,7 @@
 <form class="profile-form" (ngSubmit)="onClickUpdate()">
+  @if (commonError) {
+    <div>{{ commonError }}</div>
+  }
   <div>
     Email:
     <input type="email" [value]="profile.email" readonly>
@@ -6,6 +9,11 @@
   <div>
     Username:
     <input type="text" name="username" [(ngModel)]="profile.username">
+    @if (updateProfileForm.controls.username.errors?.['backend']; as backendErrors) {
+      @for (err of backendErrors; track err) {
+        <small>{{ err }}</small>
+      }
+    }
   </div>
 
   <div>
