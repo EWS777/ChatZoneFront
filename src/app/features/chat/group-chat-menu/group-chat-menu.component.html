@@ -7,6 +7,9 @@
 
   @for (groups of groupList; track groups.idGroup) {
     <div class="group-block">
+      @if (commonErrorAddToGroup){
+        <div>{{commonErrorAddToGroup}}</div>
+      }
       <div class="group-info">
         <span>{{groups.title}}</span>
         @if (groups.country !== null){
@@ -33,16 +36,14 @@
 
 @if (isCreateGroup()){
   <div class="create-group">
-    <button (click)="isCreateGroup.set(false)">Back</button>
+    <button (click)="isCreateGroup.set(false); commonError = ''">Back</button>
     @if (commonError) {
       <div>{{ commonError }}</div>
     }
     <h2>Create a group</h2>
-    Title:  <input [(ngModel)]="group.title">
-    @if (createGroupForm.controls.title.errors?.['backend']; as backendErrors) {
-      @for (err of backendErrors; track err) {
-        <small>{{ err }}</small>
-      }
+    Title:  <input [(ngModel)]="group.title" (input)="titleError = ''">
+    @if (titleError){
+      <div>{{titleError}}</div>
     }
     <div class="form-group">
       <label for="country">Country:</label>
@@ -91,9 +92,3 @@
   </div>
 }
 
-@if (isAnyActiveChat()){
-  <div class="common-information">
-    You have an active chat.
-    <button (click)="router.navigate(['/chat'])">Come back</button>
-  </div>
-}

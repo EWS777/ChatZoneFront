@@ -83,9 +83,12 @@
     }
     @if (!chatPersonInfo.isSingleChat && group.isAdmin) {
       <div class="common-information">
-        <button (click)="isActivateSettings.set(false)">Back</button>
+        <button (click)="isActivateSettings.set(false); titleError=''">Back</button>
         <button (click)="getGroupMembers()">List of users</button>
         <div class="update-group-params">
+          @if (commonErrorGetGroupMembers){
+            <div>{{commonErrorGetGroupMembers}}</div>
+          }
           <b>Change group params</b>
           @if (commonErrorUpdateChat){
             <div>{{commonErrorUpdateChat}}</div>
@@ -149,6 +152,9 @@
 @if(isAdminStatusInfo()){
   <div class="common-information">
     You are an admin. What action do you prefer?
+    @if (commonErrorDeleteGroupChat){
+      <div>{{commonErrorDeleteGroupChat}}</div>
+    }
     <button (click)="deleteGroupChat()">Delete group</button>
     <button (click)="getGroupMembers()">Set another admin</button>
   </div>
@@ -194,6 +200,12 @@
   <div class="common-information">
     <button (click)="isGroupMember.set(false)">Back</button>
     <h2>List of group members</h2>
+    @if (commonErrorBlockGroupMember){
+    <div>{{commonErrorBlockGroupMember}}</div>
+    }
+    @if (commonErrorSetNewAdmin){
+      <div>{{commonErrorSetNewAdmin}}</div>
+    }
     @for (members of groupMembers; track members.idPerson){
       <div>
         <span>{{members.username}}</span>

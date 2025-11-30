@@ -15,6 +15,7 @@ export class ConfirmComponent implements OnInit{
   router = inject(Router)
   route = inject(ActivatedRoute)
   confirmService = inject(ConfirmService)
+  commonError: string = ''
 
   isConfirmed = signal<boolean | null>(null)
   email: string | null = null
@@ -27,9 +28,9 @@ export class ConfirmComponent implements OnInit{
           this.isConfirmed.set(true)
           this.router.navigate([''])
         },
-        error: err => {
+        error: (err) => {
           this.isConfirmed.set(false)
-          console.log('Have not confirmed!', err)
+          this.commonError = err.error.title || 'Unhandled exception. To repair'
         }
       })
     }else {

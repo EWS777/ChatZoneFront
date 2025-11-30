@@ -1,10 +1,13 @@
-Confirm Email
+Confirm Email <br>
 
 @if (!isConfirmed()){
-  Email hasn't confirmed
+  @if (commonError){
+    <br>
+    <div>{{commonError}}</div>
+    <br>
+  }
 
-  Please write our email to confirm again
-
+  Email
   <input type="text" [(ngModel)]="email">
 
   <button (click)="reconfirm()">Confirm email</button>

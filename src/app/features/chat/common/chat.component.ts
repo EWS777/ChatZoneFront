@@ -48,6 +48,10 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy{
   messageService = inject(MessageService)
   commonError: string = ''
   commonErrorUpdateChat: string = ''
+  commonErrorBlockGroupMember: string = ''
+  commonErrorSetNewAdmin: string = ''
+  commonErrorDeleteGroupChat: string = ''
+  commonErrorGetGroupMembers: string = ''
   titleError: string = ''
 
   messages: { idSender: number, message: string, createdAt: Date}[] = [];
@@ -300,7 +304,7 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy{
         this.router.navigate(['/'])
       },
       error: err => {
-        console.log('Error', err)
+        this.commonErrorDeleteGroupChat = err.error.title || 'Unhandled exception. To repair'
       }
     })
   }
@@ -360,7 +364,7 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy{
         this.isGroupMember.set(true)
       },
       error: err => {
-        console.log('Error', err)
+        this.commonErrorGetGroupMembers = err.error.title || 'Unhandled exception. To repair'
       }
     })
   }
@@ -375,6 +379,9 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy{
         this.isActivateSettings.set(false)
         this.isAdminStatusInfo.set(false)
         this.isDisconnect.set(null)
+      },
+      error: err => {
+        this.commonErrorSetNewAdmin = err.error.title || 'Unhandled exception. To repair'
       }
     })
   }
@@ -389,7 +396,7 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy{
         this.groupMembers = this.groupMembers.filter(member => member.idPerson !== idPerson)
       },
       error: err => {
-        console.log('Error', err)
+        this.commonErrorBlockGroupMember = err.error.title || 'Unhandled exception. To repair'
       }
     })
   }

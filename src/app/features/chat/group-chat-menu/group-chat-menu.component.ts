@@ -52,6 +52,8 @@ export class GroupChatMenuComponent implements OnInit{
   isCreateGroup = signal<boolean>(false)
   isAnyActiveChat = signal<boolean>(false)
   commonError: string = ''
+  commonErrorAddToGroup: string = ''
+  titleError: string = ''
   createGroupForm = new FormGroup({
     title: new FormControl(null)
   })
@@ -88,54 +90,32 @@ export class GroupChatMenuComponent implements OnInit{
 
   async createGroup(){
     this.commonError = ''
-    this.chatService.getActiveChat().subscribe({
-      next: value => {
-        if (value.isSingleChat!==null){
-          this.isAnyActiveChat.set(true)
-        }
-        else {
-          this.chatService.createGroup(this.group).subscribe({
-            next: value =>{
-              this.signalService.addToGroup(value)
-            },
-            error: (err) => {
-              if(err.status === 400 && err.error && err.error.errors){
-                const errors = err.error.errors;
-
-                Object.keys(errors).forEach(key => {
-                  const control = this.createGroupForm.get(key.charAt(0).toLowerCase() + key.slice(1))
-                  if (control) {
-                    control.setErrors({ backend: errors[key] });
-                    control.markAsTouched()
-                  }
-                });
-              }
-              else{
-                this.commonError = err.error.title || 'Unhandled exception. To repair'
-              }
+      this.chatService.createGroup(this.group).subscribe({
+        next: value =>{
+          this.signalService.addToGroup(value)
+        },
+        error: (err) => {
+          if(err.status === 400 && err.error && err.error.errors){
+            if (err.error.errors['Title']) {
+              this.titleError = err.error.errors['Title'][0];
+            } else if (err.error.errors['title']) {
+              this.titleError = err.error.errors['title'][0];
             }
-          })
+          }
+          else{
+            this.commonError = err.error.title || 'Unhandled exception. To repair'
+          }
         }
-      }
-    })
+      })
   }
 
   async connectToGroup(idGroup: number){
-    this.chatService.getActiveChat().subscribe({
-      next: value => {
-        if (value.isSingleChat!==null){
-          this.isAnyActiveChat.set(true)
-        }
-        else {
-          this.groupMemberService.addToGroup(idGroup).subscribe({
-            next: async () =>{
-              await this.signalService.addToGroup(idGroup)
-            },
-            error: err => {
-              console.log('Error', err)
-            }
-          })
-        }
+    this.groupMemberService.addToGroup(idGroup).subscribe({
+      next: async () =>{
+        await this.signalService.addToGroup(idGroup)
+      },
+      error: err => {
+        this.commonErrorAddToGroup = err.error.title || 'Unhandled exception. To repair'
       }
     })
   }
