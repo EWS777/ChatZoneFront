@@ -102,7 +102,7 @@ export class AuthorizationComponent{
           const errors = err.error.errors;
 
           Object.keys(errors).forEach(key => {
-            const control = this.loginForm.get(key.charAt(0).toLowerCase() + key.slice(1))
+            const control = this.registrationForm.get(key.charAt(0).toLowerCase() + key.slice(1))
             if (control) {
               control.setErrors({ backend: errors[key] });
               control.markAsTouched()
