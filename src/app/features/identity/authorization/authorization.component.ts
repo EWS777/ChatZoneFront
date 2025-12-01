@@ -80,39 +80,36 @@ export class AuthorizationComponent{
 
   onRegistrationSubmit(){
     this.commonError = ''
-    // if (this.registrationForm.invalid) {
-    //   this.registrationForm.markAllAsTouched();
-    //   return;
-    // }
-
-    const dataToSend = {
-      email: this.registrationForm.get('email')?.value,
-      username: this.registrationForm.get('username')?.value,
-      password: this.registrationForm.get('password')?.value
-    }
-
-    // @ts-ignore
-    this.authService.registerLogin(dataToSend).subscribe({
-      next: value => {
-        console.log('Регистрация прошла успешно', value);
-        this.isConfirmEmailPage.set(true)
-      },
-      error: (err) => {
-        if(err.status === 400 && err.error && err.error.errors){
-          const errors = err.error.errors;
-
-          Object.keys(errors).forEach(key => {
-            const control = this.registrationForm.get(key.charAt(0).toLowerCase() + key.slice(1))
-            if (control) {
-              control.setErrors({ backend: errors[key] });
-              control.markAsTouched()
-            }
-          });
-        }
-        else{
-          this.commonError = err.error.title || 'Unhandled exception. To repair'
-        }
+    if (this.registrationForm.valid){
+      const dataToSend = {
+        email: this.registrationForm.get('email')?.value,
+        username: this.registrationForm.get('username')?.value,
+        password: this.registrationForm.get('password')?.value
       }
-    });
+
+      // @ts-ignore
+      this.authService.registerLogin(dataToSend).subscribe({
+        next: value => {
+          console.log('Регистрация прошла успешно', value);
+          this.isConfirmEmailPage.set(true)
+        },
+        error: (err) => {
+          if(err.status === 400 && err.error && err.error.errors){
+            const errors = err.error.errors;
+
+            Object.keys(errors).forEach(key => {
+              const control = this.registrationForm.get(key.charAt(0).toLowerCase() + key.slice(1))
+              if (control) {
+                control.setErrors({ backend: errors[key] });
+                control.markAsTouched()
+              }
+            });
+          }
+          else{
+            this.commonError = err.error.title || 'Unhandled exception. To repair'
+          }
+        }
+      });
+    }
   }
 }
