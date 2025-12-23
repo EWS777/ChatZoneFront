@@ -1,13 +1,15 @@
 import {Component, inject, OnInit, signal} from '@angular/core';
 import {QuickMessageService} from './quick-message.service';
 import {QuickMessage} from './quick-message';
-import {FormControl, FormGroup, FormsModule} from '@angular/forms';
+import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {map} from 'rxjs';
+import {CommonValidator} from '../../../shared/validation/CommonValidator';
 
 @Component({
   selector: 'app-quick-messages',
   imports: [
-    FormsModule
+    FormsModule,
+    ReactiveFormsModule
   ],
   templateUrl: './quick-messages.component.html',
   standalone: true,
@@ -22,7 +24,12 @@ export class QuickMessagesComponent implements OnInit{
   commonError: string = ''
 
   messageForm = new FormGroup({
-    message: new FormControl(null)
+    message: new FormControl(null, [
+      CommonValidator.required,
+      CommonValidator.minLength(1),
+      CommonValidator.maxLength(50),
+      CommonValidator.noWhitespace, // just for required
+    ])
   })
 
   changeStatus = () => this.isCreateOn.update(x=> !x)
@@ -40,7 +47,10 @@ export class QuickMessagesComponent implements OnInit{
 
   create(){
     this.commonError = ''
-    this.messageForm.get('message')?.setErrors(null)
+    if (this.messageForm.invalid){
+      this.messageForm.markAllAsTouched()
+      return
+    }
 
     this.quickMessageService.createQuickMessage(this.quickMessage).subscribe({
       next: value => {
@@ -69,6 +79,7 @@ export class QuickMessagesComponent implements OnInit{
   }
 
   update(message: QuickMessage) {
+    message.message = message.message.trim()
     this.commonError = ''
     this.messageForm.get('message')?.setErrors(null)
     this.quickMessageService.updateQuickMessage(message).subscribe({

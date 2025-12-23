@@ -4,11 +4,25 @@ Confirm Email <br>
   @if (commonError){
     <br>
     <div>{{commonError}}</div>
-    <br>
+  }
+  @if (commonErrorReconfirm){
+    <div>{{commonErrorReconfirm}}</div>
+  }
+
+  @if (successMessage()) {
+    {{ successMessage() }}
+    <button (click)="router.navigate(['/'])">Main page</button>
   }
 
   Email
-  <input type="text" [(ngModel)]="email">
+  @if (emailControl.touched && emailControl.invalid) {
+    @if (emailControl.hasError('required')) { <small>Email is required</small> }
+    @if (emailControl.hasError('email')) { <small>Invalid email format</small> }
+    @if (emailControl.hasError('minLength')) { <small>Min length is 5</small> }
+    @if (emailControl.hasError('maxLength')) { <small>Max length is 254</small> }
+    @if (emailControl.hasError('spaces')) { <small>Cannot contain spaces</small> }
+  }
+  <input type="text" [formControl]="emailControl">
 
   <button (click)="reconfirm()">Confirm email</button>
 }

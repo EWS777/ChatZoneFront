@@ -2,6 +2,7 @@ import {Component, inject, signal} from '@angular/core';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {RouterLink} from '@angular/router';
 import {ResetPasswordService} from './reset-password.service';
+import {CommonValidator} from '../../../shared/validation/CommonValidator';
 
 @Component({
   selector: 'app-reset-password',
@@ -17,17 +18,27 @@ import {ResetPasswordService} from './reset-password.service';
 export class ResetPasswordComponent {
   resetPasswordService = inject(ResetPasswordService)
 
-  email: string | null = null
   isSend = signal<boolean>(false)
   commonError: string = ''
 
   resetPasswordForm = new FormGroup({
-    email: new FormControl(null)
+    email: new FormControl(null, {validators: [
+        Validators.email,
+        CommonValidator.required,
+        CommonValidator.minLength(5),
+        CommonValidator.maxLength(254),
+        CommonValidator.noSpaces, //just for strict attributes
+      ]})
   })
 
   onClick(){
     this.commonError = ''
-    this.resetPasswordService.resetPassword(this.email).subscribe({
+    if (this.resetPasswordForm.invalid){
+      this.resetPasswordForm.markAllAsTouched()
+      return
+    }
+    const email = this.resetPasswordForm.get('email')?.value ?? null;
+    this.resetPasswordService.resetPassword(email).subscribe({
       next: () => {
         this.isSend.set(true);
       },

@@ -1,14 +1,16 @@
 import {Component, inject, OnInit, signal} from '@angular/core';
 import {ActivatedRoute, RouterLink} from '@angular/router';
 import {ResetPassword} from './resetPassword';
-import {FormControl, FormGroup, FormsModule} from '@angular/forms';
+import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {ChangePasswordService} from './change-password.service';
+import {CommonValidator} from '../../../shared/validation/CommonValidator';
 
 @Component({
   selector: 'app-change-reset-password',
   imports: [
     FormsModule,
-    RouterLink
+    RouterLink,
+    ReactiveFormsModule
   ],
   templateUrl: './change-reset-password.component.html',
   standalone: true,
@@ -20,8 +22,19 @@ export class ChangeResetPasswordComponent implements OnInit {
   commonError: string = ''
 
   resetPasswordForm = new FormGroup({
-    email: new FormControl(null),
-    password: new FormControl(null)
+    email: new FormControl(null, [
+      Validators.email,
+      CommonValidator.required,
+      CommonValidator.minLength(5),
+      CommonValidator.maxLength(254),
+      CommonValidator.noSpaces, //just for strict attributes
+    ]),
+    password: new FormControl(null, [
+      CommonValidator.required,
+      CommonValidator.minLength(8),
+      CommonValidator.maxLength(64),
+      CommonValidator.noSpaces, //just for strict attributes
+    ])
   })
 
   resetPassword: ResetPassword = {
@@ -38,7 +51,16 @@ export class ChangeResetPasswordComponent implements OnInit {
 
   update(){
     this.commonError = ''
-    this.service.resetPassword(this.resetPassword).subscribe({
+    if (this.resetPasswordForm.invalid){
+      this.resetPasswordForm.markAllAsTouched()
+      return
+    }
+    const dataToSend: ResetPassword = {
+      token: this.resetPassword.token,
+      email: this.resetPasswordForm.controls.email.value!,
+      password: this.resetPasswordForm.controls.password.value!
+    };
+    this.service.resetPassword(dataToSend).subscribe({
       next: () => {
         this.isPasswordChanged.set(true)
       },

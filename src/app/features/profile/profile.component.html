@@ -1,4 +1,4 @@
-<form class="profile-form" (ngSubmit)="onClickUpdate()">
+<form class="profile-form" [formGroup]="updateProfileForm" (ngSubmit)="onClickUpdate()">
   @if (commonError) {
     <div>{{ commonError }}</div>
   }
@@ -8,7 +8,14 @@
   </div>
   <div>
     Username:
-    <input type="text" name="username" [(ngModel)]="profile.username">
+    <input type="text" formControlName="username" name="username">
+    @if (updateProfileForm.controls.username.touched && updateProfileForm.controls.username.invalid){
+      @if(updateProfileForm.controls.username.errors?.["required"]) {<small>username is required</small>}
+      @if(updateProfileForm.controls.username.errors?.["minLength"]) {<small>Min length is 8</small>}
+      @if(updateProfileForm.controls.username.errors?.["maxLength"]) {<small>Max length is 30</small>}
+      @if (updateProfileForm.controls.username.errors?.["spaces"]) {<small>Can not contains spaces</small>}
+      @if(updateProfileForm.controls.username.errors?.["pattern"]) {<small>Username can not contains special symbols, just '_' and '-'</small>}
+    }
     @if (updateProfileForm.controls.username.errors?.['backend']; as backendErrors) {
       @for (err of backendErrors; track err) {
         <small>{{ err }}</small>

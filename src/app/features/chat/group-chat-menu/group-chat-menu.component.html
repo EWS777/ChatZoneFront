@@ -35,13 +35,18 @@
 </div>
 
 @if (isCreateGroup()){
-  <div class="create-group">
+  <div class="create-group" [formGroup]="createGroupForm">
     <button (click)="isCreateGroup.set(false); commonError = ''">Back</button>
     @if (commonError) {
       <div>{{ commonError }}</div>
     }
     <h2>Create a group</h2>
-    Title:  <input [(ngModel)]="group.title" (input)="titleError = ''">
+    @if (createGroupForm.controls.title.touched && createGroupForm.controls.title.invalid){
+      @if(createGroupForm.controls.title.errors?.["required"]) {<small>title is required</small>}
+      @if(createGroupForm.controls.title.errors?.["minLength"]) {<small>Min length is 1</small>}
+      @if(createGroupForm.controls.title.errors?.["maxLength"]) {<small>Max length is 50</small>}
+    }
+    Title:  <input formControlName="title" (input)="titleError = ''">
     @if (titleError){
       <div>{{titleError}}</div>
     }

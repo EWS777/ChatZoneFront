@@ -16,6 +16,14 @@
           <label class="login-labels">
             Username/Email
             <input formControlName = "usernameOrEmail" class="login-inputs" type="text" placeholder="example123">
+            @if (loginForm.controls.usernameOrEmail.touched && loginForm.controls.usernameOrEmail.invalid){
+              @if(loginForm.controls.usernameOrEmail.errors?.["required"]) {<small>usernameOrEmail is required</small>}
+              @if(loginForm.controls.usernameOrEmail.errors?.["minLength"]) {<small>Min length is {{ loginForm.get('usernameOrEmail')?.errors?.['minLength'].requiredLength }}</small>}
+              @if(loginForm.controls.usernameOrEmail.errors?.["maxLength"]) {<small>Max length is {{ loginForm.get('usernameOrEmail')?.errors?.['maxLength'].requiredLength }}</small>}
+              @if (loginForm.controls.usernameOrEmail.errors?.["spaces"]) {<small>Can not contains spaces</small>}
+              @if(loginForm.controls.usernameOrEmail.errors?.["pattern"]) {<small>usernameOrEmail can not contains special symbols, just '_' and '-'</small>}
+              @if (loginForm.controls.usernameOrEmail.hasError('email')) { <small>Email is not valid</small> }
+            }
             @if (loginForm.controls.usernameOrEmail.errors?.['backend']; as backendErrors) {
               @for (err of backendErrors; track err) {
                 <small>{{ err }}</small>
@@ -26,6 +34,12 @@
           <label class="login-labels">
             Password
             <input formControlName = "password" class="login-inputs" type="text" placeholder="example123">
+            @if (loginForm.controls.password.touched && loginForm.controls.password.invalid){
+              @if(loginForm.controls.password.errors?.["required"]) {<small>password is required</small>}
+              @if(loginForm.controls.password.errors?.["minLength"]) {<small>Min length is 8</small>}
+              @if(loginForm.controls.password.errors?.["maxLength"]) {<small>Max length is 64</small>}
+              @if (loginForm.controls.password.errors?.["spaces"]) {<small>Can not contains spaces</small>}
+            }
             @if (loginForm.controls.password.errors?.['backend']; as backendErrors) {
               @for (err of backendErrors; track err) {
                 <small>{{ err }}</small>
@@ -45,12 +59,13 @@
           <label class="auth-labels">
             Email
             <input formControlName = "email" class="auth-inputs" type="text" placeholder="example123">
-<!--            @if (registrationForm.controls.email.invalid && registrationForm.controls.email.touched) {-->
-<!--              @if (registrationForm.controls.email.hasError('required')) { <small>Email is required</small> }-->
-<!--              @if (registrationForm.controls.email.hasError('email')) { <small>Email is not valid</small> }-->
-<!--              @if (registrationForm.controls.email.hasError('minlength')) { <small>Min length is 5</small> }-->
-<!--              @if (registrationForm.controls.email.hasError('maxlength')) { <small>Max length is 254</small> }-->
-<!--            }-->
+            @if (registrationForm.controls.email.invalid && registrationForm.controls.email.touched) {
+              @if (registrationForm.controls.email.hasError('email')) { <small>Email is not valid</small> }
+              @if(registrationForm.controls.email.errors?.["required"]) {<small>email is required</small>}
+              @if(registrationForm.controls.email.errors?.["minLength"]) {<small>Min length is 5</small>}
+              @if(registrationForm.controls.email.errors?.["maxLength"]) {<small>Max length is 254</small>}
+              @if (registrationForm.controls.email.errors?.["spaces"]) {<small>Can not contains spaces</small>}
+            }
             @if (registrationForm.controls.email.errors?.['backend']; as backendErrors) {
               @for (err of backendErrors; track err) {
                 <small>{{ err }}</small>
@@ -61,12 +76,13 @@
           <label class="auth-labels">
             Username
             <input formControlName = "username" class="auth-inputs" type="text" placeholder="example123">
-<!--              @if (registrationForm.controls.username.touched && registrationForm.controls.username.invalid){-->
-<!--                @if(registrationForm.controls.username.errors?.["required"]) {<small>username is required</small>}-->
-<!--                @if(registrationForm.controls.username.errors?.["minlength"]) {<small>Min length is 8</small>}-->
-<!--                @if(registrationForm.controls.username.errors?.["maxlength"]) {<small>Max length is 40</small>}-->
-<!--                @if(registrationForm.controls.username.errors?.["pattern"]) {<small>Username can not contains {{'@'}}</small>}-->
-<!--              }-->
+              @if (registrationForm.controls.username.touched && registrationForm.controls.username.invalid){
+                @if(registrationForm.controls.username.errors?.["required"]) {<small>username is required</small>}
+                @if(registrationForm.controls.username.errors?.["minLength"]) {<small>Min length is 8</small>}
+                @if(registrationForm.controls.username.errors?.["maxLength"]) {<small>Max length is 30</small>}
+                @if (registrationForm.controls.username.errors?.["spaces"]) {<small>Can not contains spaces</small>}
+                @if(registrationForm.controls.username.errors?.["pattern"]) {<small>Username can not contains special symbols, just '_' and '-'</small>}
+              }
             @if (registrationForm.controls.username.errors?.['backend']; as backendErrors) {
               @for (err of backendErrors; track err) {
                 <small>{{ err }}</small>
@@ -77,11 +93,13 @@
           <label class="auth-labels">
             Password
             <input formControlName = "password" class="auth-inputs" type="text" placeholder="example123">
-<!--              @if (registrationForm.controls.password.touched && registrationForm.controls.password.invalid){-->
-<!--                @if(registrationForm.controls.password.errors?.["required"]) {<small>password is required</small>}-->
-<!--                @if(registrationForm.controls.password.errors?.["minlength"]) {<small>Min length is 8</small>}-->
-<!--                @if(registrationForm.controls.password.errors?.["maxlength"]) {<small>Max length is 64</small>}-->
-<!--              }-->
+            @if(registrationForm.errors?.["passwordMismatch"]) {<small>Passwords do not match</small>}
+              @if (registrationForm.controls.password.touched && registrationForm.controls.password.invalid){
+                @if(registrationForm.controls.password.errors?.["required"]) {<small>password is required</small>}
+                @if(registrationForm.controls.password.errors?.["minLength"]) {<small>Min length is 8</small>}
+                @if(registrationForm.controls.password.errors?.["maxLength"]) {<small>Max length is 64</small>}
+                @if (registrationForm.controls.password.errors?.["spaces"]) {<small>Can not contains spaces</small>}
+              }
             @if (registrationForm.controls.password.errors?.['backend']; as backendErrors) {
               @for (err of backendErrors; track err) {
                 <small>{{ err }}</small>
@@ -92,11 +110,13 @@
           <label class="auth-labels">
             Confirm Password
             <input formControlName = "confirmedPassword" class="auth-inputs" type="text" placeholder="example123">
-<!--              @if (registrationForm.controls.confirmedPassword.touched && registrationForm.controls.confirmedPassword.invalid){-->
-<!--                @if(registrationForm.controls.confirmedPassword.errors?.["required"]) {<small>password is required</small>}-->
-<!--                @if(registrationForm.controls.confirmedPassword.errors?.["minlength"]) {<small>Min length is 8</small>}-->
-<!--                @if(registrationForm.controls.confirmedPassword.errors?.["maxlength"]) {<small>Max length is 64</small>}-->
-<!--              }-->
+            @if(registrationForm.errors?.["passwordMismatch"]) {<small>Passwords do not match</small>}
+              @if (registrationForm.controls.confirmedPassword.touched && registrationForm.controls.confirmedPassword.invalid){
+                @if(registrationForm.controls.confirmedPassword.errors?.["required"]) {<small>password is required</small>}
+                @if(registrationForm.controls.confirmedPassword.errors?.["minLength"]) {<small>Min length is 8</small>}
+                @if(registrationForm.controls.confirmedPassword.errors?.["maxLength"]) {<small>Max length is 64</small>}
+                @if (registrationForm.controls.confirmedPassword.errors?.["spaces"]) {<small>Can not contains spaces</small>}
+              }
           </label>
 
           <button type="submit">Zarejestruj się</button>

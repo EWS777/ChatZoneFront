@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, ElementRef, inject, OnDestroy, OnInit, signal, ViewChild} from '@angular/core';
-import {FormControl, FormGroup, FormsModule} from '@angular/forms';
+import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {NgClass} from '@angular/common';
 import {QuickMessageService} from '../../profile/quick-messages/quick-message.service';
 import {QuickMessage} from '../../profile/quick-messages/quick-message';
@@ -23,12 +23,14 @@ import {firstValueFrom} from 'rxjs';
 import {BlockedGroupMemberService} from '../blocked-group-member.service';
 import {ChatPersonInfo} from '../chat-person-info';
 import {ChatService} from '../chat.service';
+import {CommonValidator} from '../../../shared/validation/CommonValidator';
 
 @Component({
   selector: 'app-chat',
   imports: [
     FormsModule,
-    NgClass
+    NgClass,
+    ReactiveFormsModule
   ],
   templateUrl: './chat.component.html',
   standalone: true,
@@ -55,7 +57,18 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy{
   titleError: string = ''
 
   messages: { idSender: number, message: string, createdAt: Date}[] = [];
-  currentMessage: string=''
+  currentMessageControl = new FormControl(null, [
+    CommonValidator.required,
+    CommonValidator.minLength(1),
+    CommonValidator.maxLength(1024),
+  ])
+  updateGroupForm = new FormGroup({
+    title: new FormControl('', [
+      CommonValidator.required,
+      CommonValidator.minLength(1),
+      CommonValidator.maxLength(50),
+    ])
+  })
   quickMessageList: QuickMessage[] | null = null
   group: Group = {
     idGroup: null,
@@ -132,6 +145,7 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy{
       this.chatService.getGroup(this.chatPersonInfo.idGroup!).subscribe({
         next: value => {
           this.group = value
+          this.updateGroupForm.controls.title.setValue(this.group.title)
         },
         error: err => {
           console.log('Error', err)
@@ -235,10 +249,15 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy{
 
   async sendMessage(){
     this.commonError = ''
+    if (this.currentMessageControl.invalid) {
+      this.currentMessageControl.markAsTouched();
+      return;
+    }
+    const message = (this.currentMessageControl.value || '').trim()
 
     try {
-      await this.baseChatService.sendMessage(this.chatPersonInfo.idGroup!, this.currentMessage, this.chatPersonInfo.isSingleChat!)
-      this.currentMessage = ''
+      await this.baseChatService.sendMessage(this.chatPersonInfo.idGroup!, message, this.chatPersonInfo.isSingleChat!)
+      this.currentMessageControl.reset()
       this.chatPersonInfo.isSentMessage = true
       requestAnimationFrame( () => {
         if (this.isUserAtBottom) {
@@ -340,6 +359,11 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy{
 
   updateGroupData(){
     this.commonErrorUpdateChat = ''
+    if (this.updateGroupForm.invalid){
+      this.updateGroupForm.markAllAsTouched()
+      return
+    }
+    this.group.title = this.updateGroupForm.value.title!
     this.chatService.updateGroup(this.group).subscribe({
       next: value=>{
         const isAdmin = this.group.isAdmin

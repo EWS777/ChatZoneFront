@@ -1,13 +1,15 @@
 import {Component, inject, OnInit} from '@angular/core';
 import {ProfileService} from './profile.service';
-import {FormControl, FormGroup, FormsModule, Validators} from '@angular/forms';
+import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {Profile} from './profile';
 import {Router} from '@angular/router';
+import {CommonValidator} from '../../shared/validation/CommonValidator';
 
 @Component({
   selector: 'app-profile',
   imports: [
     FormsModule,
+    ReactiveFormsModule,
   ],
   templateUrl: './profile.component.html',
   standalone: true,
@@ -22,7 +24,13 @@ export class ProfileComponent implements OnInit{
   commonError: string = ''
 
   updateProfileForm = new FormGroup({
-    username: new FormControl(null)
+    username: new FormControl('', [
+      CommonValidator.required,
+      CommonValidator.minLength(8),
+      CommonValidator.maxLength(30),
+      CommonValidator.noSpaces, //just for strict attributes
+      Validators.pattern(/^[a-zA-Z0-9_-]+$/)
+    ])
   })
 
   ngOnInit() {
@@ -30,12 +38,23 @@ export class ProfileComponent implements OnInit{
       .subscribe(value => {
         this.profile = value
         this.oldUsername = value.username
+        this.updateProfileForm.patchValue({
+          username: value.username
+        });
       })
   }
 
   onClickUpdate(){
     this.commonError = ''
-    this.profileService.updateProfile(this.oldUsername, this.profile)
+    if (this.updateProfileForm.invalid){
+      this.updateProfileForm.markAllAsTouched()
+      return
+    }
+    const profileToSend = {
+      ...this.profile,
+      username: this.updateProfileForm.controls.username.value!
+    };
+    this.profileService.updateProfile(this.oldUsername, profileToSend)
       .subscribe({
         next: value => {
           this.profile = value

@@ -10,7 +10,7 @@
       </div>
     } @else {
       <div class="chat-param">
-        <span>GroupName: {{ group.title }}</span>
+        <span style="white-space: pre-wrap; word-wrap: break-word;">GroupName: {{ group.title }}</span>
         @if (group.country !== null) {
           <span>Country: {{ CountryList[group.country] }}</span>
         }
@@ -34,7 +34,7 @@
   <div #chatContainer class="chat-messages" (scroll)="onScroll()">
     <ul>
       @for (msg of messages; track $index) {
-        <li [ngClass]="{ 'mine-message': msg.idSender === chatPersonInfo.idPerson, 'another-message': msg.idSender !== chatPersonInfo.idPerson }">
+        <li style="white-space: pre-wrap; word-wrap: break-word;" [ngClass]="{ 'mine-message': msg.idSender === chatPersonInfo.idPerson, 'another-message': msg.idSender !== chatPersonInfo.idPerson }">
           {{msg.message}}
         </li>
       }
@@ -50,6 +50,11 @@
     @if (commonError) {
       {{commonError}}
     }
+    @if (currentMessageControl.invalid && currentMessageControl.touched) {
+      @if (currentMessageControl.hasError('required')) {<small>Message is required</small>}
+      @if (currentMessageControl.hasError('minLength')) {<small>Min length is {{ currentMessageControl.errors?.['minLength'].requiredLength }}</small>}
+      @if (currentMessageControl.hasError('maxLength')) {<small>Max length is {{ currentMessageControl.errors?.['maxLength'].requiredLength }}</small>}
+    }
     @if (!chatPersonInfo.isSentMessage) {
       <div class="chat-quick-message">
         @for (quickMessage of quickMessageList; track quickMessage.idQuickMessage) {
@@ -63,7 +68,7 @@
     @if (chatPersonInfo.isSingleChat) {
       <button (click)="changeIsDisconnectStatus('skip')">Skip</button>
     }
-    <input [(ngModel)]="currentMessage" (input)="commonError=''" placeholder="Message"/>
+    <input [formControl]="currentMessageControl" (input)="commonError=''" placeholder="Message"/>
     <button (click)="sendMessage()">Send</button>
   </div>
 
@@ -85,7 +90,7 @@
       <div class="common-information">
         <button (click)="isActivateSettings.set(false); titleError=''">Back</button>
         <button (click)="getGroupMembers()">List of users</button>
-        <div class="update-group-params">
+        <div class="update-group-params" [formGroup]="updateGroupForm">
           @if (commonErrorGetGroupMembers){
             <div>{{commonErrorGetGroupMembers}}</div>
           }
@@ -93,14 +98,19 @@
           @if (commonErrorUpdateChat){
             <div>{{commonErrorUpdateChat}}</div>
           }
-          <br>Title:  <input [(ngModel)]="group.title" (input)="titleError=''">
+          @if (updateGroupForm.controls.title.touched && updateGroupForm.controls.title.invalid){
+            @if(updateGroupForm.controls.title.errors?.["required"]) {<small>title is required</small>}
+            @if(updateGroupForm.controls.title.errors?.["minLength"]) {<small>Min length is 1</small>}
+            @if(updateGroupForm.controls.title.errors?.["maxLength"]) {<small>Max length is 50</small>}
+          }
+          <br>Title:  <input formControlName="title" (input)="titleError=''">
           @if (titleError) {
             <div>{{ titleError }}</div>
           }
 
           <div class="form-group">
             <label for="country">Country:</label>
-            <select id="country" [(ngModel)]="group.country">
+            <select id="country" [(ngModel)]="group.country" [ngModelOptions]="{standalone: true}">
               @for (country of countryList; track country.value) {
                 <option [ngValue]="country.value">{{ country.label }}</option>
               }
@@ -109,7 +119,7 @@
 
           <div class="form-group">
             <label for="city">City:</label>
-            <select id="city" [(ngModel)]="group.city">
+            <select id="city" [(ngModel)]="group.city" [ngModelOptions]="{standalone: true}">
               @for (city of cityList; track city.value) {
                 <option [ngValue]="city.value">{{ city.label }}</option>
               }
@@ -118,7 +128,7 @@
 
           <div class="form-group">
             <label for="age">Age:</label>
-            <select id="age" [(ngModel)]="group.age">
+            <select id="age" [(ngModel)]="group.age" [ngModelOptions]="{standalone: true}">
               @for (age of ageList; track age.value) {
                 <option [ngValue]="age.value">{{ age.label }}</option>
               }
@@ -127,7 +137,7 @@
 
           <div class="form-group">
             <label for="language">Language</label>
-            <select id="language" [(ngModel)]="group.lang">
+            <select id="language" [(ngModel)]="group.lang" [ngModelOptions]="{standalone: true}">
               @for (gender of langList; track gender.value) {
                 <option [ngValue]="gender.value">{{ gender.label }}</option>
               }

@@ -9,6 +9,7 @@ import {GroupChatService} from '../group-chat.service';
 import {Router} from '@angular/router';
 import {GroupMemberService} from '../group-member/group-member.service';
 import {ChatService} from '../chat.service';
+import {CommonValidator} from '../../../shared/validation/CommonValidator';
 
 @Component({
   selector: 'app-chat-groupMenu-menu',
@@ -55,7 +56,11 @@ export class GroupChatMenuComponent implements OnInit{
   commonErrorAddToGroup: string = ''
   titleError: string = ''
   createGroupForm = new FormGroup({
-    title: new FormControl(null)
+    title: new FormControl(null, [
+      CommonValidator.required,
+      CommonValidator.minLength(1),
+      CommonValidator.maxLength(50),
+    ])
   })
 
   countryList = Object.keys(CountryList)
@@ -90,6 +95,11 @@ export class GroupChatMenuComponent implements OnInit{
 
   async createGroup(){
     this.commonError = ''
+    if (this.createGroupForm.invalid){
+      this.createGroupForm.markAllAsTouched()
+      return
+    }
+    this.group.title = this.createGroupForm.value.title!
       this.chatService.createGroup(this.group).subscribe({
         next: value =>{
           this.signalService.addToGroup(value)

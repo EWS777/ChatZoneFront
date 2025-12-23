@@ -1,12 +1,14 @@
 import {Component, inject, OnInit, signal} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ConfirmService} from './confirm.service';
-import {FormsModule} from '@angular/forms';
+import {FormControl, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
+import {CommonValidator} from '../../../shared/validation/CommonValidator';
 
 @Component({
   selector: 'app-confirm',
   imports: [
-    FormsModule
+    FormsModule,
+    ReactiveFormsModule
   ],
   templateUrl: './confirm.component.html',
   styleUrl: './confirm.component.css'
@@ -16,9 +18,17 @@ export class ConfirmComponent implements OnInit{
   route = inject(ActivatedRoute)
   confirmService = inject(ConfirmService)
   commonError: string = ''
+  commonErrorReconfirm: string = ''
+  successMessage = signal<string>('')
 
   isConfirmed = signal<boolean | null>(null)
-  email: string | null = null
+  emailControl = new FormControl(null, [
+    Validators.email,
+    CommonValidator.required,
+    CommonValidator.minLength(5),
+    CommonValidator.maxLength(254),
+    CommonValidator.noSpaces, //just for strict attributes
+  ])
 
   ngOnInit(): void {
     const token = this.route.snapshot.queryParamMap.get('link')
@@ -39,12 +49,22 @@ export class ConfirmComponent implements OnInit{
   }
 
   reconfirm(){
-    this.confirmService.reconfirm(this.email!).subscribe({
-      next: () => {
-        this.router.navigate([''])
+    this.commonErrorReconfirm = ''
+    this.successMessage.set('')
+    if (this.emailControl.invalid) {
+      this.emailControl.markAsTouched();
+      return;
+    }
+    const emailValue = (this.emailControl.value || '').trim()
+    this.confirmService.reconfirm(emailValue).subscribe({
+      next: (response: any) => {
+        const msg = response?.message || 'Link was sent successfully!';
+
+        console.log('Server response:', response);
+        this.successMessage.set(msg);
       },
-      error: err => {
-        console.log('Has not confirm again!', err)
+      error: (err) => {
+        this.commonErrorReconfirm = err.error.title || 'Unhandled exception. To repair'
       }
     })
   }

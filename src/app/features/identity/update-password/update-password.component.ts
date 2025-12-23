@@ -1,7 +1,9 @@
 import {Component, inject, signal} from '@angular/core';
-import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {FormControl, FormGroup, ReactiveFormsModule} from '@angular/forms';
 import {PasswordService} from './password.service';
 import {RouterLink} from '@angular/router';
+import {CommonValidator} from '../../../shared/validation/CommonValidator';
+import {matchValidator} from '../../../shared/validation/MatchValidator';
 
 @Component({
   selector: 'app-update-password',
@@ -18,18 +20,32 @@ export class UpdatePasswordComponent {
   isPasswordChanged = signal<boolean>(false)
 
   passwordForm = new FormGroup({
-    oldPassword: new FormControl(null),
-    newPassword: new FormControl(null),
-    confirmedPassword: new FormControl(null)
-  })
+    oldPassword: new FormControl(null, [
+      CommonValidator.required,
+      CommonValidator.minLength(8),
+      CommonValidator.maxLength(64),
+      CommonValidator.noSpaces, //just for strict attributes
+    ]),
+    newPassword: new FormControl(null, [
+      CommonValidator.required,
+      CommonValidator.minLength(8),
+      CommonValidator.maxLength(64),
+      CommonValidator.noSpaces, //just for strict attributes
+    ]),
+    confirmedPassword: new FormControl(null, [
+      CommonValidator.required,
+      CommonValidator.minLength(8),
+      CommonValidator.maxLength(64),
+      CommonValidator.noSpaces, //just for strict attributes
+    ])
+  }, {validators: matchValidator('newPassword', 'confirmedPassword')})
 
   onSubmit() {
     this.commonError = ''
-    // if (this.password.value.newPassword!==this.password.value.confirmedPassword){
-    //   console.log("Password is not the same!")
-    // }
-    // else {
-    //   if (this.password.valid) {
+    if (this.passwordForm.invalid){
+      this.passwordForm.markAllAsTouched()
+      return
+    }
         const payload = {
           oldPassword: this.passwordForm.value.oldPassword || null,
           newPassword: this.passwordForm.value.newPassword || null
@@ -56,7 +72,5 @@ export class UpdatePasswordComponent {
             }
           }
         })
-      // }
-    // }
   }
 }
