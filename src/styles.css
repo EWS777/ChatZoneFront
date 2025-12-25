@@ -1,49 +1,95 @@
 @import "tailwindcss";
 
-* {
+@font-face {
+  font-family: 'Poppins';
+  src: url('/assets/fonts/Poppins-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Poppins';
+  src: url('/assets/fonts/Poppins-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Poppins';
+  src: url('/assets/fonts/Poppins-SemiBold.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Poppins';
+  src: url('/assets/fonts/Poppins-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
   margin: 0;
   padding: 0;
+
+  /*background-color: #f8f9fa; !* light background *!*/
+  background-color: rgb(32 19 18 ); /*dark background*/
+
+  background-image:
+    radial-gradient(at 0% 0%, rgba(220, 53, 69, 0.15) 0px, transparent 50%), /* color top left */
+    radial-gradient(at 100% 0%, rgba(102, 16, 242, 0.1) 0px, transparent 50%), /* color top right */
+    radial-gradient(at 100% 100%, rgba(220, 53, 69, 0.1) 0px, transparent 50%), /* color bottom right */
+    radial-gradient(at 0% 100%, rgba(102, 16, 242, 0.15) 0px, transparent 50%); /* color bottom left */
+
+  background-attachment: fixed;
+  height: 100vh;
 }
 
-html, body {
-  margin: 0;
-  padding: 0;
-  background-color: #9496d1;
+.frame-container {
+  background-color: #17153B;
+  border-radius: 30px;
+  color: #D1D5DB;
 }
 
-button{
-  background-color: #3d3d8c;
-  padding: 5px;
-  color: #1a092c;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
+.error-container small {
+  @apply text-[#e6382c] text-[11px] font-medium block md:text-[12px];
 }
 
-button:hover {
-  background-color: #292967;
-}
-
-.container {
-  background-color: #0b0b2d;
-  color: #c14a4a;
-  border-radius: 20px;
-  padding: 40px;
-  max-width: 600px;
-  margin: 50px auto;
+.backend-error-message {
+  color: #e6382c;
   text-align: center;
+  font-weight: 600;
 }
 
-ul {
-  list-style-type: none;
+.input-field{
+  @apply block py-3 bg-gray-600/70 w-full pl-10 pr-12 text-gray-300 rounded-2xl
+  outline-none border-2 border-transparent duration-300 transition-all
+  focus:border-gray-600 focus:scale-[1.02] md:pl-11 md:py-4
 }
 
-.common-information {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: #d0d0d0;
-  padding: 30px;
+.input-icon {
+  @apply absolute left-2 md:left-3 top-1/2 -translate-y-1/2 w-5 pointer-events-none;
+}
+
+.common-bottom{
+  @apply bg-[#2E236C] hover:bg-[#3d2f8a] w-full rounded-2xl py-[6px] uppercase
+  text-xl font-medium my-6 transition-all duration-300
+  hover:scale-[1.02] active:scale-[0.98]
+  hover:shadow-[0_10px_20px_rgba(0,0,0,0.4)]
+  hover:-translate-y-0.5 active:translate-y-0 active:shadow-none
+  disabled:opacity-50 disabled:cursor-not-allowed
+  md:my-8 md:py-3 md:text-2xl lg:py-4
+}
+
+.attribute-name{
+  @apply uppercase font-semibold text-sm pl-1 md:text-base
+}
+
+.input-error-active {
+  @apply !border-red-700 !shadow-[0_0_10px_rgba(230,56,44,0.2)];
 }

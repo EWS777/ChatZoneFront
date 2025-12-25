@@ -1,40 +1,40 @@
-<div class="container">
-  <div class="header">
+<div>
+  <div>
     @if (authService.isAuthenticatedValue){
-      <div class="user-buttons">
+      <div>
         <button (click)="onClickProfile()">{{ username || 'Profile'}}</button>
         <button (click)="onClickLogout()">Logout</button>
       </div>
     } @else {
       <button (click)="onClickLogin()">Login</button>
     }
-    <h1 class="title">ChatZone</h1>
-    <div class="online">Online: {{ 1231 }}</div>
+    <h1>ChatZone</h1>
+    <div>Online: {{ 1231 }}</div>
   </div>
 
-  <div class="chat-options">
-    <div class="chat-card">
+  <div>
+    <div>
       <h2>Individual chat</h2>
       <p>Online: {{1231}}</p>
-      <button class="go-button" (click)="activateFilter()">Go</button>
+      <button (click)="activateFilter()">Go</button>
     </div>
-    <div class="chat-card">
+    <div>
       <h2>Group chat</h2>
       <p>Online: {{ 1231 }}</p>
-      <button class="go-button" (click)="router.navigate(['/groups'])">Go</button>
+      <button (click)="router.navigate(['/groups'])">Go</button>
     </div>
   </div>
 </div>
 
 @if (isFilterActivated()){
-  <div class="chat-filter">
-    <div class="filter-header">
-      <button class="button-back" (click)="activateFilter()">Back</button>
+  <div>
+    <div>
+      <button (click)="activateFilter()">Back</button>
       <h2>Choose parameters to find person</h2>
     </div>
 
-    <div class="profile-container">
-      <div class="form-group">
+    <div>
+      <div>
         <label for="theme">Theme:</label>
         <select id="theme" [(ngModel)]="filter.theme">
           @for (theme of themeList; track theme.value) {
@@ -43,7 +43,7 @@
         </select>
       </div>
 
-      <div class="form-group">
+      <div>
         <label for="country">Country:</label>
         <select id="country" [(ngModel)]="filter.country">
           @for (country of countryList; track country.value) {
@@ -52,7 +52,7 @@
         </select>
       </div>
 
-      <div class="form-group">
+      <div>
         <label for="city">City:</label>
         <select id="city" [(ngModel)]="filter.city" >
           @for (city of cityList; track city.value) {
@@ -61,7 +61,7 @@
         </select>
       </div>
 
-      <div class="form-group">
+      <div>
         <label for="age">Age:</label>
         <select id="age" [(ngModel)]="filter.age" >
           @for (age of ageList; track age.value) {
@@ -70,7 +70,7 @@
         </select>
       </div>
 
-      <div class="form-group">
+      <div>
         <label for="language">Lang:</label>
         <select id="language" [(ngModel)]="filter.language">
           @for (lang of langList; track lang.value) {
@@ -79,7 +79,7 @@
         </select>
       </div>
 
-      <div class="form-group">
+      <div>
         <label for="your-gender">Your Gender:</label>
         <select id="your-gender" [(ngModel)]="filter.yourGender">
           @for (gender of genderList; track gender.value) {
@@ -88,7 +88,7 @@
         </select>
       </div>
 
-      <div class="form-group">
+      <div>
         <label for="partner-gender">Partner Gender:</label>
         <select id="partner-gender" [(ngModel)]="filter.partnerGender">
           @for (gender of genderList; track gender.value) {
@@ -102,14 +102,14 @@
 }
 
 @if (isFindPerson()){
-  <div class="chat-filter">
+  <div>
     <h2>Waiting...</h2>
     <button (click)="cancelFindPerson()">Cancel</button>
   </div>
 }
 
 @if (isAnyActiveChat()){
-  <div class="common-information">
+  <div>
     You have an active chat.
     <button (click)="router.navigate(['/chat'])">Come back</button>
   </div>

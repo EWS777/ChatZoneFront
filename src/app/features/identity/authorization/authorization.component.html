@@ -1,64 +1,94 @@
-﻿
-<div class="app-wrapper">
+﻿<div class="flex flex-col justify-start items-center h-full pt-[200px] md:pt-[130px] lg:pt-[180px]">
 
-  @if(!isConfirmEmailPage()){
-    <div class="auth-container">
-      <div>
-        <button name="button-login" (click)="isLogin.set(true)">Login</button>
-        <button name="button-login" (click)="isLogin.set(false)">Rejestracja</button>
+@if(!isConfirmEmailPage()){
+<div class="w-full px-6 max-w-[500px] md:max-w-[700px] md:px-16 lg:-mt-20">
+  <div class="text-center">
+    <h1 class="text-[#c64542] text-4xl font-semibold md:text-6xl drop-shadow-[0_0_15px_rgba(198,69,66,0.4)]">ChatZone</h1>
+    <p class="text-gray-400 font-medium pt-1 pb-8 md:text-xl md:pt-2 md:pb-10">Connect with strangers instantly</p>
+  </div>
+  <div>
+    <div class="frame-container shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
+      <div class="pt-6">
+        <div class="bg-[#150e33] flex justify-center rounded-2xl font-semibold w-fit mx-auto py-1 px-[6px] text-gray-400 text-lg md:text-xl md:py-2">
+          <button name="button-login" (click)="isLogin.set(true)"
+          [class.bg-[#2E236C]]="isLogin()" class="tab-button">Login</button>
+          <button name="button-login" (click)="isLogin.set(false)"
+          [class.bg-[#2E236C]]="!isLogin()" class="tab-button">Signup</button>
+        </div>
       </div>
-
       @if(isLogin()){
-        <form class="login-form" [formGroup]="loginForm" (ngSubmit)="onLoginSubmit()">
-          @if (commonErrorLogin) {
-            <div> {{ commonErrorLogin }} </div>
-          }
-          <label class="login-labels">
-            Username/Email
-            <input formControlName = "usernameOrEmail" class="login-inputs" type="text" placeholder="example123">
+        <div class="px-6 pt-6 md:px-10 md:pt-8">
+          <form [formGroup]="loginForm" (ngSubmit)="onLoginSubmit()">
+            @if (commonErrorLogin) {
+              <div class="backend-error-message"> {{ commonErrorLogin }} </div>
+            }
+            <label class="attribute-name">Login</label>
+            <div class="relative">
+              <img src="/assets/imgs/user.svg" alt="" class="input-icon">
+              <input formControlName = "usernameOrEmail" type="text" placeholder="Enter your login" class="input-field"
+             [class.input-error-active]="loginForm.controls.usernameOrEmail.invalid && loginForm.controls.usernameOrEmail.touched"
+            >
+            </div>
             @if (loginForm.controls.usernameOrEmail.touched && loginForm.controls.usernameOrEmail.invalid){
-              @if(loginForm.controls.usernameOrEmail.errors?.["required"]) {<small>usernameOrEmail is required</small>}
-              @if(loginForm.controls.usernameOrEmail.errors?.["minLength"]) {<small>Min length is {{ loginForm.get('usernameOrEmail')?.errors?.['minLength'].requiredLength }}</small>}
-              @if(loginForm.controls.usernameOrEmail.errors?.["maxLength"]) {<small>Max length is {{ loginForm.get('usernameOrEmail')?.errors?.['maxLength'].requiredLength }}</small>}
-              @if (loginForm.controls.usernameOrEmail.errors?.["spaces"]) {<small>Can not contains spaces</small>}
-              @if(loginForm.controls.usernameOrEmail.errors?.["pattern"]) {<small>usernameOrEmail can not contains special symbols, just '_' and '-'</small>}
-              @if (loginForm.controls.usernameOrEmail.hasError('email')) { <small>Email is not valid</small> }
+              <div class="error-container flex flex-col pl-1 pt-1 md:pl-2 md:pt-2">
+                @if(loginForm.controls.usernameOrEmail.errors?.["required"]) {<small>Login is required</small>}
+                @if(loginForm.controls.usernameOrEmail.errors?.["minLength"]) {<small>Min length is {{ loginForm.get('usernameOrEmail')?.errors?.['minLength'].requiredLength }}</small>}
+                @if(loginForm.controls.usernameOrEmail.errors?.["maxLength"]) {<small>Max length is {{ loginForm.get('usernameOrEmail')?.errors?.['maxLength'].requiredLength }}</small>}
+                @if (loginForm.controls.usernameOrEmail.errors?.["spaces"]) {<small>Can not contains spaces</small>}
+                @if(loginForm.controls.usernameOrEmail.errors?.["pattern"]) {<small>Login can not contains special symbols, just '_' and '-'</small>}
+                @if (loginForm.controls.usernameOrEmail.hasError('email')) { <small>Email is not valid</small> }
+              </div>
             }
             @if (loginForm.controls.usernameOrEmail.errors?.['backend']; as backendErrors) {
               @for (err of backendErrors; track err) {
                 <small>{{ err }}</small>
               }
             }
-          </label>
-
-          <label class="login-labels">
-            Password
-            <input formControlName = "password" class="login-inputs" type="text" placeholder="example123">
+            <div class="pt-4 md:pt-7">
+              <label class="attribute-name">Password</label>
+            </div>
+            <div class="relative">
+              <img src="/assets/imgs/password.svg" alt="" class="input-icon">
+              <input formControlName = "password" [type]="hidePassword() ? 'password' : 'text'" placeholder="••••••••" class="input-field"
+                     [class.input-error-active]="loginForm.controls.password.invalid && loginForm.controls.password.touched">
+              <button type="button" (click)="hidePassword.set(!hidePassword())" class="absolute right-4 top-1/2 -translate-y-1/2">
+                <img [src]="hidePassword() ? '/assets/imgs/eye-hide.svg' : '/assets/imgs/eye.svg'" alt="" class="w-5">
+              </button>
+            </div>
             @if (loginForm.controls.password.touched && loginForm.controls.password.invalid){
-              @if(loginForm.controls.password.errors?.["required"]) {<small>password is required</small>}
-              @if(loginForm.controls.password.errors?.["minLength"]) {<small>Min length is 8</small>}
-              @if(loginForm.controls.password.errors?.["maxLength"]) {<small>Max length is 64</small>}
-              @if (loginForm.controls.password.errors?.["spaces"]) {<small>Can not contains spaces</small>}
+              <div class="error-container flex flex-col pl-1 pt-1 md:pl-2 md:pt-2">
+                @if(loginForm.controls.password.errors?.["required"]) {<small>password is required</small>}
+                @if(loginForm.controls.password.errors?.["minLength"]) {<small>Min length is 8</small>}
+                @if(loginForm.controls.password.errors?.["maxLength"]) {<small>Max length is 64</small>}
+                @if (loginForm.controls.password.errors?.["spaces"]) {<small>Can not contains spaces</small>}
+              </div>
             }
             @if (loginForm.controls.password.errors?.['backend']; as backendErrors) {
               @for (err of backendErrors; track err) {
                 <small>{{ err }}</small>
               }
             }
-          </label>
-
-          <button type="submit">Login</button>
-          <a [routerLink]="['/reset-password']">Zapomninałeś hasła?</a>
-        </form>
+            <a [routerLink]="['/reset-password']" class="block text-right pt-1 text-sm pr-1 text-[#7C73C0] font-semibold hover:text-[#AD88C6] md:pt-2">Forgot password?</a>
+            <button type="submit" [disabled]="isLoading() || loginForm.invalid" class="common-bottom">
+              @if (isLoading()) {
+                <div class="">
+                  <img src="/assets/imgs/loading.svg" alt="" class="w-7 md:w-8 mx-auto animate-spin">
+                </div>
+              } @else {
+                <span>Login</span>
+              }
+            </button>
+          </form>
+        </div>
       }
       @else {
-        <form class="login-form" [formGroup]="registrationForm" (ngSubmit)="onRegistrationSubmit()">
+        <form [formGroup]="registrationForm" (ngSubmit)="onRegistrationSubmit()">
           @if (commonError) {
             <div>{{ commonError }}</div>
           }
-          <label class="auth-labels">
+          <label>
             Email
-            <input formControlName = "email" class="auth-inputs" type="text" placeholder="example123">
+            <input formControlName = "email" type="text" placeholder="example123">
             @if (registrationForm.controls.email.invalid && registrationForm.controls.email.touched) {
               @if (registrationForm.controls.email.hasError('email')) { <small>Email is not valid</small> }
               @if(registrationForm.controls.email.errors?.["required"]) {<small>email is required</small>}
@@ -73,9 +103,9 @@
             }
           </label>
 
-          <label class="auth-labels">
+          <label>
             Username
-            <input formControlName = "username" class="auth-inputs" type="text" placeholder="example123">
+            <input formControlName = "username" type="text" placeholder="example123">
               @if (registrationForm.controls.username.touched && registrationForm.controls.username.invalid){
                 @if(registrationForm.controls.username.errors?.["required"]) {<small>username is required</small>}
                 @if(registrationForm.controls.username.errors?.["minLength"]) {<small>Min length is 8</small>}
@@ -90,9 +120,9 @@
             }
           </label>
 
-          <label class="auth-labels">
+          <label>
             Password
-            <input formControlName = "password" class="auth-inputs" type="text" placeholder="example123">
+            <input formControlName = "password" type="text" placeholder="example123">
             @if(registrationForm.errors?.["passwordMismatch"]) {<small>Passwords do not match</small>}
               @if (registrationForm.controls.password.touched && registrationForm.controls.password.invalid){
                 @if(registrationForm.controls.password.errors?.["required"]) {<small>password is required</small>}
@@ -107,9 +137,9 @@
             }
           </label>
 
-          <label class="auth-labels">
+          <label>
             Confirm Password
-            <input formControlName = "confirmedPassword" class="auth-inputs" type="text" placeholder="example123">
+            <input formControlName = "confirmedPassword" type="text" placeholder="example123">
             @if(registrationForm.errors?.["passwordMismatch"]) {<small>Passwords do not match</small>}
               @if (registrationForm.controls.confirmedPassword.touched && registrationForm.controls.confirmedPassword.invalid){
                 @if(registrationForm.controls.confirmedPassword.errors?.["required"]) {<small>password is required</small>}
@@ -123,6 +153,8 @@
         </form>
       }
     </div>
+  </div>
+</div>
   } @else {
     Proszę podtwierdzić email żeby aktywować konto. Link został wysłany mailowo
     <a [routerLink]="['/']">Przejdź do strony głównej</a>

@@ -22,6 +22,8 @@ export class AuthorizationComponent{
 
   isLogin = signal<boolean>(true)
   isConfirmEmailPage = signal<boolean>(false)
+  isLoading = signal<boolean>(false)
+  hidePassword = signal<boolean>(true)
   commonError: string = ''
   commonErrorLogin: string = ''
 
@@ -74,13 +76,16 @@ export class AuthorizationComponent{
       this.loginForm.markAllAsTouched()
       return
     }
+    this.isLoading.set(true)
     //   @ts-ignore
       this.authService.postLogin(this.loginForm.value).subscribe({
         next: () => {
+          this.isLoading.set(false)
           console.log('Вход выполнен');
           this.route.navigate([''])
         },
         error: (err) => {
+          this.isLoading.set(false)
           if(err.status === 400 && err.error && err.error.errors){
             const errors = err.error.errors;
 
@@ -105,6 +110,7 @@ export class AuthorizationComponent{
       this.registrationForm.markAllAsTouched()
       return
     }
+    this.isLoading.set(true)
       const dataToSend = {
         email: (this.registrationForm.get('email')?.value as string | null)?.trim().toLowerCase(),
         username: this.registrationForm.get('username')?.value,
@@ -114,10 +120,12 @@ export class AuthorizationComponent{
       // @ts-ignore
       this.authService.registerLogin(dataToSend).subscribe({
         next: value => {
+          this.isLoading.set(false)
           console.log('Регистрация прошла успешно', value);
           this.isConfirmEmailPage.set(true)
         },
         error: (err) => {
+          this.isLoading.set(false)
           if(err.status === 400 && err.error && err.error.errors){
             const errors = err.error.errors;
 
