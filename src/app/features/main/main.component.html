@@ -1,105 +1,130 @@
-<div>
-  <div>
-    @if (authService.isAuthenticatedValue){
-      <div>
-        <button (click)="onClickProfile()">{{ username || 'Profile'}}</button>
-        <button (click)="onClickLogout()">Logout</button>
-      </div>
-    } @else {
-      <button (click)="onClickLogin()">Login</button>
-    }
-    <h1>ChatZone</h1>
-    <div>Online: {{ 1231 }}</div>
-  </div>
+<div class="flex flex-col justify-start items-center pt-[40px] md:pt-[70px] lg:pt-[150px] md:pb-20">
+  <div class="w-full px-6 max-w-[500px] md:max-w-[600px] md:px-0 lg:-mt-20 lg:max-w-[1000px] relative lg:px-10">
+    <div class="w-full border-b-2 border-[#0f1a2e]/30 shadow-[0_35px_25px_-25px_rgba(11,19,33,0.8)]">
+      @if (!authService.isAuthenticatedValue){
+        <div class="flex justify-between pb-3 md:pb-0">
+          <button (click)="onClickProfile()" class="bg-[#2E236C] hover:bg-[#3d2f8a] rounded-2xl py-[6px] uppercase text-xl
+          font-medium transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] hover:shadow-[0_10px_20px_rgba(0,0,0,0.4)]
+          hover:-translate-y-0.5 active:translate-y-0 active:shadow-none disabled:opacity-50 disabled:cursor-not-allowed md:mb-3
+          md:py-3 md:text-xl lg:py-4 text-[#D1D5DB] px-6">
+            <img src="/assets/imgs/user.svg" alt="" class="w-10 mx-auto">
+          </button>
+          <button (click)="onClickLogout()" class="bg-[#2E236C] hover:bg-[#3d2f8a] rounded-2xl py-[6px] uppercase text-xl
+          font-medium transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] hover:shadow-[0_10px_20px_rgba(0,0,0,0.4)]
+          hover:-translate-y-0.5 active:translate-y-0 active:shadow-none disabled:opacity-50 disabled:cursor-not-allowed md:mb-3
+          md:py-3 md:text-xl lg:py-4 px-3 text-[#D1D5DB]">Logout</button>
+        </div>
+      } @else {
+        <div class="pb-3 md:pb-0">
+          <button (click)="onClickLogin()" class="bg-[#2E236C] hover:bg-[#3d2f8a] rounded-2xl py-[6px] uppercase text-xl
+          font-medium transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] hover:shadow-[0_10px_20px_rgba(0,0,0,0.4)]
+          hover:-translate-y-0.5 active:translate-y-0 active:shadow-none disabled:opacity-50 disabled:cursor-not-allowed md:mb-3
+          md:py-3 md:text-xl lg:py-4 px-3 text-[#D1D5DB]">Login</button>
+        </div>
+      }
+    </div>
 
-  <div>
-    <div>
-      <h2>Individual chat</h2>
-      <p>Online: {{1231}}</p>
-      <button (click)="activateFilter()">Go</button>
+    <div class="text-center pt-9 md:pt-14 lg:pt-20">
+      <h1 class="text-[#c64542] text-4xl font-semibold md:text-6xl drop-shadow-[0_0_15px_rgba(198,69,66,0.4)]">ChatZone</h1>
+      <p class="text-gray-400 font-medium pt-1 pb-8 md:text-xl md:pt-2 md:pb-10">Connect with strangers instantly</p>
     </div>
-    <div>
-      <h2>Group chat</h2>
-      <p>Online: {{ 1231 }}</p>
-      <button (click)="router.navigate(['/groups'])">Go</button>
+    <div class="grid text-center gap-6 md:grid-cols-2 md:gap-9">
+      <div class="frame-container rounded-2xl px-4 md:px-9">
+        <img src="/assets/imgs/user.svg" alt="" class="w-8 mx-auto pt-8 md:w-10 lg:w-12 lg:pt-16">
+        <h1 class="font-semibold text-2xl pt-4 text-gray-200 lg:text-3xl">Individual chat</h1>
+        <div class="text-gray-400 font-medium lg:pt-1">Connect and meet new people </div>
+        <p class="pt-3 text-green-500 font-medium text-sm lg:text-base lg:pt-6">{{1231}} users online</p>
+        <button (click)="activateFilter()" class="common-bottom">Go to chat</button>
+      </div>
+      <div class="frame-container rounded-2xl px-4 md:px-9">
+        <img src="/assets/imgs/people-group.svg" alt="" class="w-8 mx-auto pt-8 md:w-10 lg:w-12 lg:pt-16">
+        <h1 class="font-semibold text-2xl pt-4 text-gray-200 lg:text-3xl">Group chat</h1>
+        <div class="text-gray-400 font-medium lg:pt-1">Join to live conversations with other peoples</div>
+        <p class="pt-3 text-green-500 font-medium text-sm lg:text-base lg:pt-6">{{1231}} active groups</p>
+        <button (click)="router.navigate(['/groups'])" class="common-bottom">Go to groups</button>
+      </div>
     </div>
+
+      @if (isFilterActivated()){
+        <div class="mb-[350px] md:mb-[650px] lg:mb-[100px]">
+          <div class="frame-container absolute top-[166px] md:top-[230px] max-w-[600px] inset-x-6 mx-auto md:inset-x-0 lg:top-[100px] lg:max-w-full lg:inset-x-9">
+            <div class="mx-auto px-6 md:px-9 lg:px-[100px]">
+              <img src="/assets/imgs/return.svg" alt="" class="w-9 pt-4 md:pt-6 lg:pt-10" (click)="activateFilter()">
+              <div>
+                <h1 class="font-semibold text-xl pt-4 text-gray-200 lg:text-3xl text-center pb-6">Choose parameters to find person</h1>
+              </div>
+
+              <div class="grid lg:grid-cols-2 lg:gap-x-9 lg:gap-y-4 gap-4 md:gap-7">
+                <div>
+                  <label class="attribute-name" for="theme">Theme</label>
+                  <select class="input-field" id="theme" [(ngModel)]="filter.theme">
+                    @for (theme of themeList; track theme.value) {
+                      <option [ngValue]="theme.value">{{theme.label}}</option>
+                    }
+                  </select>
+                </div>
+
+                <div>
+                  <label class="attribute-name" for="country">Country</label>
+                  <select class="input-field" id="country" [(ngModel)]="filter.country">
+                    @for (country of countryList; track country.value) {
+                      <option [ngValue]="country.value">{{country.label}}</option>
+                    }
+                  </select>
+                </div>
+
+                <div>
+                  <label class="attribute-name" for="city">City</label>
+                  <select class="input-field" id="city" [(ngModel)]="filter.city" >
+                    @for (city of cityList; track city.value) {
+                      <option [ngValue]="city.value">{{city.label}}</option>
+                    }
+                  </select>
+                </div>
+
+                <div>
+                  <label class="attribute-name" for="age">Age</label>
+                  <select class="input-field" id="age" [(ngModel)]="filter.age" >
+                    @for (age of ageList; track age.value) {
+                      <option [ngValue]="age.value">{{ age.label }}</option>
+                    }
+                  </select>
+                </div>
+
+                <div>
+                  <label class="attribute-name" for="language">Lang</label>
+                  <select class="input-field" id="language" [(ngModel)]="filter.language">
+                    @for (lang of langList; track lang.value) {
+                      <option [ngValue]="lang.value">{{lang.label}}</option>
+                    }
+                  </select>
+                </div>
+
+                <div>
+                  <label class="attribute-name" for="your-gender">Your Gender</label>
+                  <select class="input-field" id="your-gender" [(ngModel)]="filter.yourGender">
+                    @for (gender of genderList; track gender.value) {
+                      <option [ngValue]="gender.value">{{gender.label}}</option>
+                    }
+                  </select>
+                </div>
+
+                <div>
+                  <label class="attribute-name" for="partner-gender">Partner Gender</label>
+                  <select class="input-field" id="partner-gender" [(ngModel)]="filter.partnerGender">
+                    @for (gender of genderList; track gender.value) {
+                      <option [ngValue]="gender.value">{{gender.label}}</option>
+                    }
+                  </select>
+                </div>
+              </div>
+              <button class="common-bottom" (click)="findPerson()">Find</button>
+            </div>
+          </div>
+        </div>
+      }
   </div>
 </div>
-
-@if (isFilterActivated()){
-  <div>
-    <div>
-      <button (click)="activateFilter()">Back</button>
-      <h2>Choose parameters to find person</h2>
-    </div>
-
-    <div>
-      <div>
-        <label for="theme">Theme:</label>
-        <select id="theme" [(ngModel)]="filter.theme">
-          @for (theme of themeList; track theme.value) {
-            <option [ngValue]="theme.value">{{theme.label}}</option>
-          }
-        </select>
-      </div>
-
-      <div>
-        <label for="country">Country:</label>
-        <select id="country" [(ngModel)]="filter.country">
-          @for (country of countryList; track country.value) {
-            <option [ngValue]="country.value">{{country.label}}</option>
-          }
-        </select>
-      </div>
-
-      <div>
-        <label for="city">City:</label>
-        <select id="city" [(ngModel)]="filter.city" >
-          @for (city of cityList; track city.value) {
-            <option [ngValue]="city.value">{{city.label}}</option>
-          }
-        </select>
-      </div>
-
-      <div>
-        <label for="age">Age:</label>
-        <select id="age" [(ngModel)]="filter.age" >
-          @for (age of ageList; track age.value) {
-            <option [ngValue]="age.value">{{ age.label }}</option>
-          }
-        </select>
-      </div>
-
-      <div>
-        <label for="language">Lang:</label>
-        <select id="language" [(ngModel)]="filter.language">
-          @for (lang of langList; track lang.value) {
-            <option [ngValue]="lang.value">{{lang.label}}</option>
-          }
-        </select>
-      </div>
-
-      <div>
-        <label for="your-gender">Your Gender:</label>
-        <select id="your-gender" [(ngModel)]="filter.yourGender">
-          @for (gender of genderList; track gender.value) {
-            <option [ngValue]="gender.value">{{gender.label}}</option>
-          }
-        </select>
-      </div>
-
-      <div>
-        <label for="partner-gender">Partner Gender:</label>
-        <select id="partner-gender" [(ngModel)]="filter.partnerGender">
-          @for (gender of genderList; track gender.value) {
-            <option [ngValue]="gender.value">{{gender.label}}</option>
-          }
-        </select>
-      </div>
-    </div>
-      <button (click)="findPerson()">Find</button>
-  </div>
-}
 
 @if (isFindPerson()){
   <div>
