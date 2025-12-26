@@ -68,7 +68,7 @@
                 <small>{{ err }}</small>
               }
             }
-            <a [routerLink]="['/reset-password']" class="block text-right pt-1 text-sm pr-1 text-[#7C73C0] font-semibold hover:text-[#AD88C6] md:pt-2">Forgot password?</a>
+            <a [routerLink]="['/reset-password']" class="block ml-auto pt-1 text-sm pr-1 text-[#7C73C0] font-semibold hover:text-[#AD88C6] md:pt-2 w-fit">Forgot password?</a>
             <button type="submit" [disabled]="isLoading() || loginForm.invalid" class="common-bottom">
               @if (isLoading()) {
                 <div class="">
