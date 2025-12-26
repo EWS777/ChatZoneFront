@@ -19,6 +19,7 @@ export class ResetPasswordComponent {
   resetPasswordService = inject(ResetPasswordService)
 
   isSend = signal<boolean>(false)
+  isLoading = signal<boolean>(false)
   commonError: string = ''
 
   resetPasswordForm = new FormGroup({
@@ -37,12 +38,15 @@ export class ResetPasswordComponent {
       this.resetPasswordForm.markAllAsTouched()
       return
     }
+    this.isLoading.set(true)
     const email = this.resetPasswordForm.get('email')?.value ?? null;
     this.resetPasswordService.resetPassword(email).subscribe({
       next: () => {
+        this.isLoading.set(false)
         this.isSend.set(true);
       },
       error: (err) => {
+        this.isLoading.set(false)
         if(err.status === 400 && err.error && err.error.errors){
           const errors = err.error.errors;
 
