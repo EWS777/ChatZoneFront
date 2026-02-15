@@ -1,40 +1,76 @@
-<form class="profile-form" [formGroup]="updateProfileForm" (ngSubmit)="onClickUpdate()">
-  @if (commonError) {
-    <div>{{ commonError }}</div>
-  }
-  <div>
-    Email:
-    <input type="email" [value]="profile.email" readonly>
-  </div>
-  <div>
-    Username:
-    <input type="text" formControlName="username" name="username">
-    @if (updateProfileForm.controls.username.touched && updateProfileForm.controls.username.invalid){
-      @if(updateProfileForm.controls.username.errors?.["required"]) {<small>username is required</small>}
-      @if(updateProfileForm.controls.username.errors?.["minLength"]) {<small>Min length is 8</small>}
-      @if(updateProfileForm.controls.username.errors?.["maxLength"]) {<small>Max length is 30</small>}
-      @if (updateProfileForm.controls.username.errors?.["spaces"]) {<small>Can not contains spaces</small>}
-      @if(updateProfileForm.controls.username.errors?.["pattern"]) {<small>Username can not contains special symbols, just '_' and '-'</small>}
-    }
-    @if (updateProfileForm.controls.username.errors?.['backend']; as backendErrors) {
-      @for (err of backendErrors; track err) {
-        <small>{{ err }}</small>
+<div>
+  <h1 class="font-semibold text-2xl pt-4 text-gray-200 lg:text-3xl text-center mb-8
+    md:pt-8">Profile</h1>
+</div>
+<div class="lg:w-[400px] lg:mx-auto">
+    <form [formGroup]="updateProfileForm" (ngSubmit)="onClickUpdate()">
+      @if (commonError) {
+        <div class="backend-error-message">{{ commonError }}</div>
       }
-    }
+      <label class="attribute-name">Email</label>
+      <div class="relative">
+        <img src="/assets/imgs/email.svg" alt="" class="input-icon">
+        <input type="email" [value]="profile.email" readonly class="input-field">
+      </div>
+
+      <div class="pt-4 md:pt-7">
+        <label class="attribute-name">Username</label>
+      </div>
+      <div class="relative">
+        <img src="/assets/imgs/user.svg" alt="" class="input-icon">
+        <input formControlName = "username" type="text" placeholder="Enter your username" class="input-field"
+               [class.input-error-active]="updateProfileForm.controls.username.invalid && updateProfileForm.controls.username.touched">
+      </div>
+      <div>
+        @if (updateProfileForm.controls.username.touched && updateProfileForm.controls.username.invalid){
+          <div class="error-container flex flex-col pl-1 pt-1 md:pl-2 md:pt-2">
+            @if(updateProfileForm.controls.username.errors?.["required"]) {<small>username is required</small>}
+            @if(updateProfileForm.controls.username.errors?.["minLength"]) {<small>Min length is 8</small>}
+            @if(updateProfileForm.controls.username.errors?.["maxLength"]) {<small>Max length is 30</small>}
+            @if (updateProfileForm.controls.username.errors?.["spaces"]) {<small>Can not contains spaces</small>}
+            @if(updateProfileForm.controls.username.errors?.["pattern"]) {<small>Username can not contains special symbols, just '_' and '-'</small>}
+          </div>
+        }
+        @if (updateProfileForm.controls.username.errors?.['backend']; as backendErrors) {
+          @for (err of backendErrors; track err) {
+            <small>{{ err }}</small>
+          }
+        }
+      </div>
+      @if (updateProfileForm.dirty){
+        <div class="flex justify-center pt-4">
+          <button type="submit" class="bg-[#2E236C] hover:bg-[#3d2f8a] w-fit rounded-2xl py-1 px-4
+  text-lg font-medium transition-all duration-300
+  hover:scale-[1.02] active:scale-[0.98]
+  hover:shadow-[0_10px_20px_rgba(0,0,0,0.4)]
+  hover:-translate-y-0.5 active:translate-y-0 active:shadow-none
+  disabled:opacity-50 disabled:cursor-not-allowed">Save changes</button>
+        </div>
+      }
+
+<!--      TODO delete this part-->
+<!--      <div>-->
+<!--        Do you want find by profile filter?-->
+<!--        <input type="radio" id="yes" name="isFindByProfile" [(ngModel)]="profile.isFindByProfile" [value]="true">-->
+<!--        <label for="yes">Yes</label>-->
+<!---->
+<!--        <input type="radio" id="no" name="isFindByProfile" [(ngModel)]="profile.isFindByProfile" [value]="false">-->
+<!--        <label for="no">No</label>-->
+<!--      </div>-->
+
+      <div class="flex flex-col items-center pt-4 gap-4 pb-10 md:flex-row md:justify-center md:pt-6">
+        <button (click)="onClickDeleteProfile()" class="bg-[#2E236C] hover:bg-[#3d2f8a] w-fit rounded-2xl py-1 px-4
+  text-lg font-medium transition-all duration-300
+  hover:scale-[1.02] active:scale-[0.98]
+  hover:shadow-[0_10px_20px_rgba(0,0,0,0.4)]
+  hover:-translate-y-0.5 active:translate-y-0 active:shadow-none
+  disabled:opacity-50 disabled:cursor-not-allowed">Delete profile</button>
+        <button (click)="onClickUpdatePassword()" class="bg-[#2E236C] hover:bg-[#3d2f8a] w-fit rounded-2xl py-1 px-4
+  text-lg font-medium transition-all duration-300
+  hover:scale-[1.02] active:scale-[0.98]
+  hover:shadow-[0_10px_20px_rgba(0,0,0,0.4)]
+  hover:-translate-y-0.5 active:translate-y-0 active:shadow-none
+  disabled:opacity-50 disabled:cursor-not-allowed">Change password</button>
+      </div>
+    </form>
   </div>
-
-  <div>
-    Do you want find by profile filter?
-    <input type="radio" id="yes" name="isFindByProfile" [(ngModel)]="profile.isFindByProfile" [value]="true">
-    <label for="yes">Yes</label>
-
-    <input type="radio" id="no" name="isFindByProfile" [(ngModel)]="profile.isFindByProfile" [value]="false">
-    <label for="no">No</label>
-  </div>
-
-  <ul>
-    <button (click)="onClickDeleteProfile()">Delete profile</button>
-    <button (click)="onClickUpdatePassword()">Change password</button>
-    <button type="submit">Save changes</button>
-  </ul>
-</form>
