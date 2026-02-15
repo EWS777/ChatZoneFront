@@ -1,41 +1,61 @@
-<div class="container">
-  <div class="group-header">
-    <button (click)="router.navigate(['/'])">Back</button>
-    <h2>List of groups</h2>
-    <button (click)="isCreateGroup.set(true)">Create group</button>
-  </div>
-
-  @for (groups of groupList; track groups.idGroup) {
-    <div class="group-block">
-      @if (commonErrorAddToGroup){
-        <div>{{commonErrorAddToGroup}}</div>
-      }
-      <div class="group-info">
-        <span>{{groups.title}}</span>
-        @if (groups.country !== null){
-          <span>{{CountryList[groups.country]}}</span>
-        }
-
-        @if (groups.city !== null){
-          <span>{{CityList[groups.city]}}</span>
-        }
-
-        @if (groups.age !== null){
-          <span>{{AgeList[groups.age]}}</span>
-        }
-
-        @if (groups.lang !== null){
-          <span>{{LangList[groups.lang]}}</span>
-        }
-        Online: {{groups.userCount}}
+<div class="flex flex-col justify-start items-center pt-[40px] md:pt-[70px] lg:pt-[150px] md:pb-20">
+  <div class="w-full max-w-[500px] px-6 md:max-w-[600px] md:px-0 lg:-mt-20 lg:max-w-[1000px] lg:px-10">
+    <!--  <div class="w-full px-6 max-w-[500px] md:max-w-[600px] md:px-0 lg:-mt-20 lg:max-w-[1000px] relative lg:px-10">-->
+    <div class="flex items-center justify-between my-auto">
+      <img src="/assets/imgs/return.svg" alt="" class="w-9" (click)="router.navigate(['/'])">
+      <!--    <button (click)="router.navigate(['/'])">Back</button>-->
+      <!--    <h2>List of groups</h2>-->
+      <!--    <button (click)="isCreateGroup.set(true)">Create group</button>-->
+      <div class="hidden md:block">
+        <h1 class="font-semibold text-xl text-gray-200 lg:text-3xl text-center">List of groups</h1>
       </div>
-      <button (click)="connectToGroup(groups.idGroup!)">Go</button>
+
+      <button (click)="isCreateGroup.set(true)" class="bg-[#2E236C] hover:bg-[#3d2f8a] rounded-2xl py-[6px] uppercase text-base
+          font-medium transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] hover:shadow-[0_10px_20px_rgba(0,0,0,0.4)]
+          hover:-translate-y-0.5 active:translate-y-0 active:shadow-none disabled:opacity-50 disabled:cursor-not-allowed md:mb-3
+          md:py-3 md:text-xl lg:py-4 px-3 text-[#D1D5DB]">Create group</button>
     </div>
-  }
+    <div class="md:hidden">
+      <h1 class="font-semibold text-xl text-gray-200 lg:text-3xl text-center pt-6">List of groups</h1>
+    </div>
+
+    <div class="frame-container py-8 px-4 md:px-6 lg:py-10 lg:px-10 flex flex-col gap-6">
+      @if (commonErrorAddToGroup){
+        <div class="backend-error-message">{{commonErrorAddToGroup}}</div>
+      }
+      @for (groups of groupList; track groups.idGroup) {
+        <div class="flex justify-between bg-[#251C57] rounded-2xl p-2">
+          <div class="flex flex-wrap gap-2">
+            <span class="bg-[#2E236C] rounded-2xl h-fit my-auto text-sm md:text-base px-2 py-2 font-medium text-[#D1D5DB]">{{groups.title}}</span>
+            @if (groups.country !== null){
+              <span class="bg-[#2E236C] rounded-2xl my-auto text-sm h-fit md:text-base px-2 py-2 font-medium text-[#D1D5DB]">{{CountryList[groups.country]}}</span>
+            }
+
+            @if (groups.city !== null){
+              <span class="bg-[#2E236C] rounded-2xl my-auto text-sm h-fit md:text-base px-2 py-2 font-medium text-[#D1D5DB]">{{CityList[groups.city]}}</span>
+            }
+
+            @if (groups.age !== null){
+              <span class="bg-[#2E236C] rounded-2xl text-sm my-auto h-fit md:text-base px-2 py-2 font-medium text-[#D1D5DB]">{{AgeList[groups.age]}}</span>
+            }
+
+            @if (groups.lang !== null){
+              <span class="bg-[#2E236C] rounded-2xl text-sm my-auto md:text-base h-fit px-2 py-2 font-medium text-[#D1D5DB]">{{LangList[groups.lang]}}</span>
+            }
+            <span class="bg-[#2E236C] rounded-2xl text-sm md:text-base my-auto px-2 py-2 h-fit font-medium text-[#D1D5DB]">Online: {{groups.userCount || 0}}</span>
+          </div>
+          <button (click)="connectToGroup(groups.idGroup!)"
+          class="bg-[#2E236C] hover:bg-[#3d2f8a] rounded-2xl uppercase text-base h-fit px-2 py-2 md:px-4
+          font-medium transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] hover:shadow-[0_10px_20px_rgba(0,0,0,0.4)]
+          hover:-translate-y-0.5 active:translate-y-0 active:shadow-none disabled:opacity-50 disabled:cursor-not-allowed text-[#D1D5DB] my-auto">Go</button>
+        </div>
+      }
+    </div>
+  </div>
 </div>
 
 @if (isCreateGroup()){
-  <div class="create-group" [formGroup]="createGroupForm">
+  <div class="create-group">
     <button (click)="isCreateGroup.set(false); commonError = ''">Back</button>
     @if (commonError) {
       <div>{{ commonError }}</div>
@@ -46,7 +66,10 @@
       @if(createGroupForm.controls.title.errors?.["minLength"]) {<small>Min length is 1</small>}
       @if(createGroupForm.controls.title.errors?.["maxLength"]) {<small>Max length is 50</small>}
     }
+    <div [formGroup]="createGroupForm">
     Title:  <input formControlName="title" (input)="titleError = ''">
+    </div>
+
     @if (titleError){
       <div>{{titleError}}</div>
     }
