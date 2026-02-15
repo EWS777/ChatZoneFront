@@ -1,13 +1,43 @@
-Blocked Users
-
+<div>
+  <h1 class="font-semibold text-2xl pt-4 text-gray-200 lg:text-3xl text-center mb-8
+    md:pt-8">Blocked Users</h1>
+</div>
 @if (blockedUser?.length === 0) {
-  You don't have any blocked users
+  <div class="pb-10">
+    <h1 class="font-semibold text-lg text-gray-200 lg:text-xl text-center">
+      You don't have any blocked users</h1>
+  </div>
 } @else {
-  @for (blockedUsers of blockedUser; track blockedUsers.idBlockedPerson) {
-    <ul>
-      <li>
-        <pre>{{ blockedUsers.blockedUsername }}    {{ blockedUsers.createdAt | date:'dd.MM.yyyy'}}    <button (click)="delete(blockedUsers.idBlockedPerson!)">Unblock</button></pre>
-      </li>
-    </ul>
-  }
+  <div class="grid gap-3 pb-10">
+    @for (blockedUsers of blockedUser; track blockedUsers.idBlockedPerson) {
+      <ul>
+        <li>
+          <div class="bg-[#251C57] flex flex-col md:flex-row gap-2 md:justify-between py-2 px-2 rounded-2xl">
+            <div class="bg-[#2E236C] hover:bg-[#3d2f8a] w-fit rounded-2xl py-1 px-4
+  text-lg font-medium transition-all duration-300
+  hover:scale-[1.02] active:scale-[0.98]
+  hover:shadow-[0_10px_20px_rgba(0,0,0,0.4)]
+  hover:-translate-y-0.5 active:translate-y-0 active:shadow-none
+  disabled:opacity-50 disabled:cursor-not-allowed">{{ blockedUsers.blockedUsername }}</div>
+            <div class="bg-[#2E236C] hover:bg-[#3d2f8a] w-fit rounded-2xl py-1 px-4
+  text-lg font-medium transition-all duration-300
+  hover:scale-[1.02] active:scale-[0.98]
+  hover:shadow-[0_10px_20px_rgba(0,0,0,0.4)]
+  hover:-translate-y-0.5 active:translate-y-0 active:shadow-none
+  disabled:opacity-50 disabled:cursor-not-allowed">
+              {{ blockedUsers.createdAt | date:'dd.MM.yyyy'}}
+            </div>
+            <div class="bg-[#2E236C] hover:bg-[#3d2f8a] w-fit rounded-2xl py-1 px-4
+  text-lg font-medium transition-all duration-300
+  hover:scale-[1.02] active:scale-[0.98]
+  hover:shadow-[0_10px_20px_rgba(0,0,0,0.4)]
+  hover:-translate-y-0.5 active:translate-y-0 active:shadow-none
+  disabled:opacity-50 disabled:cursor-not-allowed">
+              <button (click)="delete(blockedUsers.idBlockedPerson!)">Unblock</button>
+            </div>
+          </div>
+        </li>
+      </ul>
+    }
+  </div>
 }
