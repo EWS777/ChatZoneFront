@@ -1,16 +1,58 @@
-<div class="page-container">
-  <nav class="sidebar">
-    <ul>
-      <a [routerLink]="['/']">Main</a>
-      @for (menuItem of menuItems; track menuItem.name) {
-        <li>
-          <button [routerLink]="menuItem.link">{{menuItem.name}}</button>
-        </li>
-      }
-    </ul>
-  </nav>
+<div class="min-h-screen flex flex-col md:flex-row md:justify-center md:items-start md:gap-x-10 lg:gap-x-24">
+  <nav class="w-full border-b border-gray-700 p-4 md:pr-0 md:border-none md:w-[200px] md:pl-10">
+    <div class="flex items-center justify-between">
 
-  <div class="main-content">
-    <router-outlet></router-outlet>
+      <div class="relative md:hidden">
+        <button (click)="toggleDropdown()" class="bg-[#2E236C] flex justify-between items-center hover:bg-[#3d2f8a] rounded-2xl py-[6px] uppercase text-base
+          font-medium transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] hover:shadow-[0_10px_20px_rgba(0,0,0,0.4)]
+          hover:-translate-y-0.5 active:translate-y-0 active:shadow-none disabled:opacity-50 disabled:cursor-not-allowed  px-3 text-[#D1D5DB]">
+          <span>Menu</span>
+          <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" [attr.d]="isDropdownOpen ? 'M19 15l-7-7-7 7' : 'M19 9l-7 7-7-7'"></path>
+          </svg>
+        </button>
+          @if (isDropdownOpen) {
+            <ul class="absolute left-0 mt-2 w-48 bg-[#2D2D44] border border-gray-600 rounded-md shadow-2xl z-50 overflow-hidden">
+              <li class="border-b border-gray-600">
+                <a [routerLink]="['/']" (click)="isDropdownOpen = false"
+                   class="block px-4 py-2 text-sm text-gray-200 hover:bg-[#3F3B6C]">Main</a>
+              </li>
+              @for (menuItem of menuItems; track menuItem.name) {
+                <li>
+                  <button [routerLink]="menuItem.link" (click)="isDropdownOpen = false"
+                          class="w-full text-left text-sm text-gray-200 hover:bg-[#3F3B6C] transition-colors p-2">
+                    {{menuItem.name}}
+                  </button>
+                </li>
+              }
+            </ul>
+          }
+      </div>
+      <div class="hidden md:block w-40">
+        <div class="pb-3 mt-40 md:pb-0">
+          <button (click)="router.navigate(['/'])" class="bg-[#150e33] w-full py-2 flex justify-center rounded-2xl font-medium mx-auto text-gray-400 mb-20">Main page</button>
+        </div>
+        <div class="grid gap-6 lg:gap-8">
+          @for (menuItem of menuItems; track menuItem.name) {
+              <button [routerLink]="menuItem.link"
+                      routerLinkActive="bg-[#150373] text-white"
+                      [routerLinkActiveOptions]="{exact: true}"
+                      (click)="isDropdownOpen = false"
+
+                      class="bg-[#2E236C] hover:bg-[#3d2f8a] rounded-2xl py-[6px]
+              font-medium transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] hover:shadow-[0_10px_20px_rgba(0,0,0,0.4)]
+              hover:-translate-y-0.5 active:translate-y-0 active:shadow-none disabled:opacity-50 disabled:cursor-not-allowed text-[#D1D5DB] w-full lg:text-lg">
+                {{menuItem.name}}
+              </button>
+          }
+        </div>
+      </div>
+      <h1 class="text-[#c64542] text-xl font-semibold md:hidden drop-shadow-[0_0_15px_rgba(198,69,66,0.4)]">ChatZone</h1>
+    </div>
+  </nav>
+  <div class="px-4">
+    <div class="frame-container mt-[80px] px-4 max-w-[400px] mx-auto md:max-w-none md:w-[480px] md:px-6 md:mt-[145px] lg:w-[600px]">
+      <router-outlet></router-outlet>
+    </div>
   </div>
 </div>
