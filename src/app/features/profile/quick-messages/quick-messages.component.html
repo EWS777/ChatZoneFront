@@ -1,59 +1,115 @@
+<div>
+  <h1 class="font-semibold text-2xl pt-4 text-gray-200 lg:text-3xl text-center mb-8
+    md:pt-8">Quick messages</h1>
+</div>
+
 @if(quickMessageList?.length ===0){
-  You don't have any messages at this moment
+  <div>
+    <h1 class="font-semibold text-lg text-gray-200 lg:text-xl text-center">
+      You don't have any messages at this moment</h1>
+  </div>
 } @else {
   @if (messageForm.controls.message.errors?.['backend']; as backendErrors) {
     @for (err of backendErrors; track err) {
       <small>{{ err }}</small>
     }
   }
-  @for (messages of quickMessageList; track messages.idQuickMessage){
+  <div class="grid gap-10" [class.pb-10]="quickMessageList?.length === 3">
     @if (commonError) {
-      <div>{{ commonError }}</div>
+      <div class="backend-error-message">{{ commonError }}</div>
     }
-    <div>
-      Your message:
-      <input [(ngModel)]="messages.message" (focus)="onStart(messages)" (ngModelChange)="onChange(messages)"
-      #msgInput="ngModel"
-      required
-      minlength="1"
-      maxlength="50"
-     pattern=".*\S.*">
-      @if (msgInput.touched && msgInput.invalid){
-        @if(msgInput.errors?.["required"]) {<small>message is required</small>}
-        @if(msgInput.errors?.["minlength"]) {<small>Min length is 1</small>}
-        @if(msgInput.errors?.["maxlength"]) {<small>Max length is 50</small>}
-        @if(msgInput.errors?.['pattern']) {<small>Cannot contain only whitespace</small>}
-      }
-      @if(messages.isEditing){
-        <button (click)="update(messages)">Update</button>
-        <button (click)="cancel(messages)">Cancel</button>
-      }
-      <button (click)="delete(messages.idQuickMessage)">Delete message</button>
-    </div>
-  }
+    @for (messages of quickMessageList; track messages.idQuickMessage){
+      <div class="grid gap-3">
+        <div class="relative">
+          <img src="/assets/imgs/user.svg" alt="" class="input-icon">
+          <input [(ngModel)]="messages.message" (focus)="onStart(messages)" (ngModelChange)="onChange(messages)" class="input-field"
+                 type="text"
+                 #msgInput="ngModel"
+                 required
+                 minlength="1"
+                 maxlength="50"
+                 pattern=".*\S.*">
+        </div>
+        @if (msgInput.touched && msgInput.invalid){
+          <div class="error-container flex flex-col pl-1 pt-1 md:pl-2 md:pt-2">
+            @if(msgInput.errors?.["required"]) {<small>message is required</small>}
+            @if(msgInput.errors?.["minlength"]) {<small>Min length is 1</small>}
+            @if(msgInput.errors?.["maxlength"]) {<small>Max length is 50</small>}
+            @if(msgInput.errors?.['pattern']) {<small>Cannot contain only whitespace</small>}
+          </div>
+        }
+        <div class="md:flex md:justify-between grid grid-cols-2 gap-3">
+          @if(messages.isEditing){
+            <button (click)="update(messages)" class="bg-[#2E236C] hover:bg-[#3d2f8a] w-fit rounded-2xl py-1 px-4
+  text-lg font-medium transition-all duration-300
+  hover:scale-[1.02] active:scale-[0.98]
+  hover:shadow-[0_10px_20px_rgba(0,0,0,0.4)]
+  hover:-translate-y-0.5 active:translate-y-0 active:shadow-none
+  disabled:opacity-50 disabled:cursor-not-allowed">Update</button>
+            <button (click)="cancel(messages)" class="bg-[#2E236C] hover:bg-[#3d2f8a] w-fit rounded-2xl py-1 px-4
+  text-lg font-medium transition-all duration-300
+  hover:scale-[1.02] active:scale-[0.98]
+  hover:shadow-[0_10px_20px_rgba(0,0,0,0.4)]
+  hover:-translate-y-0.5 active:translate-y-0 active:shadow-none
+  disabled:opacity-50 disabled:cursor-not-allowed">Cancel</button>
+          }
+          <button (click)="delete(messages.idQuickMessage)" class="bg-[#2E236C] hover:bg-[#3d2f8a] w-fit rounded-2xl py-1 px-4
+  text-lg font-medium transition-all duration-300
+  hover:scale-[1.02] active:scale-[0.98]
+  hover:shadow-[0_10px_20px_rgba(0,0,0,0.4)]
+  hover:-translate-y-0.5 active:translate-y-0 active:shadow-none
+  disabled:opacity-50 disabled:cursor-not-allowed text-nowrap">Delete message</button>
+        </div>
+      </div>
+    }
+  </div>
 }
 
-<button (click)="changeStatus()">Add message</button>
+@if (!isCreateFirstQuickMessage()){
+  <div class="flex flex-col items-center py-8">
+    <button (click)="changeStatus()" class="bg-[#2E236C] hover:bg-[#3d2f8a] w-fit rounded-2xl py-1 px-4
+  text-lg font-medium transition-all duration-300
+  hover:scale-[1.02] active:scale-[0.98]
+  hover:shadow-[0_10px_20px_rgba(0,0,0,0.4)]
+  hover:-translate-y-0.5 active:translate-y-0 active:shadow-none
+  disabled:opacity-50 disabled:cursor-not-allowed
+">Add message</button>
+  </div>
+}
 
 @if (isCreateOn()){
   @if (commonError) {
-    <div>{{ commonError }}</div>
+    <div class="backend-error-message pt-3">{{ commonError }}</div>
   }
   <br>
   <div [formGroup]="messageForm">
-    <input type="text" placeholder="Enter new message" formControlName="message">
+    <div class="relative">
+      <img src="/assets/imgs/user.svg" alt="" class="input-icon">
+      <input type="text" placeholder="Enter new message" formControlName="message" class="input-field">
+    </div>
     @if (messageForm.controls.message.touched && messageForm.controls.message.invalid){
-      @if(messageForm.controls.message.errors?.["required"]) {<small>message is required</small>}
-      @if(messageForm.controls.message.errors?.["minLength"]) {<small>Min length is 1</small>}
-      @if(messageForm.controls.message.errors?.["maxLength"]) {<small>Max length is 50</small>}
-      @if (messageForm.controls.message.errors?.["whitespace"]) {<small>Can not contains whitespace</small>}
+      <div class="error-container flex flex-col pl-1 pt-1 md:pl-2 md:pt-2">
+        @if(messageForm.controls.message.errors?.["required"]) {<small>message is required</small>}
+        @if(messageForm.controls.message.errors?.["minLength"]) {<small>Min length is 1</small>}
+        @if(messageForm.controls.message.errors?.["maxLength"]) {<small>Max length is 50</small>}
+        @if (messageForm.controls.message.errors?.["whitespace"]) {<small>Can not contains whitespace</small>}
+      </div>
     }
-    <br>
     @if (messageForm.controls.message.errors?.['backend']; as backendErrors) {
       @for (err of backendErrors; track err) {
-        <small>{{ err }}</small>
+        <div class="error-container flex flex-col pl-1 pt-1 md:pl-2 md:pt-2">
+          <small>{{ err }}</small>
+        </div>
       }
     }
   </div>
-  <button (click)="create()">Save new message</button>
+  <div class="flex flex-col items-center py-8">
+    <button (click)="create()" class="bg-[#2E236C] hover:bg-[#3d2f8a] w-fit rounded-2xl py-1 px-4
+  text-lg font-medium transition-all duration-300
+  hover:scale-[1.02] active:scale-[0.98]
+  hover:shadow-[0_10px_20px_rgba(0,0,0,0.4)]
+  hover:-translate-y-0.5 active:translate-y-0 active:shadow-none
+  disabled:opacity-50 disabled:cursor-not-allowed
+">Save new message</button>
+  </div>
 }

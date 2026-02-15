@@ -21,6 +21,7 @@ export class QuickMessagesComponent implements OnInit{
   quickMessageList: QuickMessage[] | null = null
   quickMessage: QuickMessage = { idQuickMessage: 0, message: '' };
   isCreateOn = signal<boolean>(false)
+  isCreateFirstQuickMessage = signal<boolean>(false)
   commonError: string = ''
 
   messageForm = new FormGroup({
@@ -32,12 +33,22 @@ export class QuickMessagesComponent implements OnInit{
     ])
   })
 
-  changeStatus = () => this.isCreateOn.update(x=> !x)
-
+  changeStatus() {
+    if (this.quickMessageList && this.quickMessageList.length >=3){
+      this.isCreateFirstQuickMessage.set(true)
+      this.commonError = 'You cannot create more than 3 messages!'
+      return
+    }
+    this.isCreateOn.update(x => !x)
+    this.isCreateFirstQuickMessage.set(true)
+  }
   ngOnInit() {
     this.quickMessageService.getQuickMessages().subscribe({
       next: value => {
         this.quickMessageList = value
+        if (this.quickMessageList && this.quickMessageList.length ==3){
+          this.isCreateFirstQuickMessage.set(true)
+        }
       },
       error: err => {
         console.error('Unable to get Quick Messages', err)
@@ -47,10 +58,17 @@ export class QuickMessagesComponent implements OnInit{
 
   create(){
     this.commonError = ''
+    if (this.quickMessageList && this.quickMessageList.length >=3){
+      this.commonError = 'You cannot create more than 3 messages!'
+      this.isCreateFirstQuickMessage.set(true)
+      return
+    }
     if (this.messageForm.invalid){
       this.messageForm.markAllAsTouched()
       return
     }
+
+    this.quickMessage.message = this.messageForm.get('message')!.value || ''
 
     this.quickMessageService.createQuickMessage(this.quickMessage).subscribe({
       next: value => {
@@ -58,6 +76,10 @@ export class QuickMessagesComponent implements OnInit{
         this.isCreateOn.set(false)
         this.quickMessage.message = ''
         this.messageForm.reset()
+        this.isCreateFirstQuickMessage.set(false)
+        if (this.quickMessageList && this.quickMessageList.length ==3){
+          this.isCreateFirstQuickMessage.set(true)
+        }
       },
       error: (err) => {
         if(err.status === 400 && err.error && err.error.errors){
@@ -132,6 +154,9 @@ export class QuickMessagesComponent implements OnInit{
     ).subscribe({
         next: newList => {
           this.quickMessageList = newList
+          if (this.quickMessageList && this.quickMessageList.length < 3){
+            this.isCreateFirstQuickMessage.set(false)
+          }
         },
         error: err => {
           console.error('Delete quick messages has not completed!', err)
