@@ -5,25 +5,24 @@
 <div class="lg:w-[400px] lg:mx-auto">
     <form [formGroup]="updateProfileForm" (ngSubmit)="onClickUpdate()">
       @if (commonError) {
-        <div class="backend-error-message">{{ commonError }}</div>
+        <div >{{ commonError }}</div>
       }
-      <label class="attribute-name">Email</label>
+      <label >Email</label>
       <div class="relative">
-        <img src="/assets/imgs/email.svg" alt="" class="input-icon">
-        <input type="email" [value]="profile.email" readonly class="input-field">
+        <img src="/assets/imgs/email.svg" alt="" >
+        <input type="email" [value]="profile.email" readonly >
       </div>
 
       <div class="pt-4 md:pt-7">
-        <label class="attribute-name">Username</label>
+        <label >Username</label>
       </div>
       <div class="relative">
-        <img src="/assets/imgs/user.svg" alt="" class="input-icon">
-        <input formControlName = "username" type="text" placeholder="Enter your username" class="input-field"
-               [class.input-error-active]="updateProfileForm.controls.username.invalid && updateProfileForm.controls.username.touched">
+        <img src="/assets/imgs/user.svg" alt="" >
+        <input formControlName = "username" type="text" placeholder="Enter your username">
       </div>
       <div>
         @if (updateProfileForm.controls.username.touched && updateProfileForm.controls.username.invalid){
-          <div class="error-container flex flex-col pl-1 pt-1 md:pl-2 md:pt-2">
+          <div class=" flex flex-col pl-1 pt-1 md:pl-2 md:pt-2">
             @if(updateProfileForm.controls.username.errors?.["required"]) {<small>username is required</small>}
             @if(updateProfileForm.controls.username.errors?.["minLength"]) {<small>Min length is 8</small>}
             @if(updateProfileForm.controls.username.errors?.["maxLength"]) {<small>Max length is 30</small>}

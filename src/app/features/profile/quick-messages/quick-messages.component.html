@@ -16,13 +16,13 @@
   }
   <div class="grid gap-10" [class.pb-10]="quickMessageList?.length === 3">
     @if (commonError) {
-      <div class="backend-error-message">{{ commonError }}</div>
+      <div >{{ commonError }}</div>
     }
     @for (messages of quickMessageList; track messages.idQuickMessage){
       <div class="grid gap-3">
         <div class="relative">
-          <img src="/assets/imgs/user.svg" alt="" class="input-icon">
-          <input [(ngModel)]="messages.message" (focus)="onStart(messages)" (ngModelChange)="onChange(messages)" class="input-field"
+          <img src="/assets/imgs/user.svg" alt="" >
+          <input [(ngModel)]="messages.message" (focus)="onStart(messages)" (ngModelChange)="onChange(messages)"
                  type="text"
                  #msgInput="ngModel"
                  required
@@ -31,7 +31,7 @@
                  pattern=".*\S.*">
         </div>
         @if (msgInput.touched && msgInput.invalid){
-          <div class="error-container flex flex-col pl-1 pt-1 md:pl-2 md:pt-2">
+          <div class=" flex flex-col pl-1 pt-1 md:pl-2 md:pt-2">
             @if(msgInput.errors?.["required"]) {<small>message is required</small>}
             @if(msgInput.errors?.["minlength"]) {<small>Min length is 1</small>}
             @if(msgInput.errors?.["maxlength"]) {<small>Max length is 50</small>}
@@ -79,16 +79,16 @@
 
 @if (isCreateOn()){
   @if (commonError) {
-    <div class="backend-error-message pt-3">{{ commonError }}</div>
+    <div class=" pt-3">{{ commonError }}</div>
   }
   <br>
   <div [formGroup]="messageForm">
     <div class="relative">
-      <img src="/assets/imgs/user.svg" alt="" class="input-icon">
-      <input type="text" placeholder="Enter new message" formControlName="message" class="input-field">
+      <img src="/assets/imgs/user.svg" alt="" >
+      <input type="text" placeholder="Enter new message" formControlName="message" >
     </div>
     @if (messageForm.controls.message.touched && messageForm.controls.message.invalid){
-      <div class="error-container flex flex-col pl-1 pt-1 md:pl-2 md:pt-2">
+      <div class=" flex flex-col pl-1 pt-1 md:pl-2 md:pt-2">
         @if(messageForm.controls.message.errors?.["required"]) {<small>message is required</small>}
         @if(messageForm.controls.message.errors?.["minLength"]) {<small>Min length is 1</small>}
         @if(messageForm.controls.message.errors?.["maxLength"]) {<small>Max length is 50</small>}
@@ -97,7 +97,7 @@
     }
     @if (messageForm.controls.message.errors?.['backend']; as backendErrors) {
       @for (err of backendErrors; track err) {
-        <div class="error-container flex flex-col pl-1 pt-1 md:pl-2 md:pt-2">
+        <div class=" flex flex-col pl-1 pt-1 md:pl-2 md:pt-2">
           <small>{{ err }}</small>
         </div>
       }
