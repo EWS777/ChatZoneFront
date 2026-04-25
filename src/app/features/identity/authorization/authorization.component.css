@@ -58,6 +58,7 @@
 
 .button-register{
   background: linear-gradient(90deg, #8F7EF3 0%, #53498D 100%);
+  /*transition: all 0.3s ease;*/
 }
 
 .login-button{
@@ -206,4 +207,32 @@
 
   z-index: -1;
   pointer-events: none;
+}
+
+
+.input-auth-name{
+  color: #B4B4B4;
+  font-size: 14px;
+  margin-bottom: 4px;
+  margin-left: 4px;
+  display: block;
+}
+
+.error-input-text{
+  color: #EA4550;
+  font-size: 12px;
+  margin-top: 4px;
+  margin-left: 4px;
+  display: block;
+}
+
+.input-text{
+  color: #FFFFFF;
+  font-size: 12px;
+  padding: 12px;
+
+
+  /*placeholder:text-[#FFFFFF33] */
+  /*w-full outline-none bg-transparent*/
+  /*focus:outline-none focus:ring-0*/
 }
