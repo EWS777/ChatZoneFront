@@ -65,9 +65,25 @@
   border-radius: 10px;
   background: linear-gradient(90deg, #2556EB 0%, #153185 100%);
   box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25), 0 1px 0 0 rgba(255, 255, 255, 0.20) inset, 0 1px 1.5px 0 #4629F2, 0 0 0 1px #4629F2, 0 14px 40px -18px #2D0277;
+  width: 100%;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  font-size: 16px;
+
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
 
   transition: all 0.3s ease;
   cursor: pointer;
+}
+
+@media (min-width: 768px) {
+  font-size: 14px;
+}
+
+@media (min-width: 1024px) {
+  font-size: 16px;
 }
 
 .login-button:disabled{
@@ -230,9 +246,16 @@
   color: #FFFFFF;
   font-size: 12px;
   padding: 12px;
+  width: 100%;
+  outline: none;
+  background-color: transparent;
+}
 
+.input-text::placeholder {
+  color: #FFFFFF33;
+}
 
-  /*placeholder:text-[#FFFFFF33] */
-  /*w-full outline-none bg-transparent*/
-  /*focus:outline-none focus:ring-0*/
+.input-text:focus {
+  outline: none;
+  box-shadow: 0 0 0 0 transparent;
 }

@@ -97,7 +97,7 @@
                 </div>
 
                 <button type="submit" [disabled]="isLoading() || loginForm.invalid"
-                class="login-button w-full py-5 text-base md:text-sm lg:text-base transition-colors">
+                class="login-button">
                   @if (isLoading()){
 <!--                    <img src="/assets/imgs/loading.svg" alt="">-->
                   } @else {
@@ -130,7 +130,7 @@
 
 
           @else {
-            <div>
+            <div class="pt-5">
               <form [formGroup]="registrationForm" (ngSubmit)="onRegistrationSubmit()">
                 @if (commonError) {
                   <div>{{ commonError }}</div>
@@ -170,7 +170,7 @@
 
 
                 <label class="input-auth-name pt-6 md:pt-8">Username</label>
-                <div class="border-input" [class.border-input-error]="loginForm.controls.password.invalid && loginForm.controls.password.touched">
+                <div class="border-input" [class.border-input-error]="registrationForm.controls.username.invalid && registrationForm.controls.username.touched">
 <!--                  <img src="/assets/imgs/user.svg" alt="">-->
                   <input class="input-text" formControlName="username" type="text" placeholder="Enter your username">
                 </div>
@@ -199,15 +199,14 @@
                   }
                 }
 
-                <div>
-                  <label class="input-auth-name">Password</label>
-                </div>
-                <div>
+
+                <label class="input-auth-name pt-6 md:pt-8">Password</label>
+                <div class="border-input" [class.border-input-error]="registrationForm.controls.password.invalid && registrationForm.controls.password.touched">
 <!--                  <img src="/assets/imgs/password.svg" alt="">-->
-                  <input formControlName="password" [type]="hidePassword() ? 'password' : 'text'" placeholder="••••••••">
-                  <button type="button" (click)="hidePassword.set(!hidePassword())">
+                  <input class="input-text" formControlName="password" [type]="hidePassword() ? 'password' : 'text'" placeholder="••••••••">
+<!--                  <button type="button" (click)="hidePassword.set(!hidePassword())">-->
 <!--                    <img [src]="hidePassword() ? '/assets/imgs/eye-hide.svg' : '/assets/imgs/eye.svg'" alt="">-->
-                  </button>
+<!--                  </button>-->
                 </div>
                 <div>
                   @if (registrationForm.errors?.["passwordMismatch"]) {
@@ -236,15 +235,13 @@
                   }
                 }
 
-                <div>
-                  <label class="input-auth-name">Confirm Password</label>
-                </div>
-                <div>
+                <label class="input-auth-name pt-6 md:pt-8">Confirm Password</label>
+                <div class="border-input" [class.border-input-error]="registrationForm.controls.confirmedPassword.invalid && registrationForm.controls.confirmedPassword.touched">
 <!--                  <img src="/assets/imgs/password.svg" alt="">-->
-                  <input formControlName="confirmedPassword" [type]="hidePassword() ? 'password' : 'text'" placeholder="••••••••">
-                  <button type="button" (click)="hidePassword.set(!hidePassword())">
+                  <input class="input-text" formControlName="confirmedPassword" [type]="hidePassword() ? 'password' : 'text'" placeholder="••••••••">
+<!--                  <button type="button" (click)="hidePassword.set(!hidePassword())">-->
 <!--                    <img [src]="hidePassword() ? '/assets/imgs/eye-hide.svg' : '/assets/imgs/eye.svg'" alt="">-->
-                  </button>
+<!--                  </button>-->
                 </div>
                 <div>
                   @if (registrationForm.errors?.["passwordMismatch"]) {
@@ -272,7 +269,7 @@
 
 
 
-                <button type="submit" [disabled]="isLoading() || registrationForm.invalid">
+                <button class="login-button" type="submit" [disabled]="isLoading() || registrationForm.invalid">
                   @if (isLoading()) {
                     <div>
 <!--                      <img src="/assets/imgs/loading.svg" alt="">-->
