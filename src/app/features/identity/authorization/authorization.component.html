@@ -2,17 +2,11 @@
 
   @if (!isConfirmEmailPage()) {
     <div class="border-out w-fit px-2 py-4 md:p-10 mx-auto">
-      <div class="border-in px-4 pt-10 pb-5 md:px-5">
+      <div class="border-in px-4 pt-10 pb-5 md:px-5 max-w-[338px] md:max-w-[390px]">
           <div class="text-base md:text-sm lg:text-base bg-[#272C35] rounded-[10px]">
             <button class="uppercase rounded-lg py-4 w-[152px] md:py-[14px] lg:py-4 md:w-[174px]"  (click)="isLogin.set(true)" [class.button-register]="isLogin()">Log in</button>
             <button class="uppercase rounded-lg py-4 w-[152px] md:py-[14px] lg:py-4 md:w-[174px]" (click)="isLogin.set(false)" [class.button-register]="!isLogin()">Sign up</button>
           </div>
-
-
-
-
-
-
         @if (isLogin()) {
           <div class="pt-5">
             <form [formGroup]="loginForm" (ngSubmit)="onLoginSubmit()">
@@ -106,37 +100,27 @@
                 <a class="underline" [routerLink]="['/reset-password']">Click here</a>
               </div>
 
-              <button type="submit" [disabled]="isLoading() || loginForm.invalid"
-              class="login-button">
+              <button type="submit" [disabled]="isLoading() || loginForm.invalid" class="login-button">
                 @if (isLoading()){
-<!--                    <img src="/assets/imgs/loading.svg" alt="">-->
+                  <div class="w-6 h-6 my-auto mx-auto">
+                    <svg class="animate-spin" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                      <path d="M12 2V6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      <path d="M12 18V22" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      <path d="M4.93005 4.92969L7.76005 7.75969" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      <path d="M16.24 16.2402L19.07 19.0702" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      <path d="M2 12H6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      <path d="M18 12H22" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      <path d="M4.93005 19.0702L7.76005 16.2402" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      <path d="M16.24 7.75969L19.07 4.92969" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </div>
                 } @else {
                   Login
                 }
               </button>
-
             </form>
           </div>
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
         @else {
@@ -312,12 +296,21 @@
 
 
               <button class="login-button mt-8 md:mt-11" type="submit" [disabled]="isLoading() || registrationForm.invalid">
-                @if (isLoading()) {
-                  <div>
-<!--                      <img src="/assets/imgs/loading.svg" alt="">-->
+                @if (isLoading()){
+                  <div class="w-6 h-6 my-auto mx-auto">
+                    <svg class="animate-spin" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                      <path d="M12 2V6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      <path d="M12 18V22" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      <path d="M4.93005 4.92969L7.76005 7.75969" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      <path d="M16.24 16.2402L19.07 19.0702" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      <path d="M2 12H6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      <path d="M18 12H22" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      <path d="M4.93005 19.0702L7.76005 16.2402" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      <path d="M16.24 7.75969L19.07 4.92969" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
                   </div>
                 } @else {
-                  <span>Signup</span>
+                  Signup
                 }
               </button>
             </form>
@@ -326,7 +319,23 @@
       </div>
     </div>
   } @else {
-    Proszę podtwierdzić email żeby aktywować konto. Link został wysłany mailowo
-    <a [routerLink]="['/']">Przejdź do strony głównej</a>
+    <div class="border-out px-2 py-4 md:p-10 mx-auto">
+      <div class="border-in px-4 pt-10 pb-5 md:px-5 w-[338px] md:w-[390px] md:max-w-full text-center">
+        <svg class="mx-auto" width="70" height="70" viewBox="0 0 70 70" fill="none">
+          <path d="M64.1666 32.3164V34.9998C64.163 41.2893 62.1264 47.4092 58.3605 52.4468C54.5946 57.4843 49.3012 61.1695 43.2697 62.9528C37.2383 64.7361 30.7919 64.522 24.8921 62.3423C18.9923 60.1626 13.9552 56.1342 10.5319 50.8579C7.10861 45.5815 5.48264 39.34 5.89648 33.064C6.31031 26.7881 8.74177 20.8141 12.8282 16.0329C16.9147 11.2517 22.4372 7.91963 28.5721 6.53353C34.7071 5.14742 41.1257 5.78158 46.8708 8.34144" stroke="#10DA05" stroke-width="5.83333" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M64.1667 11.667L35 40.8628L26.25 32.1128" stroke="#10DA05" stroke-width="5.83333" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <div class="text-2xl md:text-xl lg:text-3xl mt-5 md:mt-10">
+          Email sent
+        </div>
+        <div class="text-[#5AD5A1] text-sm lg:text-base mt-2.5 md:mt-6 mb-11 md:mb-14">
+          Please check your email <br class="md:hidden">
+          to finalize registration.
+        </div>
+        <button [routerLink]="['/']" class="login-button">
+          Go have a chat! 🎉
+        </button>
+      </div>
+    </div>
   }
 </div>
