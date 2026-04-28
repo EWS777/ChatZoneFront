@@ -1,287 +1,328 @@
-﻿<div class="text-white">
+﻿<div class="min-h-screen flex justify-center items-center">
 
   @if (!isConfirmEmailPage()) {
-    <div>
-      <div>
-        <h1 class="text-xl text-center">ChatZone</h1>
-        <p class="text-center px-4 mt-20 mb-6 text-3xl md:text-4xl font-semibold">Connect with strangers
-          instantly 💥</p>
-      </div>
-      <div class="border-out w-fit px-2 py-4 md:p-10 mx-auto">
-        <div class="border-in px-4 pt-10 pb-5 md:px-5">
-            <div class="text-base md:text-sm lg:text-base bg-[#272C35] rounded-[10px]">
-              <button class="uppercase rounded-lg py-4 w-[152px] md:py-[14px] lg:py-4 md:w-[174px]"  (click)="isLogin.set(true)" [class.button-register]="isLogin()">Log in</button>
-              <button class="uppercase rounded-lg py-4 w-[152px] md:py-[14px] lg:py-4 md:w-[174px]" (click)="isLogin.set(false)" [class.button-register]="!isLogin()">Sign up</button>
-            </div>
+    <div class="border-out w-fit px-2 py-4 md:p-10 mx-auto">
+      <div class="border-in px-4 pt-10 pb-5 md:px-5">
+          <div class="text-base md:text-sm lg:text-base bg-[#272C35] rounded-[10px]">
+            <button class="uppercase rounded-lg py-4 w-[152px] md:py-[14px] lg:py-4 md:w-[174px]"  (click)="isLogin.set(true)" [class.button-register]="isLogin()">Log in</button>
+            <button class="uppercase rounded-lg py-4 w-[152px] md:py-[14px] lg:py-4 md:w-[174px]" (click)="isLogin.set(false)" [class.button-register]="!isLogin()">Sign up</button>
+          </div>
 
 
 
 
 
 
-          @if (isLogin()) {
-            <div class="pt-5">
-              <form [formGroup]="loginForm" (ngSubmit)="onLoginSubmit()">
-                @if (commonErrorLogin) {
-                  <div> {{ commonErrorLogin }}</div>
-                }
-                <label class="input-auth-name">Login</label>
-                <div class="border-input" [class.border-input-error]="loginForm.controls.usernameOrEmail.invalid && loginForm.controls.usernameOrEmail.touched">
-<!--                  <img src="/assets/imgs/user.svg" alt="">-->
-                  <input
-                    [class.text-[#EA4550]]="loginForm.controls.usernameOrEmail.invalid && loginForm.controls.usernameOrEmail.touched"
-                    [class.placeholder:text-[#EA4550]]="loginForm.controls.usernameOrEmail.invalid && loginForm.controls.usernameOrEmail.touched"
-                    class="input-text" formControlName="usernameOrEmail" type="text" placeholder="Enter your login">
-                </div>
+        @if (isLogin()) {
+          <div class="pt-5">
+            <form [formGroup]="loginForm" (ngSubmit)="onLoginSubmit()">
+              @if (commonErrorLogin) {
+                <div class="common-backend-error"> {{ commonErrorLogin }}</div>
+              }
+              <label class="input-auth-name">Login</label>
+              <div class="border-input" [class.border-input-error]="loginForm.controls.usernameOrEmail.invalid && loginForm.controls.usernameOrEmail.touched">
+                <svg class="input-icon" fill="none" viewBox="0 0 16 16">
+                  <path d="M13.3334 14V12.6667C13.3334 11.9594 13.0525 11.2811 12.5524 10.781C12.0523 10.281 11.374 10 10.6667 10H5.33341C4.62617 10 3.94789 10.281 3.4478 10.781C2.9477 11.2811 2.66675 11.9594 2.66675 12.6667V14" stroke="currentColor" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M7.99992 7.33333C9.47268 7.33333 10.6666 6.13943 10.6666 4.66667C10.6666 3.19391 9.47268 2 7.99992 2C6.52716 2 5.33325 3.19391 5.33325 4.66667C5.33325 6.13943 6.52716 7.33333 7.99992 7.33333Z" stroke="currentColor" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <input
+                  [class.text-[#EA4550]]="loginForm.controls.usernameOrEmail.invalid && loginForm.controls.usernameOrEmail.touched"
+                  [class.placeholder:text-[#EA4550]]="loginForm.controls.usernameOrEmail.invalid && loginForm.controls.usernameOrEmail.touched"
+                  class="input-text" formControlName="usernameOrEmail" type="text" placeholder="Enter your login">
+              </div>
 
-                @if (loginForm.controls.usernameOrEmail.touched && loginForm.controls.usernameOrEmail.invalid) {
-                  <div>
-                    @if (loginForm.controls.usernameOrEmail.errors?.["required"]) {
-                      <small class="error-input-text">Login is required</small>
-                    }
-                    @if (loginForm.controls.usernameOrEmail.errors?.["minLength"]) {
-                      <small class="error-input-text">Min length is {{ loginForm.get('usernameOrEmail')?.errors?.['minLength'].requiredLength }}</small>
-                    }
-                    @if (loginForm.controls.usernameOrEmail.errors?.["maxLength"]) {
-                      <small class="error-input-text">Max length is {{ loginForm.get('usernameOrEmail')?.errors?.['maxLength'].requiredLength }}</small>
-                    }
-                    @if (loginForm.controls.usernameOrEmail.errors?.["spaces"]) {
-                      <small class="error-input-text">Can not contains spaces</small>
-                    }
-                    @if (loginForm.controls.usernameOrEmail.errors?.["pattern"]) {
-                      <small class="error-input-text">Login can not contains special symbols, just '_' and '-'</small>
-                    }
-                    @if (loginForm.controls.usernameOrEmail.hasError('email')) {
-                      <small class="error-input-text">Email is not valid</small>
-                    }
-                  </div>
-                }
-                @if (loginForm.controls.usernameOrEmail.errors?.['backend']; as backendErrors) {
-                  @for (err of backendErrors; track err) {
-                    <small class="error-input-text">{{ err }}</small>
+              @if (loginForm.controls.usernameOrEmail.touched && loginForm.controls.usernameOrEmail.invalid) {
+                <div>
+                  @if (loginForm.controls.usernameOrEmail.errors?.["required"]) {
+                    <small class="error-input-text">Login is required</small>
                   }
-                }
-
-                <label class="input-auth-name pt-6 md:pt-8">Password</label>
-                <div class="border-input" [class.border-input-error]="loginForm.controls.password.invalid && loginForm.controls.password.touched">
-<!--                  <img src="/assets/imgs/password.svg" alt="">-->
-                  <input class="input-text" formControlName="password" [type]="hidePassword() ? 'password' : 'text'" placeholder="••••••••">
-<!--                  <button type="button" (click)="hidePassword.set(!hidePassword())">-->
-<!--                    <img [src]="hidePassword() ? '/assets/imgs/eye-hide.svg' : '/assets/imgs/eye.svg'" alt="">-->
-<!--                  </button>-->
+                  @if (loginForm.controls.usernameOrEmail.errors?.["minLength"]) {
+                    <small class="error-input-text">Min length is {{ loginForm.get('usernameOrEmail')?.errors?.['minLength'].requiredLength }}</small>
+                  }
+                  @if (loginForm.controls.usernameOrEmail.errors?.["maxLength"]) {
+                    <small class="error-input-text">Max length is {{ loginForm.get('usernameOrEmail')?.errors?.['maxLength'].requiredLength }}</small>
+                  }
+                  @if (loginForm.controls.usernameOrEmail.errors?.["spaces"]) {
+                    <small class="error-input-text">Can not contains spaces</small>
+                  }
+                  @if (loginForm.controls.usernameOrEmail.errors?.["pattern"]) {
+                    <small class="error-input-text">Login can not contains special symbols, just '_' and '-'</small>
+                  }
+                  @if (loginForm.controls.usernameOrEmail.hasError('email')) {
+                    <small class="error-input-text">Email is not valid</small>
+                  }
                 </div>
-                @if (loginForm.controls.password.touched && loginForm.controls.password.invalid) {
+              }
+              @if (loginForm.controls.usernameOrEmail.errors?.['backend']; as backendErrors) {
+                @for (err of backendErrors; track err) {
+                  <small class="error-input-text">{{ err }}</small>
+                }
+              }
+
+              <label class="input-auth-name pt-6 md:pt-8">Password</label>
+              <div class="border-input" [class.border-input-error]="loginForm.controls.password.invalid && loginForm.controls.password.touched">
+                <svg class="input-icon" fill="none" viewBox="0 0 16 16">
+                  <path d="M12.6667 7.3335H3.33333C2.59695 7.3335 2 7.93045 2 8.66683V13.3335C2 14.0699 2.59695 14.6668 3.33333 14.6668H12.6667C13.403 14.6668 14 14.0699 14 13.3335V8.66683C14 7.93045 13.403 7.3335 12.6667 7.3335Z" stroke="currentColor" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M4.66675 7.3335V4.66683C4.66675 3.78277 5.01794 2.93493 5.64306 2.30981C6.26818 1.68469 7.11603 1.3335 8.00008 1.3335C8.88414 1.3335 9.73198 1.68469 10.3571 2.30981C10.9822 2.93493 11.3334 3.78277 11.3334 4.66683V7.3335" stroke="currentColor" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <input class="input-text" formControlName="password" [type]="hidePassword() ? 'password' : 'text'" placeholder="••••••••">
+                  <button type="button" (click)="hidePassword.set(!hidePassword())">
+                    @if (!hidePassword()) {
+                      <svg class="w-4 h-4 shrink-0 my-auto text-[#494A4E]" fill="none" viewBox="0 0 16 16">
+                        <path d="M0.666748 7.99984C0.666748 7.99984 3.33341 2.6665 8.00008 2.6665C12.6667 2.6665 15.3334 7.99984 15.3334 7.99984C15.3334 7.99984 12.6667 13.3332 8.00008 13.3332C3.33341 13.3332 0.666748 7.99984 0.666748 7.99984Z" stroke="currentColor" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M8 10C9.10457 10 10 9.10457 10 8C10 6.89543 9.10457 6 8 6C6.89543 6 6 6.89543 6 8C6 9.10457 6.89543 10 8 10Z" stroke="currentColor" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round" />
+                      </svg>
+                    } @else {
+                      <svg class="w-4 h-4 shrink-0 my-auto text-[#494A4E]" fill="none" viewBox="0 0 16 16">
+                        <path d="M11.96 11.9599C10.8204 12.8285 9.4327 13.3098 7.99996 13.3332C3.33329 13.3332 0.666626 7.99985 0.666626 7.99985C1.49589 6.45445 2.64605 5.10426 4.03996 4.03985M6.59996 2.82652C7.05885 2.71911 7.52867 2.66652 7.99996 2.66652C12.6666 2.66652 15.3333 7.99985 15.3333 7.99985C14.9286 8.75693 14.446 9.46968 13.8933 10.1265M9.41329 9.41319C9.23019 9.60969 9.00939 9.76729 8.76406 9.8766C8.51873 9.98591 8.25389 10.0447 7.98535 10.0494C7.71681 10.0542 7.45007 10.0048 7.20103 9.90418C6.952 9.80359 6.72577 9.65387 6.53586 9.46396C6.34594 9.27404 6.19622 9.04782 6.09563 8.79878C5.99504 8.54975 5.94564 8.283 5.95038 8.01446C5.95512 7.74592 6.0139 7.48108 6.12321 7.23575C6.23252 6.99042 6.39013 6.76962 6.58663 6.58652" stroke="currentColor" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round" />
+                        <path d="M0.666626 0.666504L15.3333 15.3332" stroke="currentColor" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    }
+                  </button>
+              </div>
+              @if (loginForm.controls.password.touched && loginForm.controls.password.invalid) {
+                <div>
+                  @if (loginForm.controls.password.errors?.["required"]) {
+                    <small class="error-input-text">password is required</small>
+                  }
+                  @if (loginForm.controls.password.errors?.["minLength"]) {
+                    <small class="error-input-text">Min length is 8</small>
+                  }
+                  @if (loginForm.controls.password.errors?.["maxLength"]) {
+                    <small class="error-input-text">Max length is 64</small>
+                  }
+                  @if (loginForm.controls.password.errors?.["spaces"]) {
+                    <small class="error-input-text">Can not contains spaces</small>
+                  }
+                </div>
+              }
+              @if (loginForm.controls.password.errors?.['backend']; as backendErrors) {
+                @for (err of backendErrors; track err) {
+                  <small class="error-input-text">{{ err }}</small>
+                }
+              }
+              <div class="text-xs text-right mt-[6px] mr-1 mb-8 md:mb-11">
+                Forgot password?
+                <a class="underline" [routerLink]="['/reset-password']">Click here</a>
+              </div>
+
+              <button type="submit" [disabled]="isLoading() || loginForm.invalid"
+              class="login-button">
+                @if (isLoading()){
+<!--                    <img src="/assets/imgs/loading.svg" alt="">-->
+                } @else {
+                  Login
+                }
+              </button>
+
+            </form>
+          </div>
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        @else {
+          <div class="pt-5">
+            <form [formGroup]="registrationForm" (ngSubmit)="onRegistrationSubmit()">
+              @if (commonError) {
+                <div class="common-backend-error">{{ commonError }}</div>
+              }
+              <label class="input-auth-name">Email</label>
+              <div class="border-input" [class.border-input-error]="registrationForm.controls.email.invalid && registrationForm.controls.email.touched">
+                <svg class="input-icon" fill="none" viewBox="0 0 16 16">
+                  <path d="M2.66665 2.6665H13.3333C14.0666 2.6665 14.6666 3.2665 14.6666 3.99984V11.9998C14.6666 12.7332 14.0666 13.3332 13.3333 13.3332H2.66665C1.93331 13.3332 1.33331 12.7332 1.33331 11.9998V3.99984C1.33331 3.2665 1.93331 2.6665 2.66665 2.6665Z" stroke="currentColor" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M14.6666 4L7.99998 8.66667L1.33331 4" stroke="currentColor" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                <input
+                  [class.text-[#EA4550]]="registrationForm.controls.email.invalid && registrationForm.controls.email.touched"
+                  [class.placeholder:text-[#EA4550]]="registrationForm.controls.email.invalid && registrationForm.controls.email.touched"
+                  class="input-text" formControlName="email" type="email" placeholder="Enter your email">
+              </div>
+              @if (registrationForm.controls.email.invalid && registrationForm.controls.email.touched) {
+                <div>
+                  @if (registrationForm.controls.email.hasError('email')) {
+                    <small class="error-input-text">Email is not valid</small>
+                  }
+                  @if (registrationForm.controls.email.errors?.["required"]) {
+                    <small class="error-input-text">email is required</small>
+                  }
+                  @if (registrationForm.controls.email.errors?.["minLength"]) {
+                    <small class="error-input-text">Min length is 5</small>
+                  }
+                  @if (registrationForm.controls.email.errors?.["maxLength"]) {
+                    <small class="error-input-text">Max length is 254</small>
+                  }
+                  @if (registrationForm.controls.email.errors?.["spaces"]) {
+                    <small class="error-input-text">Can not contains spaces</small>
+                  }
+                </div>
+              }
+              @if (registrationForm.controls.email.errors?.['backend']; as backendErrors) {
+                @for (err of backendErrors; track err) {
+                  <small class="error-input-text" >{{ err }}</small>
+                }
+              }
+
+
+              <label class="input-auth-name pt-6 md:pt-8">Username</label>
+              <div class="border-input" [class.border-input-error]="registrationForm.controls.username.invalid && registrationForm.controls.username.touched">
+                <svg class="input-icon" fill="none" viewBox="0 0 16 16">
+                  <path d="M13.3334 14V12.6667C13.3334 11.9594 13.0525 11.2811 12.5524 10.781C12.0523 10.281 11.374 10 10.6667 10H5.33341C4.62617 10 3.94789 10.281 3.4478 10.781C2.9477 11.2811 2.66675 11.9594 2.66675 12.6667V14" stroke="currentColor" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M7.99992 7.33333C9.47268 7.33333 10.6666 6.13943 10.6666 4.66667C10.6666 3.19391 9.47268 2 7.99992 2C6.52716 2 5.33325 3.19391 5.33325 4.66667C5.33325 6.13943 6.52716 7.33333 7.99992 7.33333Z" stroke="currentColor" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <input class="input-text" formControlName="username" type="text" placeholder="Enter your username">
+              </div>
+              @if (registrationForm.controls.username.touched && registrationForm.controls.username.invalid) {
+                <div>
+                  @if (registrationForm.controls.username.errors?.["required"]) {
+                    <small class="error-input-text">username is required</small>
+                  }
+                  @if (registrationForm.controls.username.errors?.["minLength"]) {
+                    <small class="error-input-text">Min length is 8</small>
+                  }
+                  @if (registrationForm.controls.username.errors?.["maxLength"]) {
+                    <small class="error-input-text">Max length is 30</small>
+                  }
+                  @if (registrationForm.controls.username.errors?.["spaces"]) {
+                    <small class="error-input-text">Can not contains spaces</small>
+                  }
+                  @if (registrationForm.controls.username.errors?.["pattern"]) {
+                    <small class="error-input-text">Username can not contains special symbols, just '_' and '-'</small>
+                  }
+                </div>
+              }
+              @if (registrationForm.controls.username.errors?.['backend']; as backendErrors) {
+                @for (err of backendErrors; track err) {
+                  <small class="error-input-text">{{ err }}</small>
+                }
+              }
+
+
+              <label class="input-auth-name pt-6 md:pt-8">Password</label>
+              <div class="border-input" [class.border-input-error]="registrationForm.controls.password.invalid && registrationForm.controls.password.touched">
+                <svg class="input-icon" fill="none" viewBox="0 0 16 16">
+                  <path d="M12.6667 7.3335H3.33333C2.59695 7.3335 2 7.93045 2 8.66683V13.3335C2 14.0699 2.59695 14.6668 3.33333 14.6668H12.6667C13.403 14.6668 14 14.0699 14 13.3335V8.66683C14 7.93045 13.403 7.3335 12.6667 7.3335Z" stroke="currentColor" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M4.66675 7.3335V4.66683C4.66675 3.78277 5.01794 2.93493 5.64306 2.30981C6.26818 1.68469 7.11603 1.3335 8.00008 1.3335C8.88414 1.3335 9.73198 1.68469 10.3571 2.30981C10.9822 2.93493 11.3334 3.78277 11.3334 4.66683V7.3335" stroke="currentColor" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <input class="input-text" formControlName="password" [type]="hidePassword() ? 'password' : 'text'" placeholder="••••••••">
+                <button type="button" (click)="hidePassword.set(!hidePassword())">
+                  @if (!hidePassword()) {
+                    <svg class="w-4 h-4 shrink-0 my-auto text-[#494A4E]" fill="none" viewBox="0 0 16 16">
+                      <path d="M0.666748 7.99984C0.666748 7.99984 3.33341 2.6665 8.00008 2.6665C12.6667 2.6665 15.3334 7.99984 15.3334 7.99984C15.3334 7.99984 12.6667 13.3332 8.00008 13.3332C3.33341 13.3332 0.666748 7.99984 0.666748 7.99984Z" stroke="currentColor" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round"/>
+                      <path d="M8 10C9.10457 10 10 9.10457 10 8C10 6.89543 9.10457 6 8 6C6.89543 6 6 6.89543 6 8C6 9.10457 6.89543 10 8 10Z" stroke="currentColor" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                  } @else {
+                    <svg class="w-4 h-4 shrink-0 my-auto text-[#494A4E]" fill="none" viewBox="0 0 16 16">
+                      <path d="M11.96 11.9599C10.8204 12.8285 9.4327 13.3098 7.99996 13.3332C3.33329 13.3332 0.666626 7.99985 0.666626 7.99985C1.49589 6.45445 2.64605 5.10426 4.03996 4.03985M6.59996 2.82652C7.05885 2.71911 7.52867 2.66652 7.99996 2.66652C12.6666 2.66652 15.3333 7.99985 15.3333 7.99985C14.9286 8.75693 14.446 9.46968 13.8933 10.1265M9.41329 9.41319C9.23019 9.60969 9.00939 9.76729 8.76406 9.8766C8.51873 9.98591 8.25389 10.0447 7.98535 10.0494C7.71681 10.0542 7.45007 10.0048 7.20103 9.90418C6.952 9.80359 6.72577 9.65387 6.53586 9.46396C6.34594 9.27404 6.19622 9.04782 6.09563 8.79878C5.99504 8.54975 5.94564 8.283 5.95038 8.01446C5.95512 7.74592 6.0139 7.48108 6.12321 7.23575C6.23252 6.99042 6.39013 6.76962 6.58663 6.58652" stroke="currentColor" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round" />
+                      <path d="M0.666626 0.666504L15.3333 15.3332" stroke="currentColor" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  }
+                </button>
+              </div>
+              <div>
+                @if (registrationForm.errors?.["passwordMismatch"]) {
+                  <small class="error-input-text">Passwords do not match</small>
+                }
+                @if (registrationForm.controls.password.touched && registrationForm.controls.password.invalid) {
                   <div>
-                    @if (loginForm.controls.password.errors?.["required"]) {
+                    @if (registrationForm.controls.password.errors?.["required"]) {
                       <small class="error-input-text">password is required</small>
                     }
-                    @if (loginForm.controls.password.errors?.["minLength"]) {
+                    @if (registrationForm.controls.password.errors?.["minLength"]) {
                       <small class="error-input-text">Min length is 8</small>
                     }
-                    @if (loginForm.controls.password.errors?.["maxLength"]) {
+                    @if (registrationForm.controls.password.errors?.["maxLength"]) {
                       <small class="error-input-text">Max length is 64</small>
                     }
-                    @if (loginForm.controls.password.errors?.["spaces"]) {
+                    @if (registrationForm.controls.password.errors?.["spaces"]) {
                       <small class="error-input-text">Can not contains spaces</small>
                     }
                   </div>
                 }
-                @if (loginForm.controls.password.errors?.['backend']; as backendErrors) {
-                  @for (err of backendErrors; track err) {
-                    <small class="error-input-text">{{ err }}</small>
-                  }
+              </div>
+              @if (registrationForm.controls.password.errors?.['backend']; as backendErrors) {
+                @for (err of backendErrors; track err) {
+                  <small class="error-input-text">{{ err }}</small>
                 }
-                <div class="text-xs text-right mt-[6px] mr-1 mb-8 md:mb-11">
-                  Forgot password?
-                  <a class="underline" [routerLink]="['/reset-password']">Click here</a>
-                </div>
+              }
 
-                <button type="submit" [disabled]="isLoading() || loginForm.invalid"
-                class="login-button">
-                  @if (isLoading()){
-<!--                    <img src="/assets/imgs/loading.svg" alt="">-->
+              <label class="input-auth-name pt-6 md:pt-8">Confirm Password</label>
+              <div class="border-input" [class.border-input-error]="registrationForm.controls.confirmedPassword.invalid && registrationForm.controls.confirmedPassword.touched">
+                <svg class="input-icon" fill="none" viewBox="0 0 16 16">
+                  <path d="M12.6667 7.3335H3.33333C2.59695 7.3335 2 7.93045 2 8.66683V13.3335C2 14.0699 2.59695 14.6668 3.33333 14.6668H12.6667C13.403 14.6668 14 14.0699 14 13.3335V8.66683C14 7.93045 13.403 7.3335 12.6667 7.3335Z" stroke="currentColor" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M4.66675 7.3335V4.66683C4.66675 3.78277 5.01794 2.93493 5.64306 2.30981C6.26818 1.68469 7.11603 1.3335 8.00008 1.3335C8.88414 1.3335 9.73198 1.68469 10.3571 2.30981C10.9822 2.93493 11.3334 3.78277 11.3334 4.66683V7.3335" stroke="currentColor" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <input class="input-text" formControlName="confirmedPassword" [type]="hidePassword() ? 'password' : 'text'" placeholder="••••••••">
+                <button type="button" (click)="hidePassword.set(!hidePassword())">
+                  @if (!hidePassword()) {
+                    <svg class="w-4 h-4 shrink-0 my-auto text-[#494A4E]" fill="none" viewBox="0 0 16 16">
+                      <path d="M0.666748 7.99984C0.666748 7.99984 3.33341 2.6665 8.00008 2.6665C12.6667 2.6665 15.3334 7.99984 15.3334 7.99984C15.3334 7.99984 12.6667 13.3332 8.00008 13.3332C3.33341 13.3332 0.666748 7.99984 0.666748 7.99984Z" stroke="currentColor" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round"/>
+                      <path d="M8 10C9.10457 10 10 9.10457 10 8C10 6.89543 9.10457 6 8 6C6.89543 6 6 6.89543 6 8C6 9.10457 6.89543 10 8 10Z" stroke="currentColor" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
                   } @else {
-                    Login
+                    <svg class="w-4 h-4 shrink-0 my-auto text-[#494A4E]" fill="none" viewBox="0 0 16 16">
+                      <path d="M11.96 11.9599C10.8204 12.8285 9.4327 13.3098 7.99996 13.3332C3.33329 13.3332 0.666626 7.99985 0.666626 7.99985C1.49589 6.45445 2.64605 5.10426 4.03996 4.03985M6.59996 2.82652C7.05885 2.71911 7.52867 2.66652 7.99996 2.66652C12.6666 2.66652 15.3333 7.99985 15.3333 7.99985C14.9286 8.75693 14.446 9.46968 13.8933 10.1265M9.41329 9.41319C9.23019 9.60969 9.00939 9.76729 8.76406 9.8766C8.51873 9.98591 8.25389 10.0447 7.98535 10.0494C7.71681 10.0542 7.45007 10.0048 7.20103 9.90418C6.952 9.80359 6.72577 9.65387 6.53586 9.46396C6.34594 9.27404 6.19622 9.04782 6.09563 8.79878C5.99504 8.54975 5.94564 8.283 5.95038 8.01446C5.95512 7.74592 6.0139 7.48108 6.12321 7.23575C6.23252 6.99042 6.39013 6.76962 6.58663 6.58652" stroke="currentColor" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round" />
+                      <path d="M0.666626 0.666504L15.3333 15.3332" stroke="currentColor" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
                   }
                 </button>
-
-              </form>
-            </div>
-          }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-          @else {
-            <div class="pt-5">
-              <form [formGroup]="registrationForm" (ngSubmit)="onRegistrationSubmit()">
-                @if (commonError) {
-                  <div>{{ commonError }}</div>
+              </div>
+              <div>
+                @if (registrationForm.errors?.["passwordMismatch"]) {
+                  <small class="error-input-text">Passwords do not match</small>
                 }
-                <label class="input-auth-name">Email</label>
-                <div class="border-input" [class.border-input-error]="registrationForm.controls.email.invalid && registrationForm.controls.email.touched">
-<!--                  <img src="/assets/imgs/email.svg" alt="">-->
-                  <input
-                    [class.text-[#EA4550]]="registrationForm.controls.email.invalid && registrationForm.controls.email.touched"
-                    [class.placeholder:text-[#EA4550]]="registrationForm.controls.email.invalid && registrationForm.controls.email.touched"
-                    class="input-text" formControlName="email" type="email" placeholder="Enter your email">
-                </div>
-                @if (registrationForm.controls.email.invalid && registrationForm.controls.email.touched) {
+                @if (registrationForm.controls.confirmedPassword.touched && registrationForm.controls.confirmedPassword.invalid) {
                   <div>
-                    @if (registrationForm.controls.email.hasError('email')) {
-                      <small class="error-input-text">Email is not valid</small>
+                    @if (registrationForm.controls.confirmedPassword.errors?.["required"]) {
+                      <small class="error-input-text">password is required</small>
                     }
-                    @if (registrationForm.controls.email.errors?.["required"]) {
-                      <small class="error-input-text">email is required</small>
-                    }
-                    @if (registrationForm.controls.email.errors?.["minLength"]) {
-                      <small class="error-input-text">Min length is 5</small>
-                    }
-                    @if (registrationForm.controls.email.errors?.["maxLength"]) {
-                      <small class="error-input-text">Max length is 254</small>
-                    }
-                    @if (registrationForm.controls.email.errors?.["spaces"]) {
-                      <small class="error-input-text">Can not contains spaces</small>
-                    }
-                  </div>
-                }
-                @if (registrationForm.controls.email.errors?.['backend']; as backendErrors) {
-                  @for (err of backendErrors; track err) {
-                    <small class="error-input-text" >{{ err }}</small>
-                  }
-                }
-
-
-                <label class="input-auth-name pt-6 md:pt-8">Username</label>
-                <div class="border-input" [class.border-input-error]="registrationForm.controls.username.invalid && registrationForm.controls.username.touched">
-<!--                  <img src="/assets/imgs/user.svg" alt="">-->
-                  <input class="input-text" formControlName="username" type="text" placeholder="Enter your username">
-                </div>
-                @if (registrationForm.controls.username.touched && registrationForm.controls.username.invalid) {
-                  <div>
-                    @if (registrationForm.controls.username.errors?.["required"]) {
-                      <small class="error-input-text">username is required</small>
-                    }
-                    @if (registrationForm.controls.username.errors?.["minLength"]) {
+                    @if (registrationForm.controls.confirmedPassword.errors?.["minLength"]) {
                       <small class="error-input-text">Min length is 8</small>
                     }
-                    @if (registrationForm.controls.username.errors?.["maxLength"]) {
-                      <small class="error-input-text">Max length is 30</small>
+                    @if (registrationForm.controls.confirmedPassword.errors?.["maxLength"]) {
+                      <small class="error-input-text">Max length is 64</small>
                     }
-                    @if (registrationForm.controls.username.errors?.["spaces"]) {
+                    @if (registrationForm.controls.confirmedPassword.errors?.["spaces"]) {
                       <small class="error-input-text">Can not contains spaces</small>
-                    }
-                    @if (registrationForm.controls.username.errors?.["pattern"]) {
-                      <small class="error-input-text">Username can not contains special symbols, just '_' and '-'</small>
                     }
                   </div>
                 }
-                @if (registrationForm.controls.username.errors?.['backend']; as backendErrors) {
-                  @for (err of backendErrors; track err) {
-                    <small class="error-input-text">{{ err }}</small>
-                  }
-                }
-
-
-                <label class="input-auth-name pt-6 md:pt-8">Password</label>
-                <div class="border-input" [class.border-input-error]="registrationForm.controls.password.invalid && registrationForm.controls.password.touched">
-<!--                  <img src="/assets/imgs/password.svg" alt="">-->
-                  <input class="input-text" formControlName="password" [type]="hidePassword() ? 'password' : 'text'" placeholder="••••••••">
-<!--                  <button type="button" (click)="hidePassword.set(!hidePassword())">-->
-<!--                    <img [src]="hidePassword() ? '/assets/imgs/eye-hide.svg' : '/assets/imgs/eye.svg'" alt="">-->
-<!--                  </button>-->
-                </div>
-                <div>
-                  @if (registrationForm.errors?.["passwordMismatch"]) {
-                    <small class="error-input-text">Passwords do not match</small>
-                  }
-                  @if (registrationForm.controls.password.touched && registrationForm.controls.password.invalid) {
-                    <div>
-                      @if (registrationForm.controls.password.errors?.["required"]) {
-                        <small class="error-input-text">password is required</small>
-                      }
-                      @if (registrationForm.controls.password.errors?.["minLength"]) {
-                        <small class="error-input-text">Min length is 8</small>
-                      }
-                      @if (registrationForm.controls.password.errors?.["maxLength"]) {
-                        <small class="error-input-text">Max length is 64</small>
-                      }
-                      @if (registrationForm.controls.password.errors?.["spaces"]) {
-                        <small class="error-input-text">Can not contains spaces</small>
-                      }
-                    </div>
-                  }
-                </div>
-                @if (registrationForm.controls.password.errors?.['backend']; as backendErrors) {
-                  @for (err of backendErrors; track err) {
-                    <small class="error-input-text">{{ err }}</small>
-                  }
-                }
-
-                <label class="input-auth-name pt-6 md:pt-8">Confirm Password</label>
-                <div class="border-input" [class.border-input-error]="registrationForm.controls.confirmedPassword.invalid && registrationForm.controls.confirmedPassword.touched">
-<!--                  <img src="/assets/imgs/password.svg" alt="">-->
-                  <input class="input-text" formControlName="confirmedPassword" [type]="hidePassword() ? 'password' : 'text'" placeholder="••••••••">
-<!--                  <button type="button" (click)="hidePassword.set(!hidePassword())">-->
-<!--                    <img [src]="hidePassword() ? '/assets/imgs/eye-hide.svg' : '/assets/imgs/eye.svg'" alt="">-->
-<!--                  </button>-->
-                </div>
-                <div>
-                  @if (registrationForm.errors?.["passwordMismatch"]) {
-                    <small class="error-input-text">Passwords do not match</small>
-                  }
-                  @if (registrationForm.controls.confirmedPassword.touched && registrationForm.controls.confirmedPassword.invalid) {
-                    <div>
-                      @if (registrationForm.controls.confirmedPassword.errors?.["required"]) {
-                        <small class="error-input-text">password is required</small>
-                      }
-                      @if (registrationForm.controls.confirmedPassword.errors?.["minLength"]) {
-                        <small class="error-input-text">Min length is 8</small>
-                      }
-                      @if (registrationForm.controls.confirmedPassword.errors?.["maxLength"]) {
-                        <small class="error-input-text">Max length is 64</small>
-                      }
-                      @if (registrationForm.controls.confirmedPassword.errors?.["spaces"]) {
-                        <small class="error-input-text">Can not contains spaces</small>
-                      }
-                    </div>
-                  }
-                </div>
+              </div>
 
 
 
 
 
-                <button class="login-button" type="submit" [disabled]="isLoading() || registrationForm.invalid">
-                  @if (isLoading()) {
-                    <div>
+              <button class="login-button mt-8 md:mt-11" type="submit" [disabled]="isLoading() || registrationForm.invalid">
+                @if (isLoading()) {
+                  <div>
 <!--                      <img src="/assets/imgs/loading.svg" alt="">-->
-                    </div>
-                  } @else {
-                    <span>Signup</span>
-                  }
-                </button>
-              </form>
-            </div>
-          }
-        </div>
+                  </div>
+                } @else {
+                  <span>Signup</span>
+                }
+              </button>
+            </form>
+          </div>
+        }
       </div>
     </div>
   } @else {

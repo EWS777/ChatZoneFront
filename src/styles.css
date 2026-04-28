@@ -37,6 +37,8 @@ body {
   margin: 0;
   padding: 0;
 
+  color: white;
+
   background: linear-gradient(110deg, #242424 1.05%, #132752 101.08%);
 
   /*background-color: rgb(32 19 18 ); !*dark background*!*/
