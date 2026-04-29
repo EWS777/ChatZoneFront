@@ -111,9 +111,12 @@ body {
   background: linear-gradient(90deg, #8F7EF3 0%, #53498D 100%);
 }
 
+.blue-background-button{
+  background: linear-gradient(90deg, #2556EB 0%, #153185 100%);
+}
+
 .login-button{
   border-radius: 10px;
-  background: linear-gradient(90deg, #2556EB 0%, #153185 100%);
   box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25), 0 1px 0 0 rgba(255, 255, 255, 0.20) inset, 0 1px 1.5px 0 #4629F2, 0 0 0 1px #4629F2, 0 14px 40px -18px #2D0277;
   width: 100%;
   padding-top: 20px;
@@ -144,6 +147,30 @@ body {
 }
 
 .login-button:active:not([disabled]) {
+  transform: scale(0.96);
+  filter: brightness(0.9);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) inset, 0 1px 0 0 rgba(255, 255, 255, 0.10) inset;
+}
+
+.grey-button{
+  border-radius: 10px;
+  box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25), 0 1px 0 0 rgba(255, 255, 255, 0.20) inset, 0 1px 1.5px 0 #4629F2, 0 0 0 1px #4629F2, 0 14px 40px -18px #2D0277;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.grey-button:hover:not([disabled]){
+  transform: scale(1.02);
+  filter: brightness(1.1);
+  color: white;
+  box-shadow: 0 8px 20px -5px rgba(37, 86, 235, 0.4), 0 1px 0 0 rgba(255, 255, 255, 0.20) inset, 0 1px 1.5px 0 #4629F2;
+}
+
+.grey-button:active:not([disabled]) {
   transform: scale(0.96);
   filter: brightness(0.9);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) inset, 0 1px 0 0 rgba(255, 255, 255, 0.10) inset;

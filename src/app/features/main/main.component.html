@@ -1,22 +1,40 @@
-<div class="flex justify-between px-8 md:px-0 mt-10 md:mt-6 mb-9 lg:mb-16 lg:mt-7 max-w-[475px] md:max-w-[750px] lg:max-w-[920px] mx-auto">
+<div class="flex justify-between px-8 md:px-10 mt-10 mb-9 lg:mb-11 lg:mt-11 max-w-[475px] md:max-w-[800px] lg:max-w-[1050px] mx-auto">
   <div class="w-[120px] shrink-0 my-auto">
     ChatZone
   </div>
-  <div>
-    @if (!authService.isAuthenticatedValue){
-      <div >
-        <button (click)="onClickProfile()">
-          {{username || 'username'}}
-        </button>
-        <button (click)="onClickLogout()" class="">Logout</button>
-      </div>
-    } @else {
-      <button (click)="onClickLogin()" class="login-button !w-[150px] !py-2 text-base">Login</button>
-    }
+  <div class=""> @if (!authService.isAuthenticatedValue){
+    <div class="relative w-6 h-6 md:hidden">
+      <button (click)="isMenuOpen.set(!isMenuOpen())" class="relative flex flex-col justify-center items-center w-6 h-6 focus:outline-none z-50">
+        <span class="block absolute h-0.5 w-6 bg-white rounded-full transition-all duration-300 ease-in-out" [class.rotate-45]="isMenuOpen()" [class.-translate-y-2]="!isMenuOpen()"></span>
+        <span class="block absolute h-0.5 w-6 bg-white rounded-full transition-all duration-300 ease-in-out" [class.opacity-0]="isMenuOpen()"></span>
+        <span class="block absolute h-0.5 w-6 bg-white rounded-full transition-all duration-300 ease-in-out" [class.-rotate-45]="isMenuOpen()" [class.translate-y-2]="!isMenuOpen()"></span>
+      </button>
+      @if (isMenuOpen()){
+        <div class="!absolute right-0 top-10 border-in rounded-lg z-40 animate-in fade-in zoom-in duration-200 p-4 grid gap-3">
+          <button (click)="onClickProfile()" class="login-button blue-background-button !w-[150px] text-base !py-2 !px-0">
+            {{username || 'username'}}
+          </button>
+          <button (click)="onClickLogout()" class="text-[#494A4E] grey-button py-2 px-5 w-[150px] text-center">
+            Logout
+          </button>
+        </div>
+      }
+    </div>
+
+    <div class="md:flex hidden ml-4 gap-4">
+      <button (click)="onClickProfile()" class="login-button blue-background-button shrink-0 !w-fit text-base !py-0 px-4">
+        {{username || 'username'}}
+      </button>
+      <button (click)="onClickLogout()" class="text-[#494A4E] grey-button my-auto py-[9px] px-5">Logout</button>
+    </div>
+
+  } @else {
+    <button (click)="onClickLogin()" class="login-button blue-background-button !w-[150px] !py-2 text-base">Login</button>
+  }
   </div>
 </div>
-<div class="min-h-screen flex justify-center items-center lg:items-start">
-  <div>
+<div class="min-h-screen flex justify-center items-center md:items-start">
+  <div class="md:px-16 lg:px-0">
 
     <div class="text-center text-[32px] mb-6 lg:mb-8 px-4 leading-[40px]">
       Connect with strangers<br>instantly 💥
@@ -24,7 +42,17 @@
     <div class="border-out w-fit px-2 py-4 md:p-10 mx-auto grid md:grid-cols-2 gap-6 md:gap-7 lg:gap-10">
       <div class="border-in px-5 md:px-3 lg:px-5 w-[327px] md:w-[278px] lg:w-[389px]">
         <div class="my-5 md:my-5 lg:mt-10 lg:mb-5 text-center ">
-          <img src="/assets/imgs/user.svg" alt="" class="w-10 md:w-[29px] lg:w-10 my-auto mx-auto">
+          <svg class="mx-auto" width="40" height="42" viewBox="0 0 40 42" fill="none">
+            <g clip-path="url(#clip0_109_13)">
+              <path d="M20.0002 20.5556C25.6765 20.5556 30.278 15.9541 30.278 10.2778C30.278 4.60153 25.6765 0 20.0002 0C14.3239 0 9.72241 4.60153 9.72241 10.2778C9.72241 15.9541 14.3239 20.5556 20.0002 20.5556Z" fill="#D9D9D9"/>
+              <path d="M0 38.8423C0 30.2767 6.94373 23.333 15.5093 23.333H24.4907C33.0563 23.333 40 30.2767 40 38.8423C40 40.5554 38.6113 41.9441 36.8981 41.9441H3.10185C1.38875 41.9441 0 40.5554 0 38.8423Z" fill="#D9D9D9"/>
+            </g>
+            <defs>
+              <clipPath id="clip0_109_13">
+                <rect width="40" height="42" fill="white"/>
+              </clipPath>
+            </defs>
+          </svg>
           <div class="text-2xl md:text-xl lg:text-3xl mt-4 lg:mt-5">
             Individual<br>chat
           </div>
@@ -50,13 +78,27 @@
               {{1234}} users online
             </div>
           </div>
-          <button class="login-button mt-11 md:mt-8 lg:mt-14" (click)="activateFilter()">Go to chat</button>
+          <button class="login-button blue-background-button mt-11 md:mt-8 lg:mt-14" (click)="activateFilter()">Go to chat</button>
         </div>
       </div>
 
       <div class="border-in px-5 md:px-3 lg:px-5 w-[327px] md:w-[278px] lg:w-[389px]">
         <div class="my-5 md:my-5 lg:mt-10 lg:mb-5 text-center ">
-          <img src="/assets/imgs/user.svg" alt="" class="w-10 md:w-[29px] lg:w-10 my-auto mx-auto">
+          <svg class="mx-auto" width="80" height="42" viewBox="0 0 80 42" fill="none">
+            <g clip-path="url(#clip0_109_6)">
+              <path d="M9.99997 20.7641C12.8381 20.7641 15.1389 18.4633 15.1389 15.6252C15.1389 12.7871 12.8381 10.4863 9.99997 10.4863C7.16184 10.4863 4.86108 12.7871 4.86108 15.6252C4.86108 18.4633 7.16184 20.7641 9.99997 20.7641Z" fill="#D9D9D9"/>
+              <path d="M0 29.907C0 25.6242 3.47187 22.1523 7.75463 22.1523H12.2454C16.5281 22.1523 20 25.6242 20 29.907C20 30.7635 19.3056 31.4579 18.4491 31.4579H1.55093C0.694373 31.4579 0 30.7635 0 29.907Z" fill="#D9D9D9"/>
+              <path d="M40.0002 20.5556C45.6765 20.5556 50.278 15.9541 50.278 10.2778C50.278 4.60153 45.6765 0 40.0002 0C34.3239 0 29.7224 4.60153 29.7224 10.2778C29.7224 15.9541 34.3239 20.5556 40.0002 20.5556Z" fill="#D9D9D9"/>
+              <path d="M20 38.8423C20 30.2767 26.9437 23.333 35.5093 23.333H44.4907C53.0563 23.333 60 30.2767 60 38.8423C60 40.5554 58.6113 41.9441 56.8981 41.9441H23.1019C21.3887 41.9441 20 40.5554 20 38.8423Z" fill="#D9D9D9"/>
+              <path d="M70 20.7641C72.8381 20.7641 75.1389 18.4633 75.1389 15.6252C75.1389 12.7871 72.8381 10.4863 70 10.4863C67.1618 10.4863 64.8611 12.7871 64.8611 15.6252C64.8611 18.4633 67.1618 20.7641 70 20.7641Z" fill="#D9D9D9"/>
+              <path d="M60 29.907C60 25.6242 63.4719 22.1523 67.7546 22.1523H72.2454C76.5281 22.1523 80 25.6242 80 29.907C80 30.7635 79.3056 31.4579 78.4491 31.4579H61.5509C60.6944 31.4579 60 30.7635 60 29.907Z" fill="#D9D9D9"/>
+            </g>
+            <defs>
+              <clipPath id="clip0_109_6">
+                <rect width="80" height="42" fill="white"/>
+              </clipPath>
+            </defs>
+          </svg>
           <div class="text-2xl md:text-xl lg:text-3xl mt-4 lg:mt-5">
             Group<br>chat
           </div>
@@ -82,7 +124,7 @@
               {{1234}} users online
             </div>
           </div>
-          <button class="login-button mt-11 md:mt-8 lg:mt-14 !bg-gradient-to-r !from-[#8F7EF3] !to-[#53498D]" (click)="router.navigate(['/groups'])">Go to groups</button>
+          <button class="login-button blue-background-button mt-11 md:mt-8 lg:mt-14 !bg-gradient-to-r !from-[#8F7EF3] !to-[#53498D]" (click)="router.navigate(['/groups'])">Go to groups</button>
         </div>
       </div>
 

@@ -100,7 +100,7 @@
                 <a class="underline" [routerLink]="['/reset-password']">Click here</a>
               </div>
 
-              <button type="submit" [disabled]="isLoading() || loginForm.invalid" class="login-button">
+              <button type="submit" [disabled]="isLoading() || loginForm.invalid" class="login-button blue-background-button">
                 @if (isLoading()){
                   <div class="w-6 h-6 my-auto mx-auto">
                     <svg class="animate-spin" width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -295,7 +295,7 @@
 
 
 
-              <button class="login-button mt-8 md:mt-11" type="submit" [disabled]="isLoading() || registrationForm.invalid">
+              <button class="login-button blue-background-button mt-8 md:mt-11" type="submit" [disabled]="isLoading() || registrationForm.invalid">
                 @if (isLoading()){
                   <div class="w-6 h-6 my-auto mx-auto">
                     <svg class="animate-spin" width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -332,7 +332,7 @@
           Please check your email <br class="md:hidden">
           to finalize registration.
         </div>
-        <button [routerLink]="['/']" class="login-button">
+        <button [routerLink]="['/']" class="login-button blue-background-button">
           Go have a chat! 🎉
         </button>
       </div>

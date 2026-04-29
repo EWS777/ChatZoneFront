@@ -51,6 +51,7 @@ export class MainComponent implements OnInit{
   isFilterActivated = signal<boolean>(false)
   isFindPerson = signal<boolean>(false)
   isAnyActiveChat = signal<boolean>(false)
+  isMenuOpen = signal<boolean>(false)
 
   filter: FindPerson = {
     connectionId: '',
