@@ -1,74 +1,27 @@
-<!--<div>-->
-<!--  <div>-->
-<!--    <div>-->
-<!--      @if (authService.isAuthenticatedValue){-->
-<!--        <div >-->
-<!--          <button (click)="onClickProfile()">-->
-<!--            <img src="/assets/imgs/user.svg" alt="" >-->
-<!--          </button>-->
-<!--          <button (click)="onClickLogout()" >Logout</button>-->
-<!--        </div>-->
-<!--      } @else {-->
-<!--        <div >-->
-<!--          <button (click)="onClickLogin()" >Login</button>-->
-<!--        </div>-->
-<!--      }-->
-<!--    </div>-->
-
-<!--    <div >-->
-<!--      <h1 >ChatZone</h1>-->
-<!--      <p >Connect with strangers instantly</p>-->
-<!--    </div>-->
-<!--    <div >-->
-<!--      <div >-->
-<!--&lt;!&ndash;        <img src="/assets/imgs/user.svg" alt="" >&ndash;&gt;-->
-<!--        <h1 >Individual chat</h1>-->
-<!--        <div >Connect and meet new people </div>-->
-<!--        <p >{{1231}} users online</p>-->
-<!--        <button (click)="activateFilter()" >Go to chat</button>-->
-<!--      </div>-->
-<!--      <div >-->
-<!--&lt;!&ndash;        <img src="/assets/imgs/people-group.svg" alt="" >&ndash;&gt;-->
-<!--        <h1 >Group chat</h1>-->
-<!--        <div >Join to live conversations with other peoples</div>-->
-<!--        <p >{{1231}} active groups</p>-->
-<!--        <button (click)="router.navigate(['/groups'])" >Go to groups</button>-->
-<!--      </div>-->
-<!--    </div>-->
-<!--  </div>-->
-<!--</div>-->
-
-
-
-
-<div class="min-h-screen flex justify-center items-center">
+<div class="flex justify-between px-8 md:px-0 mt-10 md:mt-6 mb-9 lg:mb-16 lg:mt-7 max-w-[475px] md:max-w-[750px] lg:max-w-[920px] mx-auto">
+  <div class="w-[120px] shrink-0 my-auto">
+    ChatZone
+  </div>
   <div>
-    <div class="flex">
-      <div class="w-[120px] shrink-0">
-        ChatZone
+    @if (!authService.isAuthenticatedValue){
+      <div >
+        <button (click)="onClickProfile()">
+          {{username || 'username'}}
+        </button>
+        <button (click)="onClickLogout()" class="">Logout</button>
       </div>
-      <div>
-        @if (authService.isAuthenticatedValue){
-          <div >
-            <button (click)="onClickProfile()">
-              <!--            <img src="/assets/imgs/user.svg" alt="" >-->
-            </button>
-            <button (click)="onClickLogout()" >Logout</button>
-          </div>
-        } @else {
-          <div >
-            <button (click)="onClickLogin()" >Login</button>
-          </div>
-        }
-      </div>
-    </div>
+    } @else {
+      <button (click)="onClickLogin()" class="login-button !w-[150px] !py-2 text-base">Login</button>
+    }
+  </div>
+</div>
+<div class="min-h-screen flex justify-center items-center lg:items-start">
+  <div>
+
     <div class="text-center text-[32px] mb-6 lg:mb-8 px-4 leading-[40px]">
       Connect with strangers<br>instantly 💥
     </div>
-    <div class="border-out w-fit px-2 py-4 md:p-10 mx-auto
-                grid md:grid-cols-2 gap-6 md:gap-7 lg:gap-10">
-
-
+    <div class="border-out w-fit px-2 py-4 md:p-10 mx-auto grid md:grid-cols-2 gap-6 md:gap-7 lg:gap-10">
       <div class="border-in px-5 md:px-3 lg:px-5 w-[327px] md:w-[278px] lg:w-[389px]">
         <div class="my-5 md:my-5 lg:mt-10 lg:mb-5 text-center ">
           <img src="/assets/imgs/user.svg" alt="" class="w-10 md:w-[29px] lg:w-10 my-auto mx-auto">
@@ -97,7 +50,7 @@
               {{1234}} users online
             </div>
           </div>
-          <button class="login-button mt-11 md:mt-8 lg:mt-14">Go to chat</button>
+          <button class="login-button mt-11 md:mt-8 lg:mt-14" (click)="activateFilter()">Go to chat</button>
         </div>
       </div>
 
@@ -129,7 +82,7 @@
               {{1234}} users online
             </div>
           </div>
-          <button class="login-button mt-11 md:mt-8 lg:mt-14">Go to chat</button>
+          <button class="login-button mt-11 md:mt-8 lg:mt-14 !bg-gradient-to-r !from-[#8F7EF3] !to-[#53498D]" (click)="router.navigate(['/groups'])">Go to groups</button>
         </div>
       </div>
 
@@ -140,19 +93,7 @@
 
     </div>
   </div>
-
 </div>
-
-
-
-
-
-
-
-
-
-
-
 
 @if (isFilterActivated()){
   <div >
