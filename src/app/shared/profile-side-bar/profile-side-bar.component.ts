@@ -1,5 +1,12 @@
 import {Component, inject} from '@angular/core';
 import {Router, RouterLink, RouterLinkActive, RouterOutlet} from '@angular/router';
+import {AuthorizationService} from '../../features/identity/authorization/authorization.service';
+
+export const MENU_ITEMS = [
+  { name: 'Profile', link: '/profile', icon: 'profile'},
+  { name: 'Quick messages', link: '/profile/quick-messages', icon: 'messages'},
+  { name: 'Blocked users', link: '/profile/blocked-users', icon: 'blocked'}
+]
 
 @Component({
   selector: 'app-profile-side-bar',
@@ -13,21 +20,12 @@ import {Router, RouterLink, RouterLinkActive, RouterOutlet} from '@angular/route
 })
 export class ProfileSideBarComponent {
   router = inject(Router)
-  isDropdownOpen = false; // Состояние меню
+  authService = inject(AuthorizationService)
 
-  toggleDropdown() {
-    this.isDropdownOpen = !this.isDropdownOpen;
-  }
+  // get activePageName(): string {
+  //   const current = this.menuItems.find(item => this.router.url.includes(item.link));
+  //   return current ? current.name : 'Menu';
+  // }
 
-  get activePageName(): string {
-    const current = this.menuItems.find(item => this.router.url.includes(item.link));
-    return current ? current.name : 'Menu';
-  }
-
-  menuItems = [
-    { name: 'Profile', link: '/profile'},
-    { name: 'Filter', link: 'filter'},
-    { name: 'Quick messages', link: 'quick-messages'},
-    { name: 'Blocked users', link: 'blocked-users'}
-  ]
+  protected readonly MENU_ITEMS = MENU_ITEMS;
 }

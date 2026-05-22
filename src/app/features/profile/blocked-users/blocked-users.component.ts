@@ -1,13 +1,17 @@
-import {Component, inject, OnInit} from '@angular/core';
+import {Component, inject, OnInit, signal} from '@angular/core';
 import {BlockedUserService} from './blocked-user.service';
 import {BlockedUser} from './blocked-user';
 import {map} from 'rxjs';
 import {DatePipe} from '@angular/common';
+import {RouterLink} from '@angular/router';
+import {MENU_ITEMS} from '../../../shared/profile-side-bar/profile-side-bar.component';
+import {AuthorizationService} from '../../identity/authorization/authorization.service';
 
 @Component({
   selector: 'app-blocked-users',
   imports: [
-    DatePipe
+    DatePipe,
+    RouterLink
   ],
   templateUrl: './blocked-users.component.html',
   standalone: true,
@@ -15,7 +19,9 @@ import {DatePipe} from '@angular/common';
 })
 export class BlockedUsersComponent implements OnInit{
   blockedUserService = inject(BlockedUserService)
+  authService = inject(AuthorizationService);
   blockedUser: BlockedUser[] | null = null
+  isMenuOpen = signal<boolean>(false)
 
 
   ngOnInit() {
@@ -41,4 +47,6 @@ export class BlockedUsersComponent implements OnInit{
       }
     })
   }
+
+  protected readonly MENU_ITEMS = MENU_ITEMS;
 }

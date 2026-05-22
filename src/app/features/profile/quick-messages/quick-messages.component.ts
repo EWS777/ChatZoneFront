@@ -4,12 +4,16 @@ import {QuickMessage} from './quick-message';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {map} from 'rxjs';
 import {CommonValidator} from '../../../shared/validation/CommonValidator';
+import {AuthorizationService} from '../../identity/authorization/authorization.service';
+import {RouterLink} from '@angular/router';
+import {MENU_ITEMS} from '../../../shared/profile-side-bar/profile-side-bar.component';
 
 @Component({
   selector: 'app-quick-messages',
   imports: [
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    RouterLink
   ],
   templateUrl: './quick-messages.component.html',
   standalone: true,
@@ -17,11 +21,13 @@ import {CommonValidator} from '../../../shared/validation/CommonValidator';
 })
 export class QuickMessagesComponent implements OnInit{
   quickMessageService = inject(QuickMessageService)
+  authService = inject(AuthorizationService);
 
   quickMessageList: QuickMessage[] | null = null
   quickMessage: QuickMessage = { idQuickMessage: 0, message: '' };
   isCreateOn = signal<boolean>(false)
   isCreateFirstQuickMessage = signal<boolean>(false)
+  isMenuOpen = signal<boolean>(false)
   commonError: string = ''
 
   messageForm = new FormGroup({
@@ -140,6 +146,13 @@ export class QuickMessagesComponent implements OnInit{
     delete message.originalMessage;
   }
 
+  cancelCreation() {
+    this.isCreateOn.set(false);
+    this.messageForm.reset();
+    this.isCreateFirstQuickMessage.set(false);
+    this.commonError = '';
+  }
+
   onChange(message: QuickMessage){
     message.isEditing = message.message !== message.originalMessage;
   }
@@ -163,4 +176,6 @@ export class QuickMessagesComponent implements OnInit{
         }
     })
   }
+
+  protected readonly MENU_ITEMS = MENU_ITEMS;
 }

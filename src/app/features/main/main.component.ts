@@ -163,16 +163,4 @@ export class MainComponent implements OnInit{
       }
     })
   }
-
-  onClickLogout(){
-    this.authService.logout().subscribe({
-      next: () =>{
-        this.router.navigate([''])
-      },
-      error: ()=>{
-        this.authService.clearAuth()
-        this.router.navigate([''])
-      }
-    })
-  }
 }

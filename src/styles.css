@@ -314,7 +314,7 @@ body {
 }
 
 .input-text{
-  color: #FFFFFF33;
+  color: #FFFFFF;
   font-size: 12px;
   width: 100%;
   outline: none;
@@ -329,6 +329,10 @@ body {
   outline: none;
   color: white;
   box-shadow: 0 0 0 0 transparent;
+}
+
+.border-input:has(.input-text.ng-valid:not(:placeholder-shown)) .input-icon {
+  color: #ffffff;
 }
 
 .input-icon{
@@ -362,3 +366,24 @@ body {
     font-size: 16px;
   }
 }
+
+@media (min-width: 1024px) {
+  .border-profile-desktop {
+    position: relative;
+    border-radius: 10px;
+    box-sizing: border-box;
+    border: 1px solid #2556EB;
+    z-index: 0;
+    display: flex;
+    gap: 10px;
+    padding: 12px;
+
+    box-shadow:
+      0 0 1px 0 rgba(70, 41, 242, 0.5),
+      0 4px 12px rgba(70, 41, 242, 0.3),
+      0 10px 30px -15px rgba(0, 0, 0, 0.9);
+
+    transition: all 0.3s ease;
+  }
+}
+

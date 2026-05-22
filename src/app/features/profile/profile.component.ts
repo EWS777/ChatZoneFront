@@ -1,23 +1,28 @@
-import {Component, inject, OnInit} from '@angular/core';
+import {Component, inject, OnInit, signal} from '@angular/core';
 import {ProfileService} from './profile.service';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {Profile} from './profile';
-import {Router} from '@angular/router';
+import {Router, RouterLink} from '@angular/router';
 import {CommonValidator} from '../../shared/validation/CommonValidator';
+import {MENU_ITEMS} from '../../shared/profile-side-bar/profile-side-bar.component';
+import {AuthorizationService} from '../identity/authorization/authorization.service';
 
 @Component({
   selector: 'app-profile',
   imports: [
     FormsModule,
     ReactiveFormsModule,
+    RouterLink,
   ],
   templateUrl: './profile.component.html',
   standalone: true,
   styleUrl: './profile.component.css'
 })
 export class ProfileComponent implements OnInit{
+  authService = inject(AuthorizationService);
   profileService = inject(ProfileService)
   router = inject(Router)
+  isMenuOpen = signal<boolean>(false)
 
   profile!: Profile;
   oldUsername!: string;
@@ -59,6 +64,7 @@ export class ProfileComponent implements OnInit{
         next: value => {
           this.profile = value
           this.oldUsername = value.username
+          this.updateProfileForm.controls.username.markAsPristine();
         },
         error: (err) => {
           if(err.status === 400 && err.error && err.error.errors){
@@ -86,4 +92,12 @@ export class ProfileComponent implements OnInit{
   onClickUpdatePassword(){
     this.router.navigate([`update-password`])
   }
+
+  onClickCancelUsername() {
+    this.updateProfileForm.patchValue({
+      username: this.oldUsername
+    });
+  }
+
+  protected readonly MENU_ITEMS = MENU_ITEMS;
 }

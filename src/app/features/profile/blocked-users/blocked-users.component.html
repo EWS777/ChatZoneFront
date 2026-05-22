@@ -1,43 +1,100 @@
-<div>
-  <h1 class="font-semibold text-2xl pt-4 text-gray-200 lg:text-3xl text-center mb-8
-    md:pt-8">Blocked Users</h1>
-</div>
-@if (blockedUser?.length === 0) {
-  <div class="pb-10">
-    <h1 class="font-semibold text-lg text-gray-200 lg:text-xl text-center">
-      You don't have any blocked users</h1>
+<div class="flex flex-col w-full flex-1 lg:mt-28">
+  <div class="flex w-full justify-between mx-auto px-4 md:px-0 lg:hidden">
+    <div>
+      <button (click)="isMenuOpen.set(!isMenuOpen())" class="relative flex flex-col justify-center items-center w-6 h-6 focus:outline-none z-50">
+        <span class="block absolute h-0.5 w-6 bg-white rounded-full transition-all duration-300 ease-in-out" [class.rotate-45]="isMenuOpen()" [class.-translate-y-2]="!isMenuOpen()"></span>
+        <span class="block absolute h-0.5 w-6 bg-white rounded-full transition-all duration-300 ease-in-out" [class.opacity-0]="isMenuOpen()"></span>
+        <span class="block absolute h-0.5 w-6 bg-white rounded-full transition-all duration-300 ease-in-out" [class.-rotate-45]="isMenuOpen()" [class.translate-y-2]="!isMenuOpen()"></span>
+      </button>
+    </div>
+    <div class="shrink-0 my-auto w-fit">
+      ChatZone
+    </div>
   </div>
-} @else {
-  <div class="grid gap-3 pb-10">
-    @for (blockedUsers of blockedUser; track blockedUsers.idBlockedPerson) {
-      <ul>
-        <li>
-          <div class="bg-[#251C57] flex flex-col md:flex-row gap-2 md:justify-between py-2 px-2 rounded-2xl">
-            <div class="bg-[#2E236C] hover:bg-[#3d2f8a] w-fit rounded-2xl py-1 px-4
-  text-lg font-medium transition-all duration-300
-  hover:scale-[1.02] active:scale-[0.98]
-  hover:shadow-[0_10px_20px_rgba(0,0,0,0.4)]
-  hover:-translate-y-0.5 active:translate-y-0 active:shadow-none
-  disabled:opacity-50 disabled:cursor-not-allowed">{{ blockedUsers.blockedUsername }}</div>
-            <div class="bg-[#2E236C] hover:bg-[#3d2f8a] w-fit rounded-2xl py-1 px-4
-  text-lg font-medium transition-all duration-300
-  hover:scale-[1.02] active:scale-[0.98]
-  hover:shadow-[0_10px_20px_rgba(0,0,0,0.4)]
-  hover:-translate-y-0.5 active:translate-y-0 active:shadow-none
-  disabled:opacity-50 disabled:cursor-not-allowed">
-              {{ blockedUsers.createdAt | date:'dd.MM.yyyy'}}
-            </div>
-            <div class="bg-[#2E236C] hover:bg-[#3d2f8a] w-fit rounded-2xl py-1 px-4
-  text-lg font-medium transition-all duration-300
-  hover:scale-[1.02] active:scale-[0.98]
-  hover:shadow-[0_10px_20px_rgba(0,0,0,0.4)]
-  hover:-translate-y-0.5 active:translate-y-0 active:shadow-none
-  disabled:opacity-50 disabled:cursor-not-allowed">
-              <button (click)="delete(blockedUsers.idBlockedPerson!)">Unblock</button>
-            </div>
+  @if (!isMenuOpen()){
+    @if (blockedUser?.length === 0){
+      <div class="border-out w-fit px-2 py-4 md:p-10 mx-auto md:mt-20  lg:p-0 lg:flex lg:my-auto mt-[163px] lg:!bg-transparent">
+        <div class="border-in px-5 w-[327px] md:w-[389px] lg:w-[574px] py-4 md:pt-10 xl:w-[720px] lg:p-10 xl:p-20 lg:before:hidden lg:!bg-[#111111]/20">
+          <div class="text-2xl md:text-3xl text-center">
+            Blocked<br class="lg:hidden"> users
           </div>
-        </li>
-      </ul>
+          <div class="text-base text-center text-[#B4B4B4] pt-2.5 md:pt-5">
+            You don’t have any blocked<br class="lg:hidden">
+            users<br class="lg:block hidden"> at this moment.<br>
+          </div>
+        </div>
+      </div>
+    } @else {
+      <div class="border-out w-fit px-2 py-4 md:p-10 mx-auto md:mt-20 lg:p-0 lg:flex lg:my-auto mt-[88px] lg:!bg-transparent">
+        <div class="border-in px-5 w-[327px] md:w-[574px] py-4 md:pt-10 xl:w-[720px] lg:p-10 xl:p-20 lg:before:hidden lg:!bg-[#111111]/20 lg:px-5">
+          <div class="text-2xl md:text-3xl text-center mb-10">
+            Blocked<br class="lg:hidden"> users
+          </div>
+          <div class="grid gap-5">
+            @for (blockedUsers of blockedUser; track blockedUsers.idBlockedPerson) {
+              <div class="flex flex-col md:flex-row md:justify-between md:items-center bg-[#21262d] border border-gray-800 rounded-2xl p-4 gap-2 w-full min-w-0 md:gap-0 lg:bg-transparent lg:border-0 border-profile-desktop">
+                <div class="text-base w-full md:w-auto md:flex-1 md:min-w-0 truncate" [title]="blockedUsers.blockedUsername">
+                  {{blockedUsers.blockedUsername}}
+                </div>
+                <div class="flex justify-between items-center md:gap-5">
+                  <div class="text-[#B4B4B4] text-sm md:text-base">
+                    {{ blockedUsers.createdAt | date:'dd.MM.yyyy'}}
+                  </div>
+                  <button (click)="delete(blockedUsers.idBlockedPerson!)" class="bg-[#CA3A43] py-1.5 text-sm px-4 rounded-[8px] shrink-0">
+                    Unblock
+                  </button>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
     }
-  </div>
-}
+  } @else {
+    <div class="border-out w-[345px] mx-auto md:mt-20 md:w-[643px]">
+      <div class="text-[#C9C9C9] flex gap-2 hover:text-[#FFFFFF] transition-colors duration-200 justify-center mt-10">
+        <svg class="my-auto" width="8" height="13" viewBox="0 0 8 13" fill="none">
+          <path d="M6.81691 0.318242C7.23941 0.740742 7.23941 1.42324 6.81691 1.84574L2.61358 6.04908L6.81691 10.2524C7.23941 10.6749 7.23941 11.3574 6.81691 11.7799C6.39441 12.2024 5.71191 12.2024 5.28941 11.7799L0.316914 6.80741C-0.105586 6.38491 -0.105586 5.70241 0.316914 5.27991L5.28941 0.307409C5.70108 -0.104258 6.39441 -0.104258 6.81691 0.318242Z" fill="currentColor"/>
+        </svg>
+        <a [routerLink]="['/']" class="block uppercase text-sm">
+          Back to MAIN PAGE
+        </a>
+      </div>
+      <div class="grid gap-6 my-14">
+        @for (menuItem of MENU_ITEMS; track menuItem.name) {
+          <button [routerLink]="menuItem.link" (click)="isMenuOpen.set(false)"
+                  class="text-white whitespace-nowrap w-full rounded-xl transition-all duration-300
+                  ease-in-out flex items-center justify-center gap-[14px]">
+            @switch (menuItem.icon){
+              @case ('profile'){
+                <svg class="my-auto" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <path d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M12 11C14.2091 11 16 9.20914 16 7C16 4.79086 14.2091 3 12 3C9.79086 3 8 4.79086 8 7C8 9.20914 9.79086 11 12 11Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              }
+              @case ('messages'){
+                <svg class="my-auto" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <path d="M21 15C21 15.5304 20.7893 16.0391 20.4142 16.4142C20.0391 16.7893 19.5304 17 19 17H7L3 21V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H19C19.5304 3 20.0391 3.21071 20.4142 3.58579C20.7893 3.96086 21 4.46957 21 5V15Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              }
+              @case ('blocked'){
+                <svg class="my-auto" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <path d="M16 21V19C16 17.9391 15.5786 16.9217 14.8284 16.1716C14.0783 15.4214 13.0609 15 12 15H5C3.93913 15 2.92172 15.4214 2.17157 16.1716C1.42143 16.9217 1 17.9391 1 19V21" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M8.5 11C10.7091 11 12.5 9.20914 12.5 7C12.5 4.79086 10.7091 3 8.5 3C6.29086 3 4.5 4.79086 4.5 7C4.5 9.20914 6.29086 11 8.5 11Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M18 8L23 13" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M23 8L18 13" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              }
+            }
+            <span class="my-auto text-base">
+                {{menuItem.name}}
+              </span>
+          </button>
+        }
+      </div>
+      <button (click)="authService.logoutUser()" class="text-[#494A4E] grey-button text-center text-base flex justify-center mx-auto mb-10 py-5 w-[210px] md:w-[250px]">
+        Log out
+      </button>
+    </div>
+  }
+</div>

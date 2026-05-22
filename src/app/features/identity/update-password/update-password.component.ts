@@ -16,6 +16,8 @@ import {matchValidator} from '../../../shared/validation/MatchValidator';
 })
 export class UpdatePasswordComponent {
   passwordService = inject(PasswordService)
+  hidePassword = signal<boolean>(true)
+  isLoading = signal<boolean>(false)
   commonError: string = ''
   isPasswordChanged = signal<boolean>(false)
 

@@ -1,12 +1,14 @@
 import {inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {BehaviorSubject, catchError, map, of, tap} from 'rxjs';
+import {Router} from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthorizationService {
   http = inject(HttpClient)
+  router = inject(Router)
   baseApiUrl = 'https://localhost:7212/'
 
   private authState = new BehaviorSubject<boolean>(false)
@@ -73,5 +75,11 @@ export class AuthorizationService {
           return of(false);
         })
       );
+  }
+
+  logoutUser() {
+    this.logout().subscribe(() => {
+      this.router.navigate(['']);
+    });
   }
 }

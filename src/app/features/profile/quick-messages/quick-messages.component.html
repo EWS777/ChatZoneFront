@@ -1,115 +1,184 @@
-<div>
-  <h1 class="font-semibold text-2xl pt-4 text-gray-200 lg:text-3xl text-center mb-8
-    md:pt-8">Quick messages</h1>
-</div>
-
-@if(quickMessageList?.length ===0){
-  <div>
-    <h1 class="font-semibold text-lg text-gray-200 lg:text-xl text-center">
-      You don't have any messages at this moment</h1>
+<div class="flex flex-col w-full flex-1">
+  <div class="flex w-full justify-between mx-auto px-4 mb-10 md:mb-6 md:px-0 lg:hidden">
+    <div>
+      <button (click)="isMenuOpen.set(!isMenuOpen())" class="relative flex flex-col justify-center items-center w-6 h-6 focus:outline-none z-50">
+        <span class="block absolute h-0.5 w-6 bg-white rounded-full transition-all duration-300 ease-in-out" [class.rotate-45]="isMenuOpen()" [class.-translate-y-2]="!isMenuOpen()"></span>
+        <span class="block absolute h-0.5 w-6 bg-white rounded-full transition-all duration-300 ease-in-out" [class.opacity-0]="isMenuOpen()"></span>
+        <span class="block absolute h-0.5 w-6 bg-white rounded-full transition-all duration-300 ease-in-out" [class.-rotate-45]="isMenuOpen()" [class.translate-y-2]="!isMenuOpen()"></span>
+      </button>
+    </div>
+    <div class="shrink-0 my-auto w-fit">
+      ChatZone
+    </div>
   </div>
-} @else {
-  @if (messageForm.controls.message.errors?.['backend']; as backendErrors) {
-    @for (err of backendErrors; track err) {
-      <small>{{ err }}</small>
-    }
-  }
-  <div class="grid gap-10" [class.pb-10]="quickMessageList?.length === 3">
-    @if (commonError) {
-      <div >{{ commonError }}</div>
-    }
-    @for (messages of quickMessageList; track messages.idQuickMessage){
-      <div class="grid gap-3">
-        <div class="relative">
-          <img src="/assets/imgs/user.svg" alt="" >
-          <input [(ngModel)]="messages.message" (focus)="onStart(messages)" (ngModelChange)="onChange(messages)"
-                 type="text"
-                 #msgInput="ngModel"
-                 required
-                 minlength="1"
-                 maxlength="50"
-                 pattern=".*\S.*">
+  @if (!isMenuOpen()){
+    <div class="border-out w-fit px-2 py-4 md:p-10 mx-auto md:mt-16 lg:p-0 lg:mt-[100px] mt-10 lg:!bg-transparent">
+      <div class="border-in px-5 w-[327px] md:w-[389px] lg:w-[574px] py-4 md:pt-10 xl:w-[720px] lg:p-10 xl:p-20 lg:before:hidden lg:!bg-[#111111]/20">
+        <div class="text-2xl md:text-3xl text-center">
+          Quick<br class="md:hidden"> messages
         </div>
-        @if (msgInput.touched && msgInput.invalid){
-          <div class=" flex flex-col pl-1 pt-1 md:pl-2 md:pt-2">
-            @if(msgInput.errors?.["required"]) {<small>message is required</small>}
-            @if(msgInput.errors?.["minlength"]) {<small>Min length is 1</small>}
-            @if(msgInput.errors?.["maxlength"]) {<small>Max length is 50</small>}
-            @if(msgInput.errors?.['pattern']) {<small>Cannot contain only whitespace</small>}
+        @if (quickMessageList?.length === 3){
+          <div class="font-semibold text-center pt-5 text-[#B4B4B4]">
+            You can save only 3 messages.
           </div>
         }
-        <div class="md:flex md:justify-between grid grid-cols-2 gap-3">
-          @if(messages.isEditing){
-            <button (click)="update(messages)" class="bg-[#2E236C] hover:bg-[#3d2f8a] w-fit rounded-2xl py-1 px-4
-  text-lg font-medium transition-all duration-300
-  hover:scale-[1.02] active:scale-[0.98]
-  hover:shadow-[0_10px_20px_rgba(0,0,0,0.4)]
-  hover:-translate-y-0.5 active:translate-y-0 active:shadow-none
-  disabled:opacity-50 disabled:cursor-not-allowed">Update</button>
-            <button (click)="cancel(messages)" class="bg-[#2E236C] hover:bg-[#3d2f8a] w-fit rounded-2xl py-1 px-4
-  text-lg font-medium transition-all duration-300
-  hover:scale-[1.02] active:scale-[0.98]
-  hover:shadow-[0_10px_20px_rgba(0,0,0,0.4)]
-  hover:-translate-y-0.5 active:translate-y-0 active:shadow-none
-  disabled:opacity-50 disabled:cursor-not-allowed">Cancel</button>
+        @if (quickMessageList?.length === 0){
+          <div class="text-base text-center text-[#B4B4B4] pt-2.5 md:pt-5 mb-8 md:mb-10">
+            You don’t have any messages<br class="lg:hidden">
+            at this moment.<br>
+            <span class="font-bold">Go create one!</span>
+          </div>
+        } @else {
+          @if (commonError) {
+            <div class="common-backend-error mt-5">{{ commonError }}</div>
           }
-          <button (click)="delete(messages.idQuickMessage)" class="bg-[#2E236C] hover:bg-[#3d2f8a] w-fit rounded-2xl py-1 px-4
-  text-lg font-medium transition-all duration-300
-  hover:scale-[1.02] active:scale-[0.98]
-  hover:shadow-[0_10px_20px_rgba(0,0,0,0.4)]
-  hover:-translate-y-0.5 active:translate-y-0 active:shadow-none
-  disabled:opacity-50 disabled:cursor-not-allowed text-nowrap">Delete message</button>
-        </div>
+          <div class="grid gap-8 mt-10 md:mt-8">
+            @for(messages of quickMessageList; track messages.idQuickMessage){
+              <div class="w-full min-w-0">
+                <div>
+                  <div class="flex justify-between">
+                    <label class="input-auth-name">Message</label>
+                    <div class="flex mb-1 mr-1 gap-4 md:gap-5">
+                      @if (messages.isEditing){
+                        <div class="flex gap-2 md:gap-3">
+                          <button type="button" (click)="update(messages)">
+                            <svg class="m-auto" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                              <path d="M13.3332 4L5.99984 11.3333L2.6665 8" stroke="#5AD5A1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                          </button>
+                          <button type="button" (click)="cancel(messages)">
+                            <svg class="m-auto" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                              <path d="M12 4L4 12" stroke="#EA4550" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                              <path d="M4 4L12 12" stroke="#EA4550" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                          </button>
+                        </div>
+                      }
+                      <button class="text-sm text-[#5F6168] underline hover:text-[#CA3A43]" (click)="delete(messages.idQuickMessage)">Delete</button>
+                    </div>
+                  </div>
+                  <div class="border-input items-start w-full lg:!bg-[#111111]/20" [class.border-input-error]="msgInput.invalid && msgInput.touched">
+                    <svg class="input-icon mt-1" width="17" height="17" viewBox="0 0 17 17" fill="none">
+                      <path d="M16.5 11.1667C16.5 11.6382 16.3127 12.0903 15.9793 12.4237C15.6459 12.7571 15.1937 12.9444 14.7222 12.9444H4.05556L0.5 16.5V2.27778C0.5 1.80628 0.687301 1.3541 1.0207 1.0207C1.3541 0.687301 1.80628 0.5 2.27778 0.5H14.7222C15.1937 0.5 15.6459 0.687301 15.9793 1.0207C16.3127 1.3541 16.5 1.80628 16.5 2.27778V11.1667Z" stroke="white" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <textarea [(ngModel)]="messages.message" (focus)="onStart(messages)" (ngModelChange)="onChange(messages)" #msgInput="ngModel" rows="1" class="input-text resize-none [field-sizing:content] overflow-hidden w-full bg-transparent outline-none align-middle break-all" placeholder="Enter quick message"></textarea>
+                  </div>
+                  @if (msgInput.touched && msgInput.invalid) {
+                    <div>
+                      @if(msgInput.errors?.["required"]){
+                        <small class="error-input-text">message is required</small>
+                      }
+                      @if(msgInput.errors?.["minlength"]){
+                        <small class="error-input-text">Min length is 1</small>
+                      }
+                      @if(msgInput.errors?.["maxlength"]){
+                        <small class="error-input-text">Max length is 100</small>
+                      }
+                    </div>
+                  }
+                  @if (messageForm.controls.message.errors?.['backend']; as backendErrors) {
+                    @for (err of backendErrors; track err) {
+                      <small class="error-input-text">{{ err }}</small>
+                    }
+                  }
+                </div>
+              </div>
+            }
+          </div>
+        }
+        @if (isCreateOn()){
+          <div [formGroup]="messageForm" class="mt-8">
+              <div class="flex justify-between">
+                <label class="input-auth-name">Message</label>
+                <div class="flex gap-3 mb-1 mr-1">
+                  <button type="button" (click)="create()">
+                    <svg class="m-auto" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                      <path d="M13.3332 4L5.99984 11.3333L2.6665 8" stroke="#5AD5A1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </button>
+                  <button type="button" (click)="cancelCreation()">
+                    <svg class="m-auto" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                      <path d="M12 4L4 12" stroke="#EA4550" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      <path d="M4 4L12 12" stroke="#EA4550" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            <div class="border-input lg:!bg-[#111111]/20 items-start w-full" [class.border-input-error]="messageForm.controls.message.invalid && messageForm.controls.message.touched">
+              <svg class="input-icon mt-1" width="17" height="17" viewBox="0 0 17 17" fill="none">
+                <path d="M16.5 11.1667C16.5 11.6382 16.3127 12.0903 15.9793 12.4237C15.6459 12.7571 15.1937 12.9444 14.7222 12.9444H4.05556L0.5 16.5V2.27778C0.5 1.80628 0.687301 1.3541 1.0207 1.0207C1.3541 0.687301 1.80628 0.5 2.27778 0.5H14.7222C15.1937 0.5 15.6459 0.687301 15.9793 1.0207C16.3127 1.3541 16.5 1.80628 16.5 2.27778V11.1667Z" stroke="white" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <textarea formControlName="message" rows="1" class="input-text resize-none [field-sizing:content] overflow-hidden w-full bg-transparent outline-none align-middle break-all" placeholder="Enter quick message"></textarea>
+            </div>
+              @if (messageForm.controls.message.touched && messageForm.controls.message.invalid) {
+                <div>
+                  @if (messageForm.controls.message.errors?.["required"]) {
+                    <small class="error-input-text">message is required</small>
+                  }
+                  @if (messageForm.controls.message.errors?.["minLength"]) {
+                    <small class="error-input-text">Min length is 1</small>
+                  }
+                  @if (messageForm.controls.message.errors?.["maxLength"]) {
+                    <small class="error-input-text">Max length is 100</small>
+                  }
+                </div>
+              }
+              @if (messageForm.controls.message.errors?.['backend']; as backendErrors) {
+                @for (err of backendErrors; track err) {
+                  <small class="error-input-text">{{ err }}</small>
+                }
+              }
+          </div>
+        }
+        <button class="text-base login-button lg:!w-[239px] lg:block lg:mx-auto disabled:text-[#494A4E] mt-8 lg:mt-14" [disabled]="(quickMessageList?.length || 0) >= 3" (click)="changeStatus()">
+          New message
+        </button>
       </div>
-    }
-  </div>
-}
-
-@if (!isCreateFirstQuickMessage()){
-  <div class="flex flex-col items-center py-8">
-    <button (click)="changeStatus()" class="bg-[#2E236C] hover:bg-[#3d2f8a] w-fit rounded-2xl py-1 px-4
-  text-lg font-medium transition-all duration-300
-  hover:scale-[1.02] active:scale-[0.98]
-  hover:shadow-[0_10px_20px_rgba(0,0,0,0.4)]
-  hover:-translate-y-0.5 active:translate-y-0 active:shadow-none
-  disabled:opacity-50 disabled:cursor-not-allowed
-">Add message</button>
-  </div>
-}
-
-@if (isCreateOn()){
-  @if (commonError) {
-    <div class=" pt-3">{{ commonError }}</div>
-  }
-  <br>
-  <div [formGroup]="messageForm">
-    <div class="relative">
-      <img src="/assets/imgs/user.svg" alt="" >
-      <input type="text" placeholder="Enter new message" formControlName="message" >
     </div>
-    @if (messageForm.controls.message.touched && messageForm.controls.message.invalid){
-      <div class=" flex flex-col pl-1 pt-1 md:pl-2 md:pt-2">
-        @if(messageForm.controls.message.errors?.["required"]) {<small>message is required</small>}
-        @if(messageForm.controls.message.errors?.["minLength"]) {<small>Min length is 1</small>}
-        @if(messageForm.controls.message.errors?.["maxLength"]) {<small>Max length is 50</small>}
-        @if (messageForm.controls.message.errors?.["whitespace"]) {<small>Can not contains whitespace</small>}
+  } @else {
+    <div class="border-out w-[345px] mx-auto md:mt-20 md:w-[643px]">
+      <div class="text-[#C9C9C9] flex gap-2 hover:text-[#FFFFFF] transition-colors duration-200 justify-center mt-10">
+        <svg class="my-auto" width="8" height="13" viewBox="0 0 8 13" fill="none">
+          <path d="M6.81691 0.318242C7.23941 0.740742 7.23941 1.42324 6.81691 1.84574L2.61358 6.04908L6.81691 10.2524C7.23941 10.6749 7.23941 11.3574 6.81691 11.7799C6.39441 12.2024 5.71191 12.2024 5.28941 11.7799L0.316914 6.80741C-0.105586 6.38491 -0.105586 5.70241 0.316914 5.27991L5.28941 0.307409C5.70108 -0.104258 6.39441 -0.104258 6.81691 0.318242Z" fill="currentColor"/>
+        </svg>
+        <a [routerLink]="['/']" class="block uppercase text-sm">
+          Back to MAIN PAGE
+        </a>
       </div>
-    }
-    @if (messageForm.controls.message.errors?.['backend']; as backendErrors) {
-      @for (err of backendErrors; track err) {
-        <div class=" flex flex-col pl-1 pt-1 md:pl-2 md:pt-2">
-          <small>{{ err }}</small>
-        </div>
-      }
-    }
-  </div>
-  <div class="flex flex-col items-center py-8">
-    <button (click)="create()" class="bg-[#2E236C] hover:bg-[#3d2f8a] w-fit rounded-2xl py-1 px-4
-  text-lg font-medium transition-all duration-300
-  hover:scale-[1.02] active:scale-[0.98]
-  hover:shadow-[0_10px_20px_rgba(0,0,0,0.4)]
-  hover:-translate-y-0.5 active:translate-y-0 active:shadow-none
-  disabled:opacity-50 disabled:cursor-not-allowed
-">Save new message</button>
-  </div>
-}
+      <div class="grid gap-6 my-14">
+        @for (menuItem of MENU_ITEMS; track menuItem.name) {
+          <button [routerLink]="menuItem.link" (click)="isMenuOpen.set(false)"
+                  class="text-white whitespace-nowrap w-full rounded-xl transition-all duration-300 ease-in-out flex items-center justify-center gap-[14px]">
+            @switch (menuItem.icon){
+              @case ('profile'){
+                <svg class="my-auto" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <path d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M12 11C14.2091 11 16 9.20914 16 7C16 4.79086 14.2091 3 12 3C9.79086 3 8 4.79086 8 7C8 9.20914 9.79086 11 12 11Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              }
+              @case ('messages'){
+                <svg class="my-auto" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <path d="M21 15C21 15.5304 20.7893 16.0391 20.4142 16.4142C20.0391 16.7893 19.5304 17 19 17H7L3 21V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H19C19.5304 3 20.0391 3.21071 20.4142 3.58579C20.7893 3.96086 21 4.46957 21 5V15Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              }
+              @case ('blocked'){
+                <svg class="my-auto" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <path d="M16 21V19C16 17.9391 15.5786 16.9217 14.8284 16.1716C14.0783 15.4214 13.0609 15 12 15H5C3.93913 15 2.92172 15.4214 2.17157 16.1716C1.42143 16.9217 1 17.9391 1 19V21" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M8.5 11C10.7091 11 12.5 9.20914 12.5 7C12.5 4.79086 10.7091 3 8.5 3C6.29086 3 4.5 4.79086 4.5 7C4.5 9.20914 6.29086 11 8.5 11Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M18 8L23 13" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M23 8L18 13" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              }
+            }
+            <span class="my-auto text-base">
+                {{menuItem.name}}
+              </span>
+          </button>
+        }
+      </div>
+      <button (click)="authService.logoutUser()" class="text-[#494A4E] grey-button text-center text-base flex justify-center mx-auto mb-10 py-5 w-[210px] md:w-[250px]">
+        Log out
+      </button>
+    </div>
+  }
+</div>

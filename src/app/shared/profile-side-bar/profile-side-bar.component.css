@@ -1,0 +1,8 @@
+.nav-gradient{
+  background: radial-gradient(104.78% 142.11% at 140.08% 137.79%, #584D96 0%, #18243D 100%);
+}
+
+.active-menu-button{
+  border-radius: 8px;
+  background: linear-gradient(90deg, #374079 0%, #6575DF 100%);
+}

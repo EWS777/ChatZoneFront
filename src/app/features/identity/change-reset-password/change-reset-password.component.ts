@@ -4,6 +4,7 @@ import {ResetPassword} from './resetPassword';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {ChangePasswordService} from './change-password.service';
 import {CommonValidator} from '../../../shared/validation/CommonValidator';
+import {matchValidator} from '../../../shared/validation/MatchValidator';
 
 @Component({
   selector: 'app-change-reset-password',
@@ -20,6 +21,8 @@ export class ChangeResetPasswordComponent implements OnInit {
   route = inject(ActivatedRoute)
   service = inject(ChangePasswordService)
   commonError: string = ''
+  hidePassword = signal<boolean>(true)
+  isLoading = signal<boolean>(false)
 
   resetPasswordForm = new FormGroup({
     email: new FormControl(null, [
@@ -29,13 +32,19 @@ export class ChangeResetPasswordComponent implements OnInit {
       CommonValidator.maxLength(254),
       CommonValidator.noSpaces, //just for strict attributes
     ]),
-    password: new FormControl(null, [
+    newPassword: new FormControl(null, [
+      CommonValidator.required,
+      CommonValidator.minLength(8),
+      CommonValidator.maxLength(64),
+      CommonValidator.noSpaces, //just for strict attributes
+    ]),
+    confirmedPassword: new FormControl(null, [
       CommonValidator.required,
       CommonValidator.minLength(8),
       CommonValidator.maxLength(64),
       CommonValidator.noSpaces, //just for strict attributes
     ])
-  })
+  }, {validators: matchValidator('newPassword', 'confirmedPassword')})
 
   resetPassword: ResetPassword = {
     token: '',
@@ -58,7 +67,7 @@ export class ChangeResetPasswordComponent implements OnInit {
     const dataToSend: ResetPassword = {
       token: this.resetPassword.token,
       email: this.resetPasswordForm.controls.email.value!,
-      password: this.resetPasswordForm.controls.password.value!
+      password: this.resetPasswordForm.value.newPassword!
     };
     this.service.resetPassword(dataToSend).subscribe({
       next: () => {

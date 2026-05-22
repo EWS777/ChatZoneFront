@@ -1,75 +1,141 @@
-<div>
-  <h1 class="font-semibold text-2xl pt-4 text-gray-200 lg:text-3xl text-center mb-8
-    md:pt-8">Profile</h1>
-</div>
-<div class="lg:w-[400px] lg:mx-auto">
-    <form [formGroup]="updateProfileForm" (ngSubmit)="onClickUpdate()">
-      @if (commonError) {
-        <div >{{ commonError }}</div>
-      }
-      <label >Email</label>
-      <div class="relative">
-        <img src="/assets/imgs/email.svg" alt="" >
-        <input type="email" [value]="profile.email" readonly >
-      </div>
-
-      <div class="pt-4 md:pt-7">
-        <label >Username</label>
-      </div>
-      <div class="relative">
-        <img src="/assets/imgs/user.svg" alt="" >
-        <input formControlName = "username" type="text" placeholder="Enter your username">
-      </div>
-      <div>
-        @if (updateProfileForm.controls.username.touched && updateProfileForm.controls.username.invalid){
-          <div class=" flex flex-col pl-1 pt-1 md:pl-2 md:pt-2">
-            @if(updateProfileForm.controls.username.errors?.["required"]) {<small>username is required</small>}
-            @if(updateProfileForm.controls.username.errors?.["minLength"]) {<small>Min length is 8</small>}
-            @if(updateProfileForm.controls.username.errors?.["maxLength"]) {<small>Max length is 30</small>}
-            @if (updateProfileForm.controls.username.errors?.["spaces"]) {<small>Can not contains spaces</small>}
-            @if(updateProfileForm.controls.username.errors?.["pattern"]) {<small>Username can not contains special symbols, just '_' and '-'</small>}
-          </div>
-        }
-        @if (updateProfileForm.controls.username.errors?.['backend']; as backendErrors) {
-          @for (err of backendErrors; track err) {
-            <small>{{ err }}</small>
-          }
-        }
-      </div>
-      @if (updateProfileForm.dirty){
-        <div class="flex justify-center pt-4">
-          <button type="submit" class="bg-[#2E236C] hover:bg-[#3d2f8a] w-fit rounded-2xl py-1 px-4
-  text-lg font-medium transition-all duration-300
-  hover:scale-[1.02] active:scale-[0.98]
-  hover:shadow-[0_10px_20px_rgba(0,0,0,0.4)]
-  hover:-translate-y-0.5 active:translate-y-0 active:shadow-none
-  disabled:opacity-50 disabled:cursor-not-allowed">Save changes</button>
-        </div>
-      }
-
-<!--      TODO delete this part-->
-<!--      <div>-->
-<!--        Do you want find by profile filter?-->
-<!--        <input type="radio" id="yes" name="isFindByProfile" [(ngModel)]="profile.isFindByProfile" [value]="true">-->
-<!--        <label for="yes">Yes</label>-->
-<!---->
-<!--        <input type="radio" id="no" name="isFindByProfile" [(ngModel)]="profile.isFindByProfile" [value]="false">-->
-<!--        <label for="no">No</label>-->
-<!--      </div>-->
-
-      <div class="flex flex-col items-center pt-4 gap-4 pb-10 md:flex-row md:justify-center md:pt-6">
-        <button (click)="onClickDeleteProfile()" class="bg-[#2E236C] hover:bg-[#3d2f8a] w-fit rounded-2xl py-1 px-4
-  text-lg font-medium transition-all duration-300
-  hover:scale-[1.02] active:scale-[0.98]
-  hover:shadow-[0_10px_20px_rgba(0,0,0,0.4)]
-  hover:-translate-y-0.5 active:translate-y-0 active:shadow-none
-  disabled:opacity-50 disabled:cursor-not-allowed">Delete profile</button>
-        <button (click)="onClickUpdatePassword()" class="bg-[#2E236C] hover:bg-[#3d2f8a] w-fit rounded-2xl py-1 px-4
-  text-lg font-medium transition-all duration-300
-  hover:scale-[1.02] active:scale-[0.98]
-  hover:shadow-[0_10px_20px_rgba(0,0,0,0.4)]
-  hover:-translate-y-0.5 active:translate-y-0 active:shadow-none
-  disabled:opacity-50 disabled:cursor-not-allowed">Change password</button>
-      </div>
-    </form>
+<div class="flex flex-col w-full flex-1">
+  <div class="flex w-full justify-between mx-auto px-4 mb-10 md:mb-6 md:px-0 lg:hidden">
+    <div>
+      <button (click)="isMenuOpen.set(!isMenuOpen())" class="relative flex flex-col justify-center items-center w-6 h-6 focus:outline-none z-50">
+        <span class="block absolute h-0.5 w-6 bg-white rounded-full transition-all duration-300 ease-in-out" [class.rotate-45]="isMenuOpen()" [class.-translate-y-2]="!isMenuOpen()"></span>
+        <span class="block absolute h-0.5 w-6 bg-white rounded-full transition-all duration-300 ease-in-out" [class.opacity-0]="isMenuOpen()"></span>
+        <span class="block absolute h-0.5 w-6 bg-white rounded-full transition-all duration-300 ease-in-out" [class.-rotate-45]="isMenuOpen()" [class.translate-y-2]="!isMenuOpen()"></span>
+      </button>
+    </div>
+    <div class="shrink-0 my-auto w-fit">
+      ChatZone
+    </div>
   </div>
+  @if (!isMenuOpen()){
+    <div class="border-out w-fit px-2 py-4 md:p-10 mx-auto md:mt-20 lg:p-0 lg:mt-[100px] lg:!bg-transparent">
+      <div class="border-in px-5 lg:px-5 w-[327px] md:w-[389px] lg:w-[574px] py-4 md:pt-10 xl:w-[720px] xl:p-20 lg:before:hidden lg:!bg-[#111111]/20">
+        <div class="text-2xl md:text-3xl text-center">
+          Profile
+        </div>
+        <div class="mt-10 md:mt-8 lg:mt-10">
+          <form [formGroup]="updateProfileForm" (ngSubmit)="onClickUpdate()">
+            @if (commonError) {
+              <div class="common-backend-error">{{ commonError }}</div>
+            }
+            <label class="input-auth-name">Email</label>
+            <div class="border-input lg:!bg-[#111111]/20">
+              <svg class="input-icon" fill="none" viewBox="0 0 16 16">
+                <path d="M2.66665 2.6665H13.3333C14.0666 2.6665 14.6666 3.2665 14.6666 3.99984V11.9998C14.6666 12.7332 14.0666 13.3332 13.3333 13.3332H2.66665C1.93331 13.3332 1.33331 12.7332 1.33331 11.9998V3.99984C1.33331 3.2665 1.93331 2.6665 2.66665 2.6665Z" stroke="white" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M14.6666 4L7.99998 8.66667L1.33331 4" stroke="white" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+              <input class="input-text" type="email" [value]="profile.email" readonly>
+            </div>
+            <div class="flex pt-6 md:pt-8 justify-between">
+              <label class="input-auth-name">Username</label>
+              @if (updateProfileForm.controls.username.dirty && updateProfileForm.controls.username.value !== oldUsername){
+                <div class="flex gap-3 mb-1 mr-1">
+                  <button type="submit">
+                    <svg class="m-auto" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                      <path d="M13.3332 4L5.99984 11.3333L2.6665 8" stroke="#5AD5A1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </button>
+                  <button type="button" (click)="onClickCancelUsername()">
+                    <svg class="m-auto" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                      <path d="M12 4L4 12" stroke="#EA4550" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      <path d="M4 4L12 12" stroke="#EA4550" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </button>
+                </div>
+              }
+            </div>
+            <div class="border-input lg:!bg-[#111111]/20" [class.border-input-error]="updateProfileForm.controls.username.invalid && updateProfileForm.controls.username.touched">
+              <svg class="input-icon" fill="none" viewBox="0 0 16 16">
+                <path d="M13.3334 14V12.6667C13.3334 11.9594 13.0525 11.2811 12.5524 10.781C12.0523 10.281 11.374 10 10.6667 10H5.33341C4.62617 10 3.94789 10.281 3.4478 10.781C2.9477 11.2811 2.66675 11.9594 2.66675 12.6667V14" stroke="currentColor" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M7.99992 7.33333C9.47268 7.33333 10.6666 6.13943 10.6666 4.66667C10.6666 3.19391 9.47268 2 7.99992 2C6.52716 2 5.33325 3.19391 5.33325 4.66667C5.33325 6.13943 6.52716 7.33333 7.99992 7.33333Z" stroke="currentColor" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <input class="input-text" formControlName="username" type="text" placeholder="Enter your username">
+            </div>
+            @if (updateProfileForm.controls.username.touched && updateProfileForm.controls.username.invalid) {
+              <div>
+                @if (updateProfileForm.controls.username.errors?.["required"]) {
+                  <small class="error-input-text">username is required</small>
+                }
+                @if (updateProfileForm.controls.username.errors?.["minLength"]) {
+                  <small class="error-input-text">Min length is 8</small>
+                }
+                @if (updateProfileForm.controls.username.errors?.["maxLength"]) {
+                  <small class="error-input-text">Max length is 30</small>
+                }
+                @if (updateProfileForm.controls.username.errors?.["spaces"]) {
+                  <small class="error-input-text">Can not contains spaces</small>
+                }
+                @if (updateProfileForm.controls.username.errors?.["pattern"]) {
+                  <small class="error-input-text">Username can not contains special symbols, just '_' and '-'</small>
+                }
+              </div>
+            }
+            @if (updateProfileForm.controls.username.errors?.['backend']; as backendErrors) {
+              @for (err of backendErrors; track err) {
+                <small class="error-input-text">{{ err }}</small>
+              }
+            }
+          </form>
+        </div>
+        <div class="mt-8 lg:mt-14 grid lg:grid-cols-2 gap-5">
+          <button class="login-button text-[#494A4E] hover:text-white w-full text-base justify-center" (click)="onClickDeleteProfile()">
+            Delete account
+          </button>
+          <button class="text-base login-button blue-background-button" (click)="onClickUpdatePassword()">
+            Change password
+          </button>
+        </div>
+      </div>
+    </div>
+  } @else {
+    <div class="border-out w-[345px] mx-auto md:mt-20 md:w-[643px]">
+      <div class="text-[#C9C9C9] flex gap-2 hover:text-[#FFFFFF] transition-colors duration-200 justify-center mt-10">
+        <svg class="my-auto" width="8" height="13" viewBox="0 0 8 13" fill="none">
+          <path d="M6.81691 0.318242C7.23941 0.740742 7.23941 1.42324 6.81691 1.84574L2.61358 6.04908L6.81691 10.2524C7.23941 10.6749 7.23941 11.3574 6.81691 11.7799C6.39441 12.2024 5.71191 12.2024 5.28941 11.7799L0.316914 6.80741C-0.105586 6.38491 -0.105586 5.70241 0.316914 5.27991L5.28941 0.307409C5.70108 -0.104258 6.39441 -0.104258 6.81691 0.318242Z" fill="currentColor"/>
+        </svg>
+        <a [routerLink]="['/']" class="block uppercase text-sm">
+          Back to MAIN PAGE
+        </a>
+      </div>
+      <div class="grid gap-6 my-14">
+        @for (menuItem of MENU_ITEMS; track menuItem.name) {
+          <button [routerLink]="menuItem.link" (click)="isMenuOpen.set(false)"
+                  class="text-white whitespace-nowrap w-full rounded-xl transition-all duration-300
+                  ease-in-out flex items-center justify-center gap-[14px]">
+            @switch (menuItem.icon){
+              @case ('profile'){
+                <svg class="my-auto" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <path d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M12 11C14.2091 11 16 9.20914 16 7C16 4.79086 14.2091 3 12 3C9.79086 3 8 4.79086 8 7C8 9.20914 9.79086 11 12 11Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              }
+              @case ('messages'){
+                <svg class="my-auto" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <path d="M21 15C21 15.5304 20.7893 16.0391 20.4142 16.4142C20.0391 16.7893 19.5304 17 19 17H7L3 21V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H19C19.5304 3 20.0391 3.21071 20.4142 3.58579C20.7893 3.96086 21 4.46957 21 5V15Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              }
+              @case ('blocked'){
+                <svg class="my-auto" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <path d="M16 21V19C16 17.9391 15.5786 16.9217 14.8284 16.1716C14.0783 15.4214 13.0609 15 12 15H5C3.93913 15 2.92172 15.4214 2.17157 16.1716C1.42143 16.9217 1 17.9391 1 19V21" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M8.5 11C10.7091 11 12.5 9.20914 12.5 7C12.5 4.79086 10.7091 3 8.5 3C6.29086 3 4.5 4.79086 4.5 7C4.5 9.20914 6.29086 11 8.5 11Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M18 8L23 13" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M23 8L18 13" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              }
+            }
+            <span class="my-auto text-base">
+                {{menuItem.name}}
+              </span>
+          </button>
+        }
+      </div>
+      <button (click)="authService.logoutUser()" class="text-[#494A4E] grey-button text-center text-base flex justify-center mx-auto mb-10 py-5 w-[210px] md:w-[250px]">
+        Log out
+      </button>
+    </div>
+  }
+</div>
