@@ -1,6 +1,6 @@
 import {inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {BehaviorSubject, catchError, map, of, tap} from 'rxjs';
+import {BehaviorSubject, catchError, map, of, tap, throwError} from 'rxjs';
 import {Router} from '@angular/router';
 
 @Injectable({
@@ -54,13 +54,13 @@ export class AuthorizationService {
   }
 
   refreshToken(){
-    return this.http.post(`${this.baseApiUrl}authentication/refresh`,{},
-      {withCredentials:true}).pipe(
+    return this.http.post(`${this.baseApiUrl}authentication/refresh`,{}, {withCredentials:true}).pipe(
         tap(() => this.authState.next(true)),
         map(() => true),
-        catchError(() => {
+        catchError((err) => {
           this.authState.next(false)
-          return of(false)
+          this.logoutUser()
+          return throwError(() => err);
         })
     )
   }
