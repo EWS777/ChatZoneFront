@@ -1,34 +1,24 @@
 ﻿import { Routes } from '@angular/router';
-import {AuthorizationComponent} from './features/identity/authorization/authorization.component';
-import {MainComponent} from './features/main/main.component';
-import {ProfileComponent} from './features/profile/profile.component';
-import {ResetPasswordComponent} from './features/identity/reset-password/reset-password.component';
-import {BlockedUsersComponent} from './features/profile/blocked-users/blocked-users.component';
-import {QuickMessagesComponent} from './features/profile/quick-messages/quick-messages.component';
-import {ProfileSideBarComponent} from './shared/profile-side-bar/profile-side-bar.component';
 import {guardGuard} from './core/guard/guard.guard';
-import {ConfirmComponent} from './features/identity/confirm/confirm.component';
-import {UpdatePasswordComponent} from './features/identity/update-password/update-password.component';
-import {DeleteProfileComponent} from './features/identity/delete-profile/delete-profile.component';
-import {ChangeResetPasswordComponent} from './features/identity/change-reset-password/change-reset-password.component';
-import {ChatComponent} from './features/chat/common/chat.component';
-import {GroupChatMenuComponent} from './features/chat/group-chat-menu/group-chat-menu.component';
 
 export const routes: Routes = [
   {
-    path: 'profile', component: ProfileSideBarComponent, children: [
-      {path: '', component: ProfileComponent},
-      {path: 'blocked-users', component: BlockedUsersComponent},
-      {path: 'quick-messages', component: QuickMessagesComponent}
-    ], canActivate: [guardGuard]
+    path: 'profile',
+    loadComponent: () => import('./shared/profile-side-bar/profile-side-bar.component').then(x=>x.ProfileSideBarComponent),
+    canActivate: [guardGuard],
+    children: [
+      { path: '', loadComponent: () => import('./features/profile/profile.component').then(x=>x.ProfileComponent) },
+      { path: 'blocked-users', loadComponent: () => import('./features/profile/blocked-users/blocked-users.component').then(x=>x.BlockedUsersComponent) },
+      { path: 'quick-messages', loadComponent: () => import('./features/profile/quick-messages/quick-messages.component').then(x=>x.QuickMessagesComponent) }
+    ],
   },
-  {path: '', component: MainComponent},
-  {path: 'login', component: AuthorizationComponent},
-  {path: 'reset-password', component: ResetPasswordComponent},
-  {path: 'reset', component: ChangeResetPasswordComponent},
-  {path: 'confirm', component: ConfirmComponent},
-  {path: 'update-password', component: UpdatePasswordComponent, canActivate: [guardGuard]},
-  {path: 'delete-profile', component: DeleteProfileComponent, canActivate: [guardGuard]},
-  {path: 'chat', component: ChatComponent, canActivate: [guardGuard]},
-  {path: 'groups', component: GroupChatMenuComponent, canActivate: [guardGuard]}
+  { path: '', loadComponent: () => import('./features/main/main.component').then(x=>x.MainComponent) },
+  { path: 'login', loadComponent: () => import('./features/identity/authorization/authorization.component').then(x=>x.AuthorizationComponent) },
+  { path: 'reset-password', loadComponent: () => import('./features/identity/reset-password/reset-password.component').then(x=>x.ResetPasswordComponent) },
+  { path: 'reset', loadComponent: () => import('./features/identity/change-reset-password/change-reset-password.component').then(x=>x.ChangeResetPasswordComponent) },
+  { path: 'confirm', loadComponent: () => import('./features/identity/confirm/confirm.component').then(x=>x.ConfirmComponent) },
+  { path: 'update-password', loadComponent: () => import('./features/identity/update-password/update-password.component').then(x=>x.UpdatePasswordComponent), canActivate: [guardGuard] },
+  { path: 'delete-profile', loadComponent: () => import('./features/identity/delete-profile/delete-profile.component').then(x=>x.DeleteProfileComponent), canActivate: [guardGuard] },
+  { path: 'chat', loadComponent: () => import('./features/chat/common/chat.component').then(x=>x.ChatComponent), canActivate: [guardGuard] },
+  { path: 'groups', loadComponent: () => import('./features/chat/group-chat-menu/group-chat-menu.component').then(x=>x.GroupChatMenuComponent), canActivate: [guardGuard] },
 ];
