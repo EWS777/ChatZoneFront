@@ -13,7 +13,7 @@ import {FindPerson} from './find-person';
 import {MainService} from './main.service';
 import {FilterService} from '../profile/filter/filter.service';
 import {SingleChatService} from '../chat/single-chat.service';
-import {environment} from '../../../environments/enviroment';
+import {environment} from '../../../environments/environment';
 import {ChatService} from '../chat/chat.service';
 
 @Component({
@@ -32,7 +32,7 @@ export class MainComponent implements OnInit{
   @HostListener('window:beforeunload', ['$event'])
   unloadHandler() {
     if (this.isStartFindPerson()){
-      const url = environment.cancelFindPersonAPI
+      const url = `${environment.apiUrl}/Search/cancel`
       const data = JSON.stringify("")
       navigator.sendBeacon(url, data);
     }

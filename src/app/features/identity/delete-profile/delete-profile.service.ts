@@ -1,5 +1,6 @@
 ﻿import {inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
+import {environment} from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -7,7 +8,7 @@ import {HttpClient} from '@angular/common/http';
 
 export class DeleteProfileService {
   http = inject(HttpClient)
-  baseApiUrl = 'https://localhost:7212/profile/'
+  baseApiUrl = `${environment.apiUrl}profile/`
 
   deleteProfileService(payload: any){
 

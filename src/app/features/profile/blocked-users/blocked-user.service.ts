@@ -1,13 +1,14 @@
 import {inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {BlockedUser} from './blocked-user';
+import {environment} from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class BlockedUserService {
   http = inject(HttpClient)
-  url = 'https://localhost:7212/blockedPerson'
+  url = `${environment.apiUrl}blockedPerson`
 
   getBlockedPersons(){
     return this.http.get<BlockedUser[]>(`${this.url}`,{

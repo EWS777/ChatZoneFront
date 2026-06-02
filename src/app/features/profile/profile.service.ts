@@ -1,13 +1,14 @@
 import {inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Profile} from './profile';
+import {environment} from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProfileService {
   http = inject(HttpClient)
-  url = 'https://localhost:7212/profile'
+  url = `${environment.apiUrl}profile`
 
   getProfile(){
     return this.http.get<Profile>(`${this.url}`, {

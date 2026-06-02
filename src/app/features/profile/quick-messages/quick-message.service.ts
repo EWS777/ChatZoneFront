@@ -1,13 +1,14 @@
 import {inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {QuickMessage} from './quick-message';
+import {environment} from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class QuickMessageService {
   http = inject(HttpClient)
-  url = 'https://localhost:7212/QuickMessage'
+  url = `${environment.apiUrl}QuickMessage`
 
   getQuickMessages(){
     return this.http.get<QuickMessage[]>(`${this.url}`, {

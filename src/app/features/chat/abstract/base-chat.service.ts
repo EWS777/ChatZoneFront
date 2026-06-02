@@ -2,6 +2,7 @@ import {inject, Injectable} from '@angular/core';
 import {Router} from '@angular/router';
 import {HubConnection, HubConnectionBuilder, HubConnectionState} from '@microsoft/signalr';
 import {Observable, Subject} from 'rxjs';
+import {environment} from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,7 @@ export abstract class BaseChatService {
 
   constructor() {
     this.hubConnection = new HubConnectionBuilder()
-      .withUrl('https://localhost:7212/chat', {
+      .withUrl(`${environment.apiUrl}chat`, {
         withCredentials: true
       })
       .withAutomaticReconnect()

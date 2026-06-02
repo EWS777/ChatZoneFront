@@ -2,13 +2,14 @@ import {inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {ChatPersonInfo} from './chat-person-info';
 import {Group} from './group';
+import {environment} from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ChatService {
   http = inject(HttpClient)
-  url = 'https://localhost:7212/Chat'
+  url = `${environment.apiUrl}Chat`
 
   getActiveChat(){
     return this.http.get<{idChat: number | null, isSingleChat: boolean | null}>(`${this.url}/active-chat`,{
