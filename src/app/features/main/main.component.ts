@@ -98,6 +98,11 @@ export class MainComponent implements OnInit{
           this.isFindByProfile = value.isFindByProfile
         }
       })
+
+    this.signalService.onChatCreated(() => {
+      this.isStartFindPerson.set(false);
+      this.isAnyActiveChat.set(true);
+    });
   }
 
   onClickLogin(){
@@ -151,16 +156,24 @@ export class MainComponent implements OnInit{
   }
 
   startFindPerson(){
-    this.filter.connectionId = this.signalService.connectionId
+    // this.filter.connectionId = this.signalService.connectionId
     this.isFindPerson.set(true)
     this.isFilterActivated.set(false)
-    this.mainService.findPerson(this.filter).subscribe({
-      next: () => {
-        this.isStartFindPerson.set(true)
-      },
-      error: err => {
-        console.error('Error', err)
-      }
-    })
+    // this.mainService.findPerson(this.filter).subscribe({
+    //   next: () => {
+    //     this.isStartFindPerson.set(true)
+    //   },
+    //   error: err => {
+    //     console.error('Error', err)
+    //   }
+    // })
+
+    this.signalService.startSearchSingleChat(this.filter)
+      .then(() => {
+        this.isStartFindPerson.set(true);
+      })
+      .catch(() => {
+        this.isFindPerson.set(false);
+      });
   }
 }

@@ -19,4 +19,14 @@ export class SingleChatService extends BaseChatService{
   offPersonLeftChat(){
     this.hubConnection.off('LeftChat')
   }
+
+  startSearchSingleChat(filter: any){
+    return this.hubConnection.invoke('StartSearchSingeChat', filter);
+  }
+
+  onChatCreated(result: () => void) {
+    this.hubConnection.on('ChatCreated', () => {
+      result();
+    });
+  }
 }

@@ -108,7 +108,7 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy{
     yourGender: null,
     language: null,
     partnerGender: null,
-    isSearchAgain: false
+    isSearchAgain: true
   }
 
   async ngOnInit(){
@@ -335,14 +335,22 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy{
   findNewPerson(){
     this.filter.connectionId = this.baseChatService.connectionId
     this.filter.isSearchAgain = true
-    this.mainService.findPerson(this.filter).subscribe({
-      next: (res: any) => {
-        if (res.message === 'Chat was created!') window.location.reload()
-      },
-      error: err => {
-        console.error('Error', err)
-      }
-    })
+    // this.mainService.findPerson(this.filter).subscribe({
+    //   next: (res: any) => {
+    //     if (res.message === 'Chat was created!') window.location.reload()
+    //   },
+    //   error: err => {
+    //     console.error('Error', err)
+    //   }
+    // })
+
+    this.singleChatService.startSearchSingleChat(this.filter)
+      .then(() => {
+        window.location.reload();
+      })
+      .catch(err => {
+        console.error('Error', err);
+      });
   }
 
   blockPerson(){
