@@ -51,12 +51,11 @@ export class GroupChatMenuComponent implements OnInit{
     userCount: null
   }
   isCreateGroup = signal<boolean>(false)
-  isAnyActiveChat = signal<boolean>(false)
   commonError: string = ''
   commonErrorAddToGroup: string = ''
   titleError: string = ''
   createGroupForm = new FormGroup({
-    title: new FormControl(null, [
+    title: new FormControl<string | null>(null, [
       CommonValidator.required,
       CommonValidator.minLength(1),
       CommonValidator.maxLength(50),
@@ -65,19 +64,19 @@ export class GroupChatMenuComponent implements OnInit{
 
   countryList = Object.keys(CountryList)
     .filter(k => isNaN(Number(k)))
-    .map(name => ({ label: name, value: (CountryList as any)[name] as number }));
+    .map(name => ({label: name, value: CountryList[name as keyof typeof CountryList]}))
 
   cityList = Object.keys(CityList)
     .filter(k => isNaN(Number(k)))
-    .map(name => ({ label: name, value: (CityList as any)[name] as number }));
+    .map(name => ({ label: name, value: CityList[name as keyof typeof CityList]}))
 
   ageList = Object.keys(AgeList)
     .filter(k => isNaN(Number(k)))
-    .map(name => ({ label: name, value: (AgeList as any)[name] as number }));
+    .map(name => ({ label: name, value: AgeList[name as keyof typeof AgeList]}))
 
   langList = Object.keys(LangList)
     .filter(k => isNaN(Number(k)))
-    .map(name => ({ label: name, value: (LangList as any)[name] as number }));
+    .map(name => ({ label: name, value: LangList[name as keyof typeof LangList]}))
 
 
   ngOnInit(): void {

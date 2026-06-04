@@ -2,7 +2,7 @@ import {Component, inject, signal} from '@angular/core';
 import {FormControl, FormGroup, ReactiveFormsModule} from "@angular/forms";
 import {CommonValidator} from '../../../shared/validation/CommonValidator';
 import {Router, RouterLink} from '@angular/router';
-import {DeleteProfileService} from './delete-profile.service';
+import {DeleteProfileRequest, DeleteProfileService} from './delete-profile.service';
 
 @Component({
   selector: 'app-delete-profile',
@@ -40,7 +40,9 @@ export class DeleteProfileComponent {
     }
     this.isLoading.set(true)
 
-    const payload = { password: this.deleteProfileForm.controls.password.value! };
+    const payload: DeleteProfileRequest = {
+      password: this.deleteProfileForm.value.password ?? ''
+    }
 
     this.service.deleteProfileService(payload).subscribe({
       next: () =>{

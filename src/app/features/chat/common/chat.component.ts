@@ -25,6 +25,10 @@ import {ChatPersonInfo} from '../chat-person-info';
 import {ChatService} from '../chat.service';
 import {CommonValidator} from '../../../shared/validation/CommonValidator';
 
+interface HubError {
+  message?: string;
+}
+
 @Component({
   selector: 'app-chat',
   imports: [
@@ -255,8 +259,16 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy{
     }
     const message = (this.currentMessageControl.value || '').trim()
 
+    const idGroup = this.chatPersonInfo.idGroup;
+    const isSingleChat = this.chatPersonInfo.isSingleChat;
+
+    if (idGroup === null || idGroup === undefined || isSingleChat === null || isSingleChat === undefined) {
+      this.commonError = 'Chat data is incomplete. Cannot send message.';
+      return;
+    }
+
     try {
-      await this.baseChatService.sendMessage(this.chatPersonInfo.idGroup!, message, this.chatPersonInfo.isSingleChat!)
+      await this.baseChatService.sendMessage(idGroup, message, isSingleChat)
       this.currentMessageControl.reset()
       this.chatPersonInfo.isSentMessage = true
       requestAnimationFrame( () => {
@@ -265,15 +277,16 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy{
         }
       })
     }
-    catch (err: any){
-      if (err.message) {
+    catch (err: unknown){
+      const hubError = err as HubError
+      if (hubError && typeof hubError.message == 'string') {
         const prefix = "HubException: "
-        const index = err.message.indexOf(prefix)
+        const index = hubError.message.indexOf(prefix)
 
         if (index !== -1) {
-          this.commonError = err.message.substring(index + prefix.length)
+          this.commonError = hubError.message.substring(index + prefix.length)
         } else {
-          this.commonError = err.message.replace('Error: ', '')
+          this.commonError = hubError.message.replace('Error: ', '')
         }
       } else {
         this.commonError = 'Unhandled exception. To repair'
@@ -440,17 +453,17 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy{
 
   countryList = Object.keys(CountryList)
     .filter(k => isNaN(Number(k)))
-    .map(name => ({ label: name, value: (CountryList as any)[name] as number }));
+    .map(name => ({label: name, value: CountryList[name as keyof typeof CountryList]}))
 
   cityList = Object.keys(CityList)
     .filter(k => isNaN(Number(k)))
-    .map(name => ({ label: name, value: (CityList as any)[name] as number }));
+    .map(name => ({ label: name, value: CityList[name as keyof typeof CityList]}))
 
   ageList = Object.keys(AgeList)
     .filter(k => isNaN(Number(k)))
-    .map(name => ({ label: name, value: (AgeList as any)[name] as number }));
+    .map(name => ({ label: name, value: AgeList[name as keyof typeof AgeList]}))
 
   langList = Object.keys(LangList)
     .filter(k => isNaN(Number(k)))
-    .map(name => ({ label: name, value: (LangList as any)[name] as number }));
+    .map(name => ({ label: name, value: LangList[name as keyof typeof LangList]}))
 }

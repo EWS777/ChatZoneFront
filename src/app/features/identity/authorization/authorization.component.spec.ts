@@ -57,7 +57,7 @@ describe('AuthorizationComponent (Login and Registration Forms)', () => {
         password: 'validPassword123'
       });
 
-      mockAuthService.postLogin.and.returnValue(of({} as any));
+      mockAuthService.postLogin.and.returnValue(of({}));
 
       component.onLoginSubmit();
 
@@ -130,7 +130,7 @@ describe('AuthorizationComponent (Login and Registration Forms)', () => {
         confirmedPassword: 'password123'
       });
 
-      mockAuthService.registerLogin.and.returnValue(of({} as any));
+      mockAuthService.registerLogin.and.returnValue(of({}));
 
       component.onRegistrationSubmit();
 

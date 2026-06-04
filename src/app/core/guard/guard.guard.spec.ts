@@ -21,7 +21,7 @@ describe('guardGuard', () =>{
     })
   })
 
-  const runGuard = () => TestBed.runInInjectionContext(() => guardGuard(null as any, null as any)) as Observable<boolean>;
+  const runGuard = () => TestBed.runInInjectionContext(() => guardGuard(null as never, null as never)) as Observable<boolean>;
 
   it('Test 1: Must accept go ahead (true), if user already authorized', async () => {
     mockAuthService.isAuthenticated.and.returnValue(of(true));

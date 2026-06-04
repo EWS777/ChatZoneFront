@@ -77,30 +77,35 @@ export class AuthorizationComponent{
       return
     }
     this.isLoading.set(true)
-    //   @ts-ignore
-      this.authService.postLogin(this.loginForm.value).subscribe({
-        next: () => {
-          this.isLoading.set(false)
-          this.route.navigate([''])
-        },
-        error: (err) => {
-          this.isLoading.set(false)
-          if(err.status === 400 && err.error && err.error.errors){
-            const errors = err.error.errors;
 
-            Object.keys(errors).forEach(key => {
-              const control = this.loginForm.get(key.charAt(0).toLowerCase() + key.slice(1))
-              if (control) {
-                control.setErrors({ backend: errors[key] });
-                control.markAsTouched()
-              }
-            });
-          }
-          else{
-            this.commonErrorLogin = err.error.title || 'Unhandled exception. To repair'
-          }
+    const loginPayload = {
+      usernameOrEmail: this.loginForm.value.usernameOrEmail ?? '',
+      Password: this.loginForm.value.password ?? ''
+    };
+
+    this.authService.postLogin(loginPayload).subscribe({
+      next: () => {
+        this.isLoading.set(false)
+        void this.route.navigate([''])
+      },
+      error: (err) => {
+        this.isLoading.set(false)
+        if(err.status === 400 && err.error && err.error.errors){
+          const errors = err.error.errors;
+
+          Object.keys(errors).forEach(key => {
+            const control = this.loginForm.get(key.charAt(0).toLowerCase() + key.slice(1))
+            if (control) {
+              control.setErrors({ backend: errors[key] });
+              control.markAsTouched()
+            }
+          });
         }
-      })
+        else{
+          this.commonErrorLogin = err.error.title || 'Unhandled exception. To repair'
+        }
+      }
+    })
   }
 
   onRegistrationSubmit(){
@@ -110,35 +115,34 @@ export class AuthorizationComponent{
       return
     }
     this.isLoading.set(true)
-      const dataToSend = {
-        email: (this.registrationForm.get('email')?.value as string | null)?.trim().toLowerCase(),
-        username: this.registrationForm.get('username')?.value,
-        password: this.registrationForm.get('password')?.value
-      }
+    const dataToSend = {
+      email: (this.registrationForm.value.email ?? '').trim().toLowerCase(),
+      username: this.registrationForm.value.username ?? '',
+      password: this.registrationForm.value.password ?? ''
+    };
 
-      // @ts-ignore
-      this.authService.registerLogin(dataToSend).subscribe({
-        next: _ => {
-          this.isLoading.set(false)
-          this.isConfirmEmailPage.set(true)
-        },
-        error: (err) => {
-          this.isLoading.set(false)
-          if(err.status === 400 && err.error && err.error.errors){
-            const errors = err.error.errors;
+    this.authService.registerLogin(dataToSend).subscribe({
+      next: () => {
+        this.isLoading.set(false)
+        this.isConfirmEmailPage.set(true)
+      },
+      error: (err) => {
+        this.isLoading.set(false)
+        if(err.status === 400 && err.error && err.error.errors){
+          const errors = err.error.errors;
 
-            Object.keys(errors).forEach(key => {
-              const control = this.registrationForm.get(key.charAt(0).toLowerCase() + key.slice(1))
-              if (control) {
-                control.setErrors({ backend: errors[key] });
-                control.markAsTouched()
-              }
-            });
-          }
-          else{
-            this.commonError = err.error.title || 'Unhandled exception. To repair'
-          }
+          Object.keys(errors).forEach(key => {
+            const control = this.registrationForm.get(key.charAt(0).toLowerCase() + key.slice(1))
+            if (control) {
+              control.setErrors({ backend: errors[key] });
+              control.markAsTouched()
+            }
+          });
         }
-      });
+        else{
+          this.commonError = err.error.title || 'Unhandled exception. To repair'
+        }
+      }
+    });
   }
 }

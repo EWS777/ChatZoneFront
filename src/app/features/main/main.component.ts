@@ -67,27 +67,27 @@ export class MainComponent implements OnInit{
 
   countryList = Object.keys(CountryList)
     .filter(k => isNaN(Number(k)))
-    .map(name => ({ label: name, value: (CountryList as any)[name] as number }));
+    .map(name => ({label: name, value: CountryList[name as keyof typeof CountryList]}))
 
   ageList = Object.keys(AgeList)
     .filter(k => isNaN(Number(k)))
-    .map(name => ({ label: name, value: (AgeList as any)[name] as number }));
+    .map(name => ({ label: name, value: AgeList[name as keyof typeof AgeList]}))
 
   cityList = Object.keys(CityList)
     .filter(k => isNaN(Number(k)))
-    .map(name => ({ label: name, value: (CityList as any)[name] as number }));
+    .map(name => ({ label: name, value: CityList[name as keyof typeof CityList]}))
 
   langList = Object.keys(LangList)
     .filter(k => isNaN(Number(k)))
-    .map(name => ({ label: name, value: (LangList as any)[name] as number }));
+    .map(name => ({ label: name, value: LangList[name as keyof typeof LangList]}))
 
   themeList = Object.keys(ThemeList)
     .filter(k => isNaN(Number(k)))
-    .map(name => ({ label: name, value: (ThemeList as any)[name] as number }));
+    .map(name => ({ label: name, value: ThemeList[name as keyof typeof ThemeList]}))
 
   genderList = Object.keys(GenderList)
     .filter(k => isNaN(Number(k)))
-    .map(name => ({ label: name, value: (GenderList as any)[name] as number }));
+    .map(name => ({ label: name, value: GenderList[name as keyof typeof GenderList]}))
 
 
   ngOnInit(){

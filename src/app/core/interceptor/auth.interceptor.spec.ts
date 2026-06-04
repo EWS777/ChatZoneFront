@@ -39,7 +39,7 @@ describe('authInterceptor', () => {
   });
 
   it('should call refreshToken and retry the request if 401 error occurs', () => {
-    mockAuthService.refreshToken.and.returnValue(of({} as any));
+    mockAuthService.refreshToken.and.returnValue(of(true));
 
     http.get('/api/data').subscribe();
 

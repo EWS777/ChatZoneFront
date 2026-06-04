@@ -57,10 +57,8 @@ export class ConfirmComponent implements OnInit{
     }
     const emailValue = (this.emailControl.value || '').trim()
     this.confirmService.reconfirm(emailValue).subscribe({
-      next: (response: any) => {
-        const msg = response?.message || 'Link was sent successfully!';
-
-        console.log('Server response:', response);
+      next: (response) => {
+        const msg = response.message || 'Link was sent successfully!';
         this.successMessage.set(msg);
       },
       error: (err) => {
