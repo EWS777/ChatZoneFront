@@ -7,10 +7,10 @@ import {environment} from '../../../environments/environment';
 })
 export class MainService {
   http = inject(HttpClient)
-  url = `${environment.apiUrl}search/`
+  url = `${environment.apiUrl}Search/`
 
   cancelFindPerson(){
-    return this.http.delete(`${this.url}cancel`, {
+    return this.http.post(`${this.url}cancel`, {}, {
       withCredentials: true
     })
   }
