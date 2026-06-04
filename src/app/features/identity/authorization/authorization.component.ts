@@ -28,12 +28,12 @@ export class AuthorizationComponent{
   commonErrorLogin: string = ''
 
   loginForm = new FormGroup({
-    usernameOrEmail: new FormControl(null, {validators:[
+    usernameOrEmail: new FormControl<string | null>(null, {validators:[
       CommonValidator.required,
         CommonValidator.noSpaces,
         CommonValidator.usernameOrEmailSmart
       ]}),
-    password: new FormControl(null, {validators: [
+    password: new FormControl<string | null>(null, {validators: [
         CommonValidator.required,
         CommonValidator.minLength(8),
         CommonValidator.maxLength(64),
@@ -42,27 +42,27 @@ export class AuthorizationComponent{
   })
 
   registrationForm = new FormGroup({
-    username: new FormControl(null, [
+    username: new FormControl<string | null>(null, [
       CommonValidator.required,
       CommonValidator.minLength(8),
       CommonValidator.maxLength(30),
       CommonValidator.noSpaces, //just for strict attributes
       Validators.pattern(/^[a-zA-Z0-9_-]+$/)
     ]),
-    email: new FormControl(null, {validators: [
+    email: new FormControl<string | null>(null, {validators: [
       Validators.email,
       CommonValidator.required,
       CommonValidator.minLength(5),
       CommonValidator.maxLength(254),
       CommonValidator.noSpaces, //just for strict attributes
       ]}),
-    password: new FormControl(null, {validators: [
+    password: new FormControl<string | null>(null, {validators: [
         CommonValidator.required,
         CommonValidator.minLength(8),
         CommonValidator.maxLength(64),
         CommonValidator.noSpaces, //just for strict attributes
       ]}),
-    confirmedPassword: new FormControl(null, {validators: [
+    confirmedPassword: new FormControl<string | null>(null, {validators: [
         CommonValidator.required,
         CommonValidator.minLength(8),
         CommonValidator.maxLength(64),
@@ -81,7 +81,6 @@ export class AuthorizationComponent{
       this.authService.postLogin(this.loginForm.value).subscribe({
         next: () => {
           this.isLoading.set(false)
-          console.log('Вход выполнен');
           this.route.navigate([''])
         },
         error: (err) => {
@@ -119,9 +118,8 @@ export class AuthorizationComponent{
 
       // @ts-ignore
       this.authService.registerLogin(dataToSend).subscribe({
-        next: value => {
+        next: _ => {
           this.isLoading.set(false)
-          console.log('Регистрация прошла успешно', value);
           this.isConfirmEmailPage.set(true)
         },
         error: (err) => {
