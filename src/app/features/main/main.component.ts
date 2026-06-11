@@ -156,17 +156,8 @@ export class MainComponent implements OnInit{
   }
 
   startFindPerson(){
-    // this.filter.connectionId = this.signalService.connectionId
     this.isFindPerson.set(true)
     this.isFilterActivated.set(false)
-    // this.mainService.findPerson(this.filter).subscribe({
-    //   next: () => {
-    //     this.isStartFindPerson.set(true)
-    //   },
-    //   error: err => {
-    //     console.error('Error', err)
-    //   }
-    // })
 
     this.signalService.startSearchSingleChat(this.filter)
       .then(() => {

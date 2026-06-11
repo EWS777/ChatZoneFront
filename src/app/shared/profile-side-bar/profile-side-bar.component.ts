@@ -22,10 +22,5 @@ export class ProfileSideBarComponent {
   router = inject(Router)
   authService = inject(AuthorizationService)
 
-  // get activePageName(): string {
-  //   const current = this.menuItems.find(item => this.router.url.includes(item.link));
-  //   return current ? current.name : 'Menu';
-  // }
-
   protected readonly MENU_ITEMS = MENU_ITEMS;
 }

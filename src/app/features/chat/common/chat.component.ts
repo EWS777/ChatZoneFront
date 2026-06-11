@@ -5,7 +5,6 @@ import {QuickMessageService} from '../../profile/quick-messages/quick-message.se
 import {QuickMessage} from '../../profile/quick-messages/quick-message';
 import {Router} from '@angular/router';
 import {FindPerson} from '../../main/find-person';
-import {MainService} from '../../main/main.service';
 import {BlockedUserService} from '../../profile/blocked-users/blocked-user.service';
 import {SingleChatService} from '../single-chat.service';
 import {BaseChatService} from '../abstract/base-chat.service';
@@ -47,7 +46,6 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy{
   groupChatService = inject(GroupChatService)
   singleChatService = inject(SingleChatService)
   baseChatService = inject(BaseChatService)
-  mainService = inject(MainService)
   private quickMessageService = inject(QuickMessageService)
   private blockedPersonService = inject(BlockedUserService)
   router = inject(Router)
@@ -348,14 +346,6 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy{
   findNewPerson(){
     this.filter.connectionId = this.baseChatService.connectionId
     this.filter.isSearchAgain = true
-    // this.mainService.findPerson(this.filter).subscribe({
-    //   next: (res: any) => {
-    //     if (res.message === 'Chat was created!') window.location.reload()
-    //   },
-    //   error: err => {
-    //     console.error('Error', err)
-    //   }
-    // })
 
     this.singleChatService.startSearchSingleChat(this.filter)
       .then(() => {
