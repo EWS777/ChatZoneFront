@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import {AuthorizationService} from './features/identity/authorization/authorization.service';
 
 @Component({
   selector: 'app-root',
@@ -12,9 +11,6 @@ import {AuthorizationService} from './features/identity/authorization/authorizat
 export class AppComponent implements OnInit{
   title = 'ChatZoneFront';
 
-  constructor(private authService: AuthorizationService) {}
-
   ngOnInit(): void {
-    this.authService.checkAuth().subscribe();
   }
 }
