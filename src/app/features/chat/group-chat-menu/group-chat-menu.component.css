@@ -1,0 +1,34 @@
+.button-background{
+  background: linear-gradient(90deg, #2556EB 0%, #153185 100%), #EA4550;
+}
+
+.group-chat-params {
+  border: 1px solid #494A4E;
+  border-radius: 16px;
+  font-size: 12px;
+  height: max-content;
+  margin-top: auto;
+  margin-bottom: auto;
+  padding: 8px 20px;
+  flex-shrink: 0;
+}
+
+@media (min-width: 768px) {
+  .group-chat-params {
+    font-size: 12px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .group-chat-params {
+    font-size: 16px;
+  }
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

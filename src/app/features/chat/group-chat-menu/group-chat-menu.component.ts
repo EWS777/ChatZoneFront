@@ -6,7 +6,7 @@ import {CityList} from '../../profile/filter/enums/city-list';
 import {AgeList} from '../../profile/filter/enums/age-list';
 import {LangList} from '../../profile/filter/enums/lang-list';
 import {GroupChatService} from '../group-chat.service';
-import {Router} from '@angular/router';
+import {Router, RouterLink} from '@angular/router';
 import {GroupMemberService} from '../group-member/group-member.service';
 import {ChatService} from '../chat.service';
 import {CommonValidator} from '../../../shared/validation/CommonValidator';
@@ -15,7 +15,8 @@ import {CommonValidator} from '../../../shared/validation/CommonValidator';
   selector: 'app-chat-groupMenu-menu',
   imports: [
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    RouterLink
   ],
   standalone: true,
   templateUrl: './group-chat-menu.component.html',

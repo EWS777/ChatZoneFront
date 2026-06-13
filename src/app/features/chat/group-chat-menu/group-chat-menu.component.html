@@ -1,122 +1,65 @@
-<div class="flex flex-col justify-start items-center pt-[40px] md:pt-[70px] lg:pt-[150px] md:pb-20">
-  <div class="w-full max-w-[500px] px-6 md:max-w-[600px] md:px-0 lg:-mt-20 lg:max-w-[1000px] lg:px-10">
-    <!--  <div class="w-full px-6 max-w-[500px] md:max-w-[600px] md:px-0 lg:-mt-20 lg:max-w-[1000px] relative lg:px-10">-->
-    <div class="flex items-center justify-between my-auto">
-      <img src="/assets/imgs/return.svg" alt="" class="w-9" (click)="router.navigate(['/'])">
-      <!--    <button (click)="router.navigate(['/'])">Back</button>-->
-      <!--    <h2>List of groups</h2>-->
-      <!--    <button (click)="isCreateGroup.set(true)">Create group</button>-->
-      <div class="hidden md:block">
-        <h1 class="font-semibold text-xl text-gray-200 lg:text-3xl text-center">List of groups</h1>
+<div class="flex flex-col min-h-screen px-4 md:px-11 lg:px-14 pt-[120px] md:pt-[100px] max-w-[1212px] w-full mx-auto">
+  <div class="flex justify-between pb-6 md:pb-5">
+    <div class="text-[#494A4E] flex gap-2 justify-center hover:text-[#C9C9C9] transition-colors duration-200 mt-auto">
+      <svg class="my-auto" width="8" height="13" viewBox="0 0 8 13" fill="none">
+        <path d="M6.81691 0.318242C7.23941 0.740742 7.23941 1.42324 6.81691 1.84574L2.61358 6.04908L6.81691 10.2524C7.23941 10.6749 7.23941 11.3574 6.81691 11.7799C6.39441 12.2024 5.71191 12.2024 5.28941 11.7799L0.316914 6.80741C-0.105586 6.38491 -0.105586 5.70241 0.316914 5.27991L5.28941 0.307409C5.70108 -0.104258 6.39441 -0.104258 6.81691 0.318242Z" fill="currentColor"/>
+      </svg>
+      <a [routerLink]="['']" class="block uppercase text-sm">
+        Back to MAIN PAGE
+      </a>
+    </div>
+    <button class="text-base py-3 px-5 button-background rounded-[10px]" (click)="isCreateGroup.set(true)">
+      Create a group
+    </button>
+  </div>
+
+  <div class="border-out px-2 py-4 md:p-10 mx-auto w-full">
+    <div class="border-in px-4 pb-5 md:px-5 text-center pt-4 md:pt-10">
+      <div class="text-[28px]">
+        List of groups
       </div>
 
-      <button (click)="isCreateGroup.set(true)" class="bg-[#2E236C] hover:bg-[#3d2f8a] rounded-2xl py-[6px] uppercase text-base
-          font-medium transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] hover:shadow-[0_10px_20px_rgba(0,0,0,0.4)]
-          hover:-translate-y-0.5 active:translate-y-0 active:shadow-none disabled:opacity-50 disabled:cursor-not-allowed md:mb-3
-          md:py-3 md:text-xl lg:py-4 px-3 text-[#D1D5DB]">Create group</button>
-    </div>
-    <div class="md:hidden">
-      <h1 class="font-semibold text-xl text-gray-200 lg:text-3xl text-center pt-6">List of groups</h1>
-    </div>
-
-    <div class="py-8 px-4 md:px-6 lg:py-10 lg:px-10 flex flex-col gap-6">
       @if (commonErrorAddToGroup){
-        <div >{{commonErrorAddToGroup}}</div>
+        <div class="common-backend-error mt-4">{{commonErrorAddToGroup}}</div>
       }
-      @for (groups of groupList; track groups.idGroup) {
-        <div class="flex justify-between bg-[#251C57] rounded-2xl p-2">
-          <div class="flex flex-wrap gap-2">
-            <span class="bg-[#2E236C] rounded-2xl h-fit my-auto text-sm md:text-base px-2 py-2 font-medium text-[#D1D5DB]">{{groups.title}}</span>
-            @if (groups.country !== null){
-              <span class="bg-[#2E236C] rounded-2xl my-auto text-sm h-fit md:text-base px-2 py-2 font-medium text-[#D1D5DB]">{{CountryList[groups.country]}}</span>
-            }
 
-            @if (groups.city !== null){
-              <span class="bg-[#2E236C] rounded-2xl my-auto text-sm h-fit md:text-base px-2 py-2 font-medium text-[#D1D5DB]">{{CityList[groups.city]}}</span>
-            }
+      <div class="grid gap-5 mt-10">
+        @for (groups of groupList; track groups.idGroup){
+          <div class="border-input min-w-0 ">
+            <div class="flex justify-between gap-5 w-full md:gap-0">
+              <div class="flex flex-wrap gap-2 md:overflow-x-auto md:flex-nowrap md:max-w-[66%] no-scrollbar">
+                <span class="group-chat-params">{{groups.title}} </span>
 
-            @if (groups.age !== null){
-              <span class="bg-[#2E236C] rounded-2xl text-sm my-auto h-fit md:text-base px-2 py-2 font-medium text-[#D1D5DB]">{{AgeList[groups.age]}}</span>
-            }
+                @if (groups.lang !== null) { <span class="group-chat-params"> {{LangList[groups.lang]}} </span> }
 
-            @if (groups.lang !== null){
-              <span class="bg-[#2E236C] rounded-2xl text-sm my-auto md:text-base h-fit px-2 py-2 font-medium text-[#D1D5DB]">{{LangList[groups.lang]}}</span>
-            }
-            <span class="bg-[#2E236C] rounded-2xl text-sm md:text-base my-auto px-2 py-2 h-fit font-medium text-[#D1D5DB]">Online: {{groups.userCount || 0}}</span>
+                @if(groups.age !== null) { <span class="group-chat-params"> {{AgeList[groups.age]}} </span> }
+
+                @if(groups.country !== null) { <span class="group-chat-params"> {{CountryList[groups.country]}} </span> }
+
+                @if(groups.city !== null) { <span class="group-chat-params"> {{CityList[groups.city]}} </span> }
+
+              </div>
+              <div class="flex flex-col gap-2 my-auto md:flex-row-reverse">
+                <button class="text-sm button-background rounded-2xl mx-auto px-5 py-2" (click)="connectToGroup(groups.idGroup!)">
+                  Go
+                </button>
+                <div class="flex gap-1 min-[500px]:text-nowrap my-auto">
+                  <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+                    <g filter="url(#filter0_f_170_2393)">
+                      <circle cx="11" cy="11" r="8" fill="#52BD91" fill-opacity="0.3"/>
+                    </g>
+                    <circle cx="11" cy="11" r="6" fill="#52BD91" fill-opacity="0.6"/>
+                    <circle cx="11" cy="11" r="4" fill="#52BD91"/>
+                  </svg>
+                  <div class="text-[#5AD5A1] text-xs my-auto text-nowrap">
+                    {{groups.userCount || 0}} online
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-          <button (click)="connectToGroup(groups.idGroup!)"
-          class="bg-[#2E236C] hover:bg-[#3d2f8a] rounded-2xl uppercase text-base h-fit px-2 py-2 md:px-4
-          font-medium transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] hover:shadow-[0_10px_20px_rgba(0,0,0,0.4)]
-          hover:-translate-y-0.5 active:translate-y-0 active:shadow-none disabled:opacity-50 disabled:cursor-not-allowed text-[#D1D5DB] my-auto">Go</button>
-        </div>
-      }
+        }
+      </div>
     </div>
   </div>
 </div>
-
-@if (isCreateGroup()){
-  <div class="create-group">
-    <button (click)="isCreateGroup.set(false); commonError = ''">Back</button>
-    @if (commonError) {
-      <div>{{ commonError }}</div>
-    }
-    <h2>Create a group</h2>
-    @if (createGroupForm.controls.title.touched && createGroupForm.controls.title.invalid){
-      @if(createGroupForm.controls.title.errors?.["required"]) {<small>title is required</small>}
-      @if(createGroupForm.controls.title.errors?.["minLength"]) {<small>Min length is 1</small>}
-      @if(createGroupForm.controls.title.errors?.["maxLength"]) {<small>Max length is 50</small>}
-    }
-    <div [formGroup]="createGroupForm">
-    Title:  <input formControlName="title" (input)="titleError = ''">
-    </div>
-
-    @if (titleError){
-      <div>{{titleError}}</div>
-    }
-    <div class="form-group">
-      <label for="country">Country:</label>
-      <select id="country" [(ngModel)]="group.country">
-        @for (country of countryList; track country.value) {
-          <option [ngValue]="country.value">{{country.label}}</option>
-        }
-      </select>
-    </div>
-
-    <div class="form-group">
-      <label for="city">City:</label>
-      <select id="city" [(ngModel)]="group.city" >
-        @for (city of cityList; track city.value) {
-          <option [ngValue]="city.value">{{city.label}}</option>
-        }
-      </select>
-    </div>
-
-    <div class="form-group">
-      <label for="age">Age:</label>
-      <select id="age" [(ngModel)]="group.age">
-        @for (age of ageList; track age.value) {
-          <option [ngValue]="age.value">{{ age.label }}</option>
-        }
-      </select>
-    </div>
-
-    <div class="form-group">
-      <label for="language">Language</label>
-      <select id="language" [(ngModel)]="group.lang">
-        @for (gender of langList; track gender.value) {
-          <option [ngValue]="gender.value">{{gender.label}}</option>
-        }
-      </select>
-    </div>
-
-    <button (click)="createGroup()">Create</button>
-  </div>
-}
-
-@if (isGroupMemberBlocked){
-  <div class="common-information">
-    You've been blocked in group!!!
-    <button (click)="clearBlockState()">Ok</button>
-  </div>
-}
-
