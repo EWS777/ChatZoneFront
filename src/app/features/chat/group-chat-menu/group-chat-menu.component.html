@@ -1,21 +1,30 @@
 <div class="flex flex-col min-h-screen px-4 md:px-11 lg:px-14 pt-[120px] md:pt-[100px] max-w-[1212px] w-full mx-auto">
-  <div class="flex justify-between pb-6 md:pb-5">
-    <div class="text-[#494A4E] flex gap-2 justify-center hover:text-[#C9C9C9] transition-colors duration-200 mt-auto">
-      <svg class="my-auto" width="8" height="13" viewBox="0 0 8 13" fill="none">
-        <path d="M6.81691 0.318242C7.23941 0.740742 7.23941 1.42324 6.81691 1.84574L2.61358 6.04908L6.81691 10.2524C7.23941 10.6749 7.23941 11.3574 6.81691 11.7799C6.39441 12.2024 5.71191 12.2024 5.28941 11.7799L0.316914 6.80741C-0.105586 6.38491 -0.105586 5.70241 0.316914 5.27991L5.28941 0.307409C5.70108 -0.104258 6.39441 -0.104258 6.81691 0.318242Z" fill="currentColor"/>
-      </svg>
+<div class="flex justify-between pb-6 md:pb-5">
+  <div class="text-[#494A4E] flex gap-2 justify-center hover:text-[#C9C9C9] transition-colors duration-200 my-auto">
+    <svg class="my-auto" width="8" height="13" viewBox="0 0 8 13" fill="none">
+      <path d="M6.81691 0.318242C7.23941 0.740742 7.23941 1.42324 6.81691 1.84574L2.61358 6.04908L6.81691 10.2524C7.23941 10.6749 7.23941 11.3574 6.81691 11.7799C6.39441 12.2024 5.71191 12.2024 5.28941 11.7799L0.316914 6.80741C-0.105586 6.38491 -0.105586 5.70241 0.316914 5.27991L5.28941 0.307409C5.70108 -0.104258 6.39441 -0.104258 6.81691 0.318242Z" fill="currentColor"/>
+    </svg>
+    @if (!isCreateGroup()){
       <a [routerLink]="['']" class="block uppercase text-sm">
         Back to MAIN PAGE
       </a>
-    </div>
+    } @else {
+      <a (click)="isCreateGroup.set(false)" class="block uppercase text-sm">
+        Back to the groups
+      </a>
+    }
+  </div>
+  @if (!isCreateGroup()){
     <button class="text-base py-3 px-5 button-background rounded-[10px]" (click)="isCreateGroup.set(true)">
       Create a group
     </button>
-  </div>
+  }
+</div>
 
+@if (!isCreateGroup()){
   <div class="border-out px-2 py-4 md:p-10 mx-auto w-full">
     <div class="border-in px-4 pb-5 md:px-5 text-center pt-4 md:pt-10">
-      <div class="text-[28px]">
+      <div class="text-[28px] lg:text-3xl">
         List of groups
       </div>
 
@@ -62,4 +71,110 @@
       </div>
     </div>
   </div>
+} @else {
+  <div class="border-out px-2 py-4 md:p-10 mx-auto w-full max-w-[600px] md:max-w-full">
+    <div class="border-in px-4 pb-5 md:px-5 text-center pt-4 md:pt-10">
+      <div class="text-2xl md:text-3xl">
+        Create a group
+      </div>
+      <div class="text-[#B4B4B4] mt-5">
+        Discover something new!
+      </div>
+
+      @if (commonError) {
+        <div class="common-backend-error"> {{ commonError }}</div>
+      }
+
+      <form [formGroup]="createGroupForm" (ngSubmit)="createGroup()" class="mt-10 text-left">
+        <div class="grid gap-6 md:grid-cols-2 md:gap-y-9 lg:max-w-[750px] lg:mx-auto">
+          <div>
+            <label class="input-auth-name">Title</label>
+            <div class="border-input" [class.border-input-error]="createGroupForm.controls.title.invalid && createGroupForm.controls.title.touched">
+              <input
+                [class.text-[#EA4550]]="createGroupForm.controls.title.invalid && createGroupForm.controls.title.touched"
+                [class.placeholder:text-[#EA4550]]="createGroupForm.controls.title.invalid && createGroupForm.controls.title.touched"
+                class="input-text" formControlName="title" type="text" placeholder="Enter title">
+            </div>
+            @if (createGroupForm.controls.title.touched && createGroupForm.controls.title.invalid) {
+              <div>
+                @if (createGroupForm.controls.title.errors?.["required"]) {
+                  <small class="error-input-text">Title is required</small>
+                }
+                @if (createGroupForm.controls.title.errors?.["minLength"]) {
+                  <small class="error-input-text">Min length is {{ createGroupForm.get('title')?.errors?.['minLength'].requiredLength }}</small>
+                }
+                @if (createGroupForm.controls.title.errors?.["maxLength"]) {
+                  <small class="error-input-text">Max length is {{ createGroupForm.get('title')?.errors?.['maxLength'].requiredLength }}</small>
+                }
+              </div>
+            }
+            @if (createGroupForm.controls.title.errors?.['backend']; as backendErrors) {
+              @for (err of backendErrors; track err) {
+                <small class="error-input-text">{{ err }}</small>
+              }
+            }
+          </div>
+          <div>
+            <label class="input-auth-name">Country</label>
+            <app-dropdown-select [items]="countryList" placeholder="Choose country" formControlName="country"></app-dropdown-select>
+            @if (createGroupForm.controls.country.errors?.['backend']; as backendErrors) {
+              @for (err of backendErrors; track err) {
+                <small class="error-input-text">{{ err }}</small>
+              }
+            }
+          </div>
+          <div>
+            <label class="input-auth-name">City</label>
+            <app-dropdown-select [items]="cityList" placeholder="Choose city" formControlName="city"></app-dropdown-select>
+            @if (createGroupForm.controls.city.errors?.['backend']; as backendErrors) {
+              @for (err of backendErrors; track err) {
+                <small class="error-input-text">{{ err }}</small>
+              }
+            }
+          </div>
+          <div>
+            <label class="input-auth-name">Age</label>
+            <app-dropdown-select [items]="ageList" placeholder="Choose age" formControlName="age"></app-dropdown-select>
+            @if (createGroupForm.controls.age.errors?.['backend']; as backendErrors) {
+              @for (err of backendErrors; track err) {
+                <small class="error-input-text">{{ err }}</small>
+              }
+            }
+          </div>
+          <div>
+            <label class="input-auth-name">Language</label>
+            <app-dropdown-select [items]="langList" placeholder="Choose language" formControlName="lang"></app-dropdown-select>
+            @if (createGroupForm.controls.lang.errors?.['backend']; as backendErrors) {
+              @for (err of backendErrors; track err) {
+                <small class="error-input-text">{{ err }}</small>
+              }
+            }
+          </div>
+        </div>
+
+        <button type="submit" [disabled]="createGroupForm.invalid" class="login-button blue-background-button mt-8 md:mt-11 md:max-w-[239px] md:mx-auto md:block">
+          Create
+        </button>
+      </form>
+    </div>
+  </div>
+}
 </div>
+
+@if (isGroupMemberBlocked){
+  <div class="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-xs bg-black/10 transition-all duration-300">
+    <div class="border-out px-2 py-4 md:p-5 mx-auto">
+      <div class="border-in px-4 pt-10 pb-5 md:px-5 w-[338px] md:w-[390px] text-center">
+        <div class="text-2xl md:text-xl lg:text-3xl mt-5 md:mt-10">
+          You have been blocked <br> in this chat!
+        </div>
+        <div class="text-[#5AD5A1] text-sm lg:text-base mt-2.5 md:mt-6 mb-11 md:mb-14">
+          Please choose another chat.
+        </div>
+        <button (click)="clearBlockState()" type="button" class="login-button blue-background-button">
+          Okay
+        </button>
+      </div>
+    </div>
+  </div>
+}

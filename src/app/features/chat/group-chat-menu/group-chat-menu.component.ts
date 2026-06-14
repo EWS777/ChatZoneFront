@@ -8,15 +8,25 @@ import {LangList} from '../../profile/filter/enums/lang-list';
 import {GroupChatService} from '../group-chat.service';
 import {Router, RouterLink} from '@angular/router';
 import {GroupMemberService} from '../group-member/group-member.service';
-import {ChatService} from '../chat.service';
+import {ChatService, CreateGroupInterface} from '../chat.service';
 import {CommonValidator} from '../../../shared/validation/CommonValidator';
+import {DropdownSelectComponent} from '../../../shared/dropdown/dropdown-select.component';
+
+interface CreateGroupForm {
+  title: FormControl<string | null>;
+  country: FormControl<number | null>;
+  city: FormControl<number | null>;
+  age: FormControl<number | null>;
+  lang: FormControl<number | null>;
+}
 
 @Component({
   selector: 'app-chat-groupMenu-menu',
   imports: [
     ReactiveFormsModule,
     FormsModule,
-    RouterLink
+    RouterLink,
+    DropdownSelectComponent
   ],
   standalone: true,
   templateUrl: './group-chat-menu.component.html',
@@ -25,59 +35,49 @@ import {CommonValidator} from '../../../shared/validation/CommonValidator';
 
 export class GroupChatMenuComponent implements OnInit{
   router = inject(Router)
+  chatService = inject(ChatService)
+  signalService = inject(GroupChatService)
+  groupMemberService = inject(GroupMemberService)
+
   isGroupMemberBlocked = false;
+  groupList: Group[] = []
+  isCreateGroup = signal<boolean>(false)
+  commonError: string = ''
+  commonErrorAddToGroup: string = ''
+  titleError: string = ''
 
   constructor() {
     const state = this.router.getCurrentNavigation()?.extras.state
     this.isGroupMemberBlocked = state?.['isGroupMemberBlocked']
   }
 
-  chatService = inject(ChatService)
-  signalService = inject(GroupChatService)
-  groupMemberService = inject(GroupMemberService)
+  countryList = this.enumToKeyValue(CountryList);
+  cityList = this.enumToKeyValue(CityList);
+  ageList = this.enumToKeyValue(AgeList);
+  langList = this.enumToKeyValue(LangList);
 
   protected readonly CountryList = CountryList;
   protected readonly CityList = CityList;
   protected readonly AgeList = AgeList;
   protected readonly LangList = LangList;
-  groupList: Group[] = []
-  group: Group = {
-    idGroup: null,
-    title: '',
-    country: null,
-    city: null,
-    age: null,
-    lang: null,
-    isAdmin: null,
-    userCount: null
+
+  private enumToKeyValue(enumObj: any) {
+    return Object.keys(enumObj)
+      .filter(k => isNaN(Number(k)))
+      .map(name => ({ label: name, value: enumObj[name] }));
   }
-  isCreateGroup = signal<boolean>(false)
-  commonError: string = ''
-  commonErrorAddToGroup: string = ''
-  titleError: string = ''
-  createGroupForm = new FormGroup({
+
+  createGroupForm = new FormGroup<CreateGroupForm>({
     title: new FormControl<string | null>(null, [
       CommonValidator.required,
       CommonValidator.minLength(1),
       CommonValidator.maxLength(50),
-    ])
+    ]),
+    country: new FormControl(null),
+    city: new FormControl(null),
+    age: new FormControl(null),
+    lang: new FormControl(null)
   })
-
-  countryList = Object.keys(CountryList)
-    .filter(k => isNaN(Number(k)))
-    .map(name => ({label: name, value: CountryList[name as keyof typeof CountryList]}))
-
-  cityList = Object.keys(CityList)
-    .filter(k => isNaN(Number(k)))
-    .map(name => ({ label: name, value: CityList[name as keyof typeof CityList]}))
-
-  ageList = Object.keys(AgeList)
-    .filter(k => isNaN(Number(k)))
-    .map(name => ({ label: name, value: AgeList[name as keyof typeof AgeList]}))
-
-  langList = Object.keys(LangList)
-    .filter(k => isNaN(Number(k)))
-    .map(name => ({ label: name, value: LangList[name as keyof typeof LangList]}))
 
 
   ngOnInit(): void {
@@ -99,24 +99,32 @@ export class GroupChatMenuComponent implements OnInit{
       this.createGroupForm.markAllAsTouched()
       return
     }
-    this.group.title = this.createGroupForm.value.title!
-      this.chatService.createGroup(this.group).subscribe({
-        next: value =>{
-          this.signalService.addToGroup(value)
-        },
-        error: (err) => {
-          if(err.status === 400 && err.error && err.error.errors){
-            if (err.error.errors['Title']) {
-              this.titleError = err.error.errors['Title'][0];
-            } else if (err.error.errors['title']) {
-              this.titleError = err.error.errors['title'][0];
-            }
-          }
-          else{
-            this.commonError = err.error.title || 'Unhandled exception. To repair'
+
+    const groupData: CreateGroupInterface = {
+      title: this.createGroupForm.value.title!,
+      country: this.createGroupForm.value.country ?? null,
+      city: this.createGroupForm.value.city ?? null,
+      age: this.createGroupForm.value.age ?? null,
+      lang: this.createGroupForm.value.lang ?? null,
+    }
+
+    this.chatService.createGroup(groupData).subscribe({
+      next: value =>{
+        this.signalService.addToGroup(value)
+      },
+      error: (err) => {
+        if(err.status === 400 && err.error && err.error.errors){
+          if (err.error.errors['Title']) {
+            this.titleError = err.error.errors['Title'][0];
+          } else if (err.error.errors['title']) {
+            this.titleError = err.error.errors['title'][0];
           }
         }
-      })
+        else{
+          this.commonError = err.error.title || 'Unhandled exception. To repair'
+        }
+      }
+    })
   }
 
   async connectToGroup(idGroup: number){

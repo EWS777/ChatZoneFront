@@ -1,0 +1,20 @@
+<div class="relative" #dropdownContainer>
+  <button type="button" (click)="toggleDropdown($event)" class="w-full border-input flex items-center justify-between text-xs">
+    <span [class]="selectedValue !== null && selectedValue !== undefined ? 'text-[#FFFFFF]' : 'text-[#494A4E]'">
+      {{ selectedLabel || placeholder }}
+    </span>
+    <svg class="h-5 w-5 text-gray-500 transition-transform duration-400" [class.rotate-180]="isOpen" viewBox="0 0 20 20" fill="currentColor">
+      <path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+    </svg>
+  </button>
+
+  @if (isOpen) {
+    <div class="absolute z-10 mt-1 w-full bg-[#192337] rounded-[10px] shadow-[0_12px_16px_-4px_rgba(16,24,40,0.10),0_4px_6px_-2px_rgba(16,24,40,0.05)] overflow-auto py-1">
+      @for (item of items; track item.value) {
+        <div (click)="selectItem(item)" class="py-2 px-4 hover:bg-[#47588C] text-sm md:text-base text-white transition-colors duration-150">
+          {{ item.label }}
+        </div>
+      }
+    </div>
+  }
+</div>

@@ -4,6 +4,14 @@ import {ChatPersonInfo} from './chat-person-info';
 import {Group} from './group';
 import {environment} from '../../../environments/environment';
 
+export interface CreateGroupInterface {
+  title: string
+  country: number | null
+  city: number | null
+  age: number | null
+  lang: number | null
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -23,7 +31,7 @@ export class ChatService {
     })
   }
 
-  createGroup(request: Group){
+  createGroup(request: CreateGroupInterface){
     return this.http.post<number>(`${this.url}/create`, request, {
       withCredentials: true
     })
