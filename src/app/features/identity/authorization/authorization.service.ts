@@ -1,6 +1,6 @@
 import {inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {BehaviorSubject, catchError, map, of, tap, throwError} from 'rxjs';
+import {BehaviorSubject, catchError, map, of, switchMap, tap, throwError} from 'rxjs';
 import {Router} from '@angular/router';
 import {environment} from '../../../../environments/environment';
 
@@ -45,7 +45,14 @@ export class AuthorizationService {
   postLogin(payload: {usernameOrEmail: string, Password: string}){
     return this.http.post(`${this.baseApiUrl}authentication/login`, payload,{
       withCredentials: true
-    }).pipe(tap(() => this.authState.next(true)))
+    }).pipe(
+      switchMap(() =>{
+        return this.http.get(`${this.baseApiUrl}authentication/csrf`, {
+          withCredentials: true
+        })
+      }),
+      tap(() => this.authState.next(true))
+    )
   }
 
   registerLogin(payload: {email: string, username: string, password: string}){
