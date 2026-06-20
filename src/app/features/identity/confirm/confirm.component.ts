@@ -1,14 +1,15 @@
 import {Component, inject, OnInit, signal} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
+import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import {ConfirmService} from './confirm.service';
-import {FormControl, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
+import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {CommonValidator} from '../../../shared/validation/CommonValidator';
 
 @Component({
   selector: 'app-confirm',
   imports: [
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    RouterLink
   ],
   templateUrl: './confirm.component.html',
   styleUrl: './confirm.component.css'
@@ -18,17 +19,18 @@ export class ConfirmComponent implements OnInit{
   route = inject(ActivatedRoute)
   confirmService = inject(ConfirmService)
   commonError: string = ''
-  commonErrorReconfirm: string = ''
   successMessage = signal<string>('')
 
   isConfirmed = signal<boolean | null>(null)
-  emailControl = new FormControl(null, [
-    Validators.email,
-    CommonValidator.required,
-    CommonValidator.minLength(5),
-    CommonValidator.maxLength(254),
-    CommonValidator.noSpaces, //just for strict attributes
-  ])
+  confirmEmailForm = new FormGroup({
+    email: new FormControl<string | null>(null, {validators: [
+        Validators.email,
+        CommonValidator.required,
+        CommonValidator.minLength(5),
+        CommonValidator.maxLength(254),
+        CommonValidator.noSpaces, //just for strict attributes
+      ]})
+  })
 
   ngOnInit(): void {
     const token = this.route.snapshot.queryParamMap.get('link')
@@ -49,20 +51,19 @@ export class ConfirmComponent implements OnInit{
   }
 
   reconfirm(){
-    this.commonErrorReconfirm = ''
     this.successMessage.set('')
-    if (this.emailControl.invalid) {
-      this.emailControl.markAsTouched();
+    if (this.confirmEmailForm.invalid) {
+      this.confirmEmailForm.markAsTouched();
       return;
     }
-    const emailValue = (this.emailControl.value || '').trim()
-    this.confirmService.reconfirm(emailValue).subscribe({
+    const emailValue = this.confirmEmailForm.get('email')?.value;
+    this.confirmService.reconfirm(emailValue!).subscribe({
       next: (response) => {
         const msg = response.message || 'Link was sent successfully!';
         this.successMessage.set(msg);
       },
       error: (err) => {
-        this.commonErrorReconfirm = err.error.title || 'Unhandled exception. To repair'
+        this.commonError = err.error.title || 'Unhandled exception. To repair'
       }
     })
   }
