@@ -47,7 +47,7 @@ export class GroupChatMenuComponent implements OnInit{
   titleError: string = ''
 
   constructor() {
-    const state = this.router.getCurrentNavigation()?.extras.state
+    const state = this.router.currentNavigation()?.extras.state
     this.isGroupMemberBlocked = state?.['isGroupMemberBlocked']
   }
 
