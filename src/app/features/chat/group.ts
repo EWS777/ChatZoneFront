@@ -6,5 +6,5 @@ export interface Group {
   age: number | null
   lang: number | null
   isAdmin: boolean | null
-  userCount: number | null
+  personCount: number | null
 }

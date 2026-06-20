@@ -80,7 +80,7 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy{
     age: null,
     lang: null,
     isAdmin: null,
-    userCount: null
+    personCount: null
   }
   chatPersonInfo: ChatPersonInfo = {
     idPerson: null,
