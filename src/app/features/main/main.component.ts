@@ -15,6 +15,7 @@ import {SingleChatFilter, SingleChatService} from '../chat/single-chat.service';
 import {environment} from '../../../environments/environment';
 import {ChatService} from '../chat/chat.service';
 import {DropdownSelectComponent} from '../../shared/dropdown/dropdown-select.component';
+import {HttpXsrfTokenExtractor} from '@angular/common/http';
 
 @Component({
   selector: 'app-main',
@@ -29,13 +30,29 @@ import {DropdownSelectComponent} from '../../shared/dropdown/dropdown-select.com
 })
 export class MainComponent implements OnInit{
   isStartFindPerson = signal<boolean>(false)
+  private tokenExtractor = inject(HttpXsrfTokenExtractor)
 
   @HostListener('window:beforeunload')
   unloadHandler() {
     if (this.isStartFindPerson()){
-      const url = `${environment.apiUrl}/Search/cancel`
-      const data = JSON.stringify("")
-      navigator.sendBeacon(url, data);
+      const url = `${environment.apiUrl}Search/cancel`
+      const xsrfToken = this.tokenExtractor.getToken()
+
+      const headers: HeadersInit = {
+        'Content-Type': 'application/json'
+      };
+
+      if (xsrfToken) {
+        headers['X-XSRF-TOKEN'] = xsrfToken;
+      }
+
+      fetch(url, {
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify({}),
+        keepalive: true,
+        credentials: "include"
+      });
     }
   }
 
