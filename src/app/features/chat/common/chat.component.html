@@ -1,16 +1,16 @@
-<div class="container">
-  <div class="chat-header">
+<div>
+  <div>
     <button (click)="changeIsDisconnectStatus('exit')">Back</button>
     @if (chatPersonInfo.isSingleChat) {
-      <div class="chat-param">
+      <div>
         <span>Username: qwerty123</span>
         <span>Age: 20-25</span>
         <span>Gender: Man</span>
         <span>Country: Poland</span>
       </div>
     } @else {
-      <div class="chat-param">
-        <span style="white-space: pre-wrap; word-wrap: break-word;">GroupName: {{ group.title }}</span>
+      <div>
+        <span>GroupName: {{ group.title }}</span>
         @if (group.country !== null) {
           <span>Country: {{ CountryList[group.country] }}</span>
         }
@@ -31,22 +31,17 @@
 
   </div>
 
-  <div #chatContainer class="chat-messages" (scroll)="onScroll()">
+  <div #chatContainer (scroll)="onScroll()">
     <ul>
       @for (msg of messages; track $index) {
-        <li style="white-space: pre-wrap; word-wrap: break-word;" [ngClass]="{ 'mine-message': msg.idSender === chatPersonInfo.idPerson, 'another-message': msg.idSender !== chatPersonInfo.idPerson }">
+        <li [ngClass]="{ 'mine-message': msg.idSender === chatPersonInfo.idPerson, 'another-message': msg.idSender !== chatPersonInfo.idPerson }">
           {{msg.message}}
         </li>
       }
     </ul>
   </div>
 
-  <div class="chat-footer-wrapper">
-    @if (chatPersonInfo.isSingleChat){
-      <h2>SINGLE CHAT</h2>
-    } @else {
-      <h2>GROUP CHAT</h2>
-    }
+  <div>
     @if (commonError) {
       {{commonError}}
     }
@@ -56,7 +51,7 @@
       @if (currentMessageControl.hasError('maxLength')) {<small>Max length is {{ currentMessageControl.errors?.['maxLength'].requiredLength }}</small>}
     }
     @if (!chatPersonInfo.isSentMessage) {
-      <div class="chat-quick-message">
+      <div>
         @for (quickMessage of quickMessageList; track quickMessage.idQuickMessage) {
           <button (click)="sendQuickMessage(quickMessage.message)">{{ quickMessage.message }}</button>
         }
@@ -64,7 +59,7 @@
     }
   </div>
 
-  <div class="chat-footer">
+  <div>
     @if (chatPersonInfo.isSingleChat) {
       <button (click)="changeIsDisconnectStatus('skip')">Skip</button>
     }
@@ -73,7 +68,7 @@
   </div>
 
   @if (isDisconnect() === 'skip') {
-    <div class="common-information">
+    <div>
       Do you want to skip person?
       <button (click)="exitChat(false)">Yes</button>
       <button (click)="changeIsDisconnectStatus(null)">No</button>
@@ -82,15 +77,15 @@
 
   @if (isActivateSettings()) {
     @if (chatPersonInfo.isSingleChat) {
-      <div class="common-information">
+      <div>
         <button (click)="blockPerson()">Block user</button>
       </div>
     }
     @if (!chatPersonInfo.isSingleChat && group.isAdmin) {
-      <div class="common-information">
+      <div>
         <button (click)="isActivateSettings.set(false); titleError=''">Back</button>
         <button (click)="getGroupMembers()">List of users</button>
-        <div class="update-group-params" [formGroup]="updateGroupForm">
+        <div [formGroup]="updateGroupForm">
           @if (commonErrorGetGroupMembers){
             <div>{{commonErrorGetGroupMembers}}</div>
           }
@@ -108,7 +103,7 @@
             <div>{{ titleError }}</div>
           }
 
-          <div class="form-group">
+          <div>
             <label for="country">Country:</label>
             <select id="country" [(ngModel)]="group.country" [ngModelOptions]="{standalone: true}">
               @for (country of countryList; track country.value) {
@@ -117,7 +112,7 @@
             </select>
           </div>
 
-          <div class="form-group">
+          <div>
             <label for="city">City:</label>
             <select id="city" [(ngModel)]="group.city" [ngModelOptions]="{standalone: true}">
               @for (city of cityList; track city.value) {
@@ -126,7 +121,7 @@
             </select>
           </div>
 
-          <div class="form-group">
+          <div>
             <label for="age">Age:</label>
             <select id="age" [(ngModel)]="group.age" [ngModelOptions]="{standalone: true}">
               @for (age of ageList; track age.value) {
@@ -135,7 +130,7 @@
             </select>
           </div>
 
-          <div class="form-group">
+          <div>
             <label for="language">Language</label>
             <select id="language" [(ngModel)]="group.lang" [ngModelOptions]="{standalone: true}">
               @for (gender of langList; track gender.value) {
@@ -152,7 +147,7 @@
 
 
 @if (isDisconnect() === 'exit') {
-  <div class="common-information">
+  <div>
     Do you want to quite chat?
     <button (click)="exitChat(true)">Yes</button>
     <button (click)="changeIsDisconnectStatus(null)">No</button>
@@ -160,7 +155,7 @@
 }
 
 @if(isAdminStatusInfo()){
-  <div class="common-information">
+  <div>
     You are an admin. What action do you prefer?
     @if (commonErrorDeleteGroupChat){
       <div>{{commonErrorDeleteGroupChat}}</div>
@@ -171,28 +166,28 @@
 }
 
 @if (isPersonBlocked()) {
-  <div class="common-information">
+  <div>
     <h2><span>Person has blocked!</span></h2>
     <button (click)="isPersonBlocked.set(false)">Ok</button>
   </div>
 }
 
 @if(isNewAdminNotification() && group.isAdmin){
-  <div class="common-information">
+  <div>
     You are a new admin of this group!
     <button (click)="isNewAdminNotification.set(false)">Great!</button>
   </div>
 }
 
 @if (isDeleteGroupStatus()) {
-  <div class="common-information">
+  <div>
     The group was deleted!
     <button (click)="router.navigate(['/'])">Okay</button>
   </div>
 }
 
 @if (isOtherPersonLeft()) {
-  <div class="common-information">
+  <div>
     <h2>Person has disconnected!</h2>
     Do you want to find new person?
     <button (click)="findNewPerson()">Yes</button>
@@ -201,13 +196,13 @@
 }
 
 @if (isShowNewFinder()){
-  <div class="common-information">
+  <div>
     <h2>Waiting for new matching...</h2>
   </div>
 }
 
 @if (isGroupMember()){
-  <div class="common-information">
+  <div>
     <button (click)="isGroupMember.set(false)">Back</button>
     <h2>List of group members</h2>
     @if (commonErrorBlockGroupMember){
