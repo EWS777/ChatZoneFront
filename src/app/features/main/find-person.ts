@@ -7,5 +7,6 @@ export interface FindPerson {
   yourGender: number | null,
   partnerGender: number | null,
   language: number | null,
-  isSearchAgain: boolean
+  isSearchAgain: boolean,
+  isFindRandomPerson: false
 }

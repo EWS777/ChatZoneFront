@@ -10,7 +10,8 @@ export interface SingleChatFilter{
   yourGender: number | null,
   language: number | null,
   partnerGender: number | null,
-  isSearchAgain: boolean
+  isSearchAgain: boolean,
+  isFindRandomPerson: boolean
 }
 
 @Injectable({

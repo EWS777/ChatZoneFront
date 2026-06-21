@@ -110,7 +110,8 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy{
     yourGender: null,
     language: null,
     partnerGender: null,
-    isSearchAgain: true
+    isSearchAgain: true,
+    isFindRandomPerson: false
   }
 
   async ngOnInit(){

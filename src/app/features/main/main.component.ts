@@ -62,7 +62,8 @@ export class MainComponent implements OnInit{
     yourGender: null,
     language: null,
     partnerGender: null,
-    isSearchAgain: false
+    isSearchAgain: false,
+    isFindRandomPerson: false
   }
 
   countryList = Object.keys(CountryList)
