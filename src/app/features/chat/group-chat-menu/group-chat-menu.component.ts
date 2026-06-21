@@ -64,7 +64,8 @@ export class GroupChatMenuComponent implements OnInit{
   private enumToKeyValue(enumObj: any) {
     return Object.keys(enumObj)
       .filter(k => isNaN(Number(k)))
-      .map(name => ({ label: name, value: enumObj[name] }));
+      .map(name => ({ label: name, value: enumObj[name] }))
+      .filter(item => item.value !== 0);
   }
 
   createGroupForm = new FormGroup<CreateGroupForm>({
