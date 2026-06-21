@@ -2,25 +2,26 @@ import {Component, HostListener, inject, OnInit, signal} from '@angular/core';
 import {ProfileService} from '../profile/profile.service';
 import {Router} from '@angular/router';
 import {AuthorizationService} from '../identity/authorization/authorization.service';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {CountryList} from '../profile/filter/enums/country-list';
 import {AgeList} from '../profile/filter/enums/age-list';
 import {CityList} from '../profile/filter/enums/city-list';
 import {LangList} from '../profile/filter/enums/lang-list';
 import {ThemeList} from '../profile/filter/enums/theme-list';
 import {GenderList} from '../profile/filter/enums/gender-list';
-import {FindPerson} from './find-person';
 import {MainService} from './main.service';
 import {FilterService} from '../profile/filter/filter.service';
-import {SingleChatService} from '../chat/single-chat.service';
+import {SingleChatFilter, SingleChatService} from '../chat/single-chat.service';
 import {environment} from '../../../environments/environment';
 import {ChatService} from '../chat/chat.service';
+import {DropdownSelectComponent} from '../../shared/dropdown/dropdown-select.component';
 
 @Component({
   selector: 'app-main',
   imports: [
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    DropdownSelectComponent
   ],
   templateUrl: './main.component.html',
   standalone: true,
@@ -29,7 +30,7 @@ import {ChatService} from '../chat/chat.service';
 export class MainComponent implements OnInit{
   isStartFindPerson = signal<boolean>(false)
 
-  @HostListener('window:beforeunload', ['$event'])
+  @HostListener('window:beforeunload')
   unloadHandler() {
     if (this.isStartFindPerson()){
       const url = `${environment.apiUrl}/Search/cancel`
@@ -47,56 +48,47 @@ export class MainComponent implements OnInit{
   chatService = inject(ChatService)
 
   username: string | null = null;
-  isFindByProfile: boolean = false;
   isFilterActivated = signal<boolean>(false)
   isFindPerson = signal<boolean>(false)
   isAnyActiveChat = signal<boolean>(false)
   isMenuOpen = signal<boolean>(false)
 
-  filter: FindPerson = {
-    connectionId: '',
-    theme: null,
-    country: null,
-    city: null,
-    age: null,
-    yourGender: null,
-    language: null,
-    partnerGender: null,
-    isSearchAgain: false,
-    isFindRandomPerson: false
+  findSingleChatForm = new FormGroup({
+    connectionId: new FormControl<string | null>(null),
+    theme: new FormControl<number | null>(null),
+    country: new FormControl<number | null>(null),
+    city: new FormControl<number | null>(null),
+    age: new FormControl<number | null>(null),
+    yourGender: new FormControl<number | null>(null),
+    language: new FormControl<number | null>(null),
+    partnerGender: new FormControl<number | null>(null),
+    isSearchAgain: new FormControl<boolean>(false),
+    isFindRandomPerson: new FormControl<boolean>(false)
+  })
+
+  themeList = this.enumToKeyValue(ThemeList);
+  countryList = this.enumToKeyValue(CountryList);
+  cityList = this.enumToKeyValue(CityList);
+  ageList = this.enumToKeyValue(AgeList);
+  langList = this.enumToKeyValue(LangList);
+  genderList = this.enumToKeyValue(GenderList);
+
+  get maleAndFemaleOnly() {
+    return this.genderList.filter(g => g.label === 'male' || g.label === 'female');
   }
 
-  countryList = Object.keys(CountryList)
-    .filter(k => isNaN(Number(k)))
-    .map(name => ({label: name, value: CountryList[name as keyof typeof CountryList]}))
-
-  ageList = Object.keys(AgeList)
-    .filter(k => isNaN(Number(k)))
-    .map(name => ({ label: name, value: AgeList[name as keyof typeof AgeList]}))
-
-  cityList = Object.keys(CityList)
-    .filter(k => isNaN(Number(k)))
-    .map(name => ({ label: name, value: CityList[name as keyof typeof CityList]}))
-
-  langList = Object.keys(LangList)
-    .filter(k => isNaN(Number(k)))
-    .map(name => ({ label: name, value: LangList[name as keyof typeof LangList]}))
-
-  themeList = Object.keys(ThemeList)
-    .filter(k => isNaN(Number(k)))
-    .map(name => ({ label: name, value: ThemeList[name as keyof typeof ThemeList]}))
-
-  genderList = Object.keys(GenderList)
-    .filter(k => isNaN(Number(k)))
-    .map(name => ({ label: name, value: GenderList[name as keyof typeof GenderList]}))
-
+  private enumToKeyValue(enumObj: any) {
+    return Object.keys(enumObj)
+      .filter(k => isNaN(Number(k)))
+      .map(name => ({ label: name, value: enumObj[name] }))
+      .filter(item => item.value !== 0);
+  }
 
   ngOnInit(){
     this.profile.getProfile()
       .subscribe({
         next: value => {
           this.username = value.username
-          this.isFindByProfile = value.isFindByProfile
         }
       })
 
@@ -116,19 +108,17 @@ export class MainComponent implements OnInit{
 
   activateFilter(){
     this.isFilterActivated.set(!this.isFilterActivated())
-    if (this.isFindByProfile){
-      this.filterService.getFilter().subscribe({
-        next: value => {
-          this.filter.country = value.country
-          this.filter.age = value.age
-          this.filter.theme = value.theme
-          this.filter.city = value.city
-          this.filter.yourGender = value.yourGender
-          this.filter.partnerGender = value.partnerGender
-          this.filter.language = value.language
-        }
-      })
-    }
+    this.filterService.getFilter().subscribe({
+      next: value => {
+        this.findSingleChatForm.get('country')?.setValue(value.country)
+        this.findSingleChatForm.get('age')?.setValue(value.age)
+        this.findSingleChatForm.get('theme')?.setValue(value.theme)
+        this.findSingleChatForm.get('city')?.setValue(value.city)
+        this.findSingleChatForm.get('yourGender')?.setValue(value.yourGender)
+        this.findSingleChatForm.get('partnerGender')?.setValue(value.partnerGender)
+        this.findSingleChatForm.get('language')?.setValue(value.language)
+      }
+    })
   }
 
   cancelFindPerson(){
@@ -143,13 +133,14 @@ export class MainComponent implements OnInit{
     })
   }
 
-  findPerson(){
+  findPerson(isFindRandom: boolean){
     this.chatService.getActiveChat().subscribe({
       next: value => {
         if(value.isSingleChat!==null){
           this.isAnyActiveChat.set(true)
         }
         else {
+          this.findSingleChatForm.get('isFindRandomPerson')?.setValue(isFindRandom)
           this.startFindPerson()
         }
       }
@@ -160,7 +151,20 @@ export class MainComponent implements OnInit{
     this.isFindPerson.set(true)
     this.isFilterActivated.set(false)
 
-    this.signalService.startSearchSingleChat(this.filter)
+    const filterData: SingleChatFilter = {
+      connectionId: this.findSingleChatForm.value.connectionId ?? null,
+      theme: this.findSingleChatForm.value.theme ?? null,
+      country: this.findSingleChatForm.value.country ?? null,
+      city: this.findSingleChatForm.value.city ?? null,
+      age: this.findSingleChatForm.value.age ?? null,
+      yourGender: this.findSingleChatForm.value.yourGender ?? null,
+      language: this.findSingleChatForm.value.language ?? null,
+      partnerGender: this.findSingleChatForm.value.partnerGender ?? null,
+      isSearchAgain: !!this.findSingleChatForm.value.isSearchAgain,
+      isFindRandomPerson: !!this.findSingleChatForm.value.isFindRandomPerson
+    }
+
+    this.signalService.startSearchSingleChat(filterData)
       .then(() => {
         this.isStartFindPerson.set(true);
       })
