@@ -1,5 +1,6 @@
 ﻿export enum GenderList {
+  'None',
   'male',
   'female',
-  'none'
+  'both'
 }

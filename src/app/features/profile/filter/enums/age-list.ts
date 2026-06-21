@@ -1,6 +1,5 @@
 export enum AgeList {
-
-
+  'None',
   '18-22' ,
   '23-25' ,
   '25-30' ,
