@@ -170,13 +170,13 @@ export class MainComponent implements OnInit{
 
     const filterData: SingleChatFilter = {
       connectionId: this.findSingleChatForm.value.connectionId ?? null,
-      theme: this.findSingleChatForm.value.theme ?? null,
-      country: this.findSingleChatForm.value.country ?? null,
-      city: this.findSingleChatForm.value.city ?? null,
-      age: this.findSingleChatForm.value.age ?? null,
-      yourGender: this.findSingleChatForm.value.yourGender ?? null,
-      language: this.findSingleChatForm.value.language ?? null,
-      partnerGender: this.findSingleChatForm.value.partnerGender ?? null,
+      theme: this.findSingleChatForm.value.isFindRandomPerson === true ? null : this.findSingleChatForm.value.theme ?? null,
+      country: this.findSingleChatForm.value.isFindRandomPerson === true ? null :  this.findSingleChatForm.value.country ?? null,
+      city: this.findSingleChatForm.value.isFindRandomPerson === true ? null :  this.findSingleChatForm.value.city ?? null,
+      age: this.findSingleChatForm.value.isFindRandomPerson === true ? null :  this.findSingleChatForm.value.age ?? null,
+      yourGender: this.findSingleChatForm.value.isFindRandomPerson === true ? null :  this.findSingleChatForm.value.yourGender ?? null,
+      language: this.findSingleChatForm.value.isFindRandomPerson === true ? null :  this.findSingleChatForm.value.language ?? null,
+      partnerGender: this.findSingleChatForm.value.isFindRandomPerson === true ? null :  this.findSingleChatForm.value.partnerGender ?? null,
       isSearchAgain: !!this.findSingleChatForm.value.isSearchAgain,
       isFindRandomPerson: !!this.findSingleChatForm.value.isFindRandomPerson
     }
