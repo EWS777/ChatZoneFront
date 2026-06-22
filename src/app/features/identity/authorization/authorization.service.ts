@@ -63,6 +63,11 @@ export class AuthorizationService {
 
   refreshToken(){
     return this.http.post(`${this.baseApiUrl}authentication/refresh`,{}, {withCredentials:true}).pipe(
+        switchMap(() =>{
+          return this.http.get(`${this.baseApiUrl}authentication/csrf`, {
+            withCredentials: true
+          })
+        }),
         tap(() => this.authState.next(true)),
         map(() => true),
         catchError((err) => {
