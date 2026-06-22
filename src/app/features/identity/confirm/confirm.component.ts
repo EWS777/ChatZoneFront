@@ -45,8 +45,6 @@ export class ConfirmComponent implements OnInit{
           this.commonError = err.error.title || 'Unhandled exception. To repair'
         }
       })
-    }else {
-      console.log('Token is not exists!')
     }
   }
 

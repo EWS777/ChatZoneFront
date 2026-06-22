@@ -157,9 +157,7 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy{
       next: value => {
         this.quickMessageList = value
       },
-      error: err => {
-        console.error('Error', err)
-      }
+      error: () => {}
     })
 
     this.baseChatService.receiveMessage().subscribe(data =>{
@@ -186,9 +184,7 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy{
             lang: value.lang
           });
         },
-        error: err => {
-          console.log('Error', err)
-        }
+        error: () => {}
       })
 
       this.groupChatService.setNewAdmin().subscribe(isAdmin => {
@@ -355,9 +351,7 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy{
           next: async () =>{
             await this.router.navigate(['/'])
           },
-          error: err =>{
-            console.log('Error', err)
-          }
+          error: () =>{}
         })
       }
 
@@ -390,9 +384,7 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy{
       .then(() => {
         window.location.reload();
       })
-      .catch(err => {
-        console.error('Error', err);
-      });
+      .catch(() => {});
   }
 
   blockPerson(){
@@ -401,9 +393,7 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy{
         this.isPersonBlocked.set(true)
         this.isActivateSettings.set(false)
       },
-      error: err => {
-        console.error('Error', err)
-      }
+      error: () => {}
     })
   }
 
@@ -425,8 +415,6 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy{
       isAdmin: rawValue.isAdmin,
       personCount: rawValue.personCount ? +rawValue.personCount : null
     };
-
-    console.log('payload isAdmin = ', payload.isAdmin)
 
     this.chatService.updateGroup(payload).subscribe({
       next: value=>{
@@ -526,9 +514,7 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy{
       next: () => {
         this.router.navigate(['/'])
       },
-      error: err => {
-        console.error('Error', err)
-      }
+      error: () => {}
     })
   }
 }

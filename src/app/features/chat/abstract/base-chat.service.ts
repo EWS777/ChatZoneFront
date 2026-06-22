@@ -27,7 +27,7 @@ export abstract class BaseChatService {
         const id = await this.hubConnection.invoke('GetConnectionId');
         return this.connectionId = id;
       })
-      .catch(error => console.error('Error', error))
+      .catch(() => {})
 
     this.hubConnection.on("ChatCreated", ()=> {
       if (this.router.url === '/chat'){

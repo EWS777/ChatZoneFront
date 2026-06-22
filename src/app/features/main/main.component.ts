@@ -144,9 +144,7 @@ export class MainComponent implements OnInit{
         this.isFindPerson.set(false)
         this.isFilterActivated.set(true)
       },
-      error: err => {
-        console.error('Error', err)
-      }
+      error: () => {}
     })
   }
 

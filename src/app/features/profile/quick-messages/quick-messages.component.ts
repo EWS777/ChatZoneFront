@@ -56,9 +56,7 @@ export class QuickMessagesComponent implements OnInit{
           this.isCreateFirstQuickMessage.set(true)
         }
       },
-      error: err => {
-        console.error('Unable to get Quick Messages', err)
-      }
+      error: () => {}
     })
   }
 
@@ -171,9 +169,7 @@ export class QuickMessagesComponent implements OnInit{
             this.isCreateFirstQuickMessage.set(false)
           }
         },
-        error: err => {
-          console.error('Delete quick messages has not completed!', err)
-        }
+        error: () => {}
     })
   }
 

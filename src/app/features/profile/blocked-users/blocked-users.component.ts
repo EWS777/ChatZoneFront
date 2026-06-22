@@ -29,9 +29,7 @@ export class BlockedUsersComponent implements OnInit{
       next: value => {
         this.blockedUser = value
       },
-      error: err => {
-        console.error('Get blocked users has not completed!', err)
-      }
+      error: () => {}
     })
   }
 
@@ -42,9 +40,7 @@ export class BlockedUsersComponent implements OnInit{
       next: value => {
         this.blockedUser = value
       },
-      error: err => {
-        console.error('Delete has not completed!', err)
-      }
+      error: () => {}
     })
   }
 
