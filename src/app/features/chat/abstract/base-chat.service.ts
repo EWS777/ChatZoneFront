@@ -1,17 +1,19 @@
-import {inject, Injectable} from '@angular/core';
+import {inject, Injectable, NgZone} from '@angular/core';
 import {Router} from '@angular/router';
 import {HubConnection, HubConnectionBuilder, HubConnectionState} from '@microsoft/signalr';
 import {Observable, Subject} from 'rxjs';
 import {environment} from '../../../../environments/environment';
+import * as signalR from '@microsoft/signalr';
 
 @Injectable({
   providedIn: 'root'
 })
 export abstract class BaseChatService {
   protected router = inject(Router)
+  protected ngZone = inject(NgZone)
   private messageSubject = new Subject<{idSender: number, message: string, createdAt: Date}>();
   protected readonly hubConnection: HubConnection;
-  private readonly connectionPromise: Promise<void>
+  private connectionPromise: Promise<void> | null = null
   connectionId: string = ''
 
   constructor() {
@@ -20,26 +22,24 @@ export abstract class BaseChatService {
         withCredentials: true
       })
       .withAutomaticReconnect()
+      .configureLogging(signalR.LogLevel.Information)
       .build()
 
-    this.connectionPromise = this.hubConnection.start()
-      .then(async () => {
-        const id = await this.hubConnection.invoke('GetConnectionId');
-        return this.connectionId = id;
-      })
-      .catch(() => {})
-
     this.hubConnection.on("ChatCreated", ()=> {
-      if (this.router.url === '/chat'){
-        this.router.navigateByUrl('/', {skipLocationChange: true}).then(()=>{
-          this.router.navigate(['chat']);
-        })
-      }
-      else this.router.navigate(['chat']);
+      this.ngZone.run(() => {
+        if (this.router.url === '/chat'){
+          this.router.navigateByUrl('/', {skipLocationChange: true}).then(()=>{
+            this.router.navigate(['chat']);
+          })
+        }
+        else this.router.navigate(['chat']);
+      })
     });
 
     this.hubConnection.on('Receive', (idSender: number, message: string, createdAt: Date) =>{
-      this.messageSubject.next({idSender: idSender, message: message, createdAt: createdAt})
+      this.ngZone.run(() => {
+        this.messageSubject.next({idSender: idSender, message: message, createdAt: createdAt});
+      });
     })
   }
 
@@ -51,10 +51,24 @@ export abstract class BaseChatService {
     if (this.hubConnection.state === HubConnectionState.Connected) {
       return;
     }
-    return this.connectionPromise;
+    if (this.connectionPromise){
+      return this.connectionPromise
+    }
+
+    this.connectionPromise = this.hubConnection.start()
+      .then(async () => {
+        this.connectionId = await this.hubConnection.invoke('GetConnectionId')
+      })
+      .catch(error => {
+        this.connectionPromise = null
+        throw error
+      })
+
+    return this.connectionPromise
   }
 
   async sendMessage(idGroup: number, message: string, isSingleChat: boolean) {
+    await this.ensureConnection()
     await this.hubConnection.invoke('SendMessage', idGroup, message, isSingleChat)
   }
 

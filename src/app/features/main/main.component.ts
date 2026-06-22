@@ -113,6 +113,10 @@ export class MainComponent implements OnInit{
       this.isStartFindPerson.set(false);
       this.isAnyActiveChat.set(true);
     });
+
+    this.signalService.startSearch(() =>{
+      this.isFindPerson.set(true)
+    })
   }
 
   onClickLogin(){
@@ -163,7 +167,6 @@ export class MainComponent implements OnInit{
   }
 
   startFindPerson(){
-    this.isFindPerson.set(true)
     this.isFilterActivated.set(false)
 
     const filterData: SingleChatFilter = {

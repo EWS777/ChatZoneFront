@@ -146,6 +146,16 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy{
   }
 
   async ngOnInit(){
+    this.baseChatService.receiveMessage().subscribe(data =>{
+      this.messages.push(data)
+
+      requestAnimationFrame( () => {
+        if (this.isUserAtBottom) {
+          this.scrollToBottom();
+        }
+      })
+    })
+
     await this.baseChatService.startConnect()
 
     this.chatPersonInfo = await firstValueFrom(this.chatService.getChatPersonInfo())
@@ -158,16 +168,6 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy{
         this.quickMessageList = value
       },
       error: () => {}
-    })
-
-    this.baseChatService.receiveMessage().subscribe(data =>{
-      this.messages.push(data)
-
-      requestAnimationFrame( () => {
-        if (this.isUserAtBottom) {
-          this.scrollToBottom();
-        }
-      })
     })
 
     if (this.chatPersonInfo.isSingleChat){

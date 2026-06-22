@@ -25,7 +25,7 @@ export class SingleChatService extends BaseChatService{
 
   personLeftChat(result: ()=>void){
     this.hubConnection.on('LeftChat', ()=>{
-      result()
+      this.ngZone.run(() => result())
     })
   }
 
@@ -33,13 +33,20 @@ export class SingleChatService extends BaseChatService{
     this.hubConnection.off('LeftChat')
   }
 
-  startSearchSingleChat(filter: SingleChatFilter) : Promise<void>{
+  async startSearchSingleChat(filter: SingleChatFilter) : Promise<void>{
+    await this.ensureConnection()
     return this.hubConnection.invoke('StartSearchSingleChat', filter);
   }
 
   onChatCreated(result: () => void) {
     this.hubConnection.on('ChatCreated', () => {
-      result();
+      this.ngZone.run(() => result())
+    });
+  }
+
+  startSearch(result: () => void) {
+    this.hubConnection.on('QueueJoined', () => {
+      this.ngZone.run(() => result())
     });
   }
 }
