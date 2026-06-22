@@ -1,6 +1,6 @@
-import {AfterViewInit, Component, ElementRef, inject, OnDestroy, OnInit, signal, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, HostListener, inject, OnDestroy, OnInit, signal, ViewChild} from '@angular/core';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {NgClass} from '@angular/common';
+import {DatePipe, NgClass} from '@angular/common';
 import {QuickMessageService} from '../../profile/quick-messages/quick-message.service';
 import {QuickMessage} from '../../profile/quick-messages/quick-message';
 import {Router} from '@angular/router';
@@ -23,6 +23,10 @@ import {BlockedGroupMemberService} from '../blocked-group-member.service';
 import {ChatPersonInfo} from '../chat-person-info';
 import {ChatService} from '../chat.service';
 import {CommonValidator} from '../../../shared/validation/CommonValidator';
+import {MainService} from '../../main/main.service';
+import {HttpXsrfTokenExtractor} from '@angular/common/http';
+import {environment} from '../../../../environments/environment';
+import {DropdownSelectComponent} from '../../../shared/dropdown/dropdown-select.component';
 
 interface HubError {
   message?: string;
@@ -33,7 +37,9 @@ interface HubError {
   imports: [
     FormsModule,
     NgClass,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    DatePipe,
+    DropdownSelectComponent
   ],
   templateUrl: './chat.component.html',
   standalone: true,
@@ -46,6 +52,7 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy{
   groupChatService = inject(GroupChatService)
   singleChatService = inject(SingleChatService)
   baseChatService = inject(BaseChatService)
+  mainService = inject(MainService)
   private quickMessageService = inject(QuickMessageService)
   private blockedPersonService = inject(BlockedUserService)
   router = inject(Router)
@@ -58,6 +65,32 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy{
   commonErrorGetGroupMembers: string = ''
   titleError: string = ''
 
+  private tokenExtractor = inject(HttpXsrfTokenExtractor)
+
+  @HostListener('window:beforeunload')
+  unloadHandler() {
+    if (this.isShowNewFinder()){
+      const url = `${environment.apiUrl}Search/cancel`
+      const xsrfToken = this.tokenExtractor.getToken()
+
+      const headers: HeadersInit = {
+        'Content-Type': 'application/json'
+      };
+
+      if (xsrfToken) {
+        headers['X-XSRF-TOKEN'] = xsrfToken;
+      }
+
+      fetch(url, {
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify({}),
+        keepalive: true,
+        credentials: "include"
+      });
+    }
+  }
+
   messages: { idSender: number, message: string, createdAt: Date}[] = [];
   currentMessageControl = new FormControl(null, [
     CommonValidator.required,
@@ -69,19 +102,16 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy{
       CommonValidator.required,
       CommonValidator.minLength(1),
       CommonValidator.maxLength(50),
-    ])
+    ]),
+    country: new FormControl<number | null>(null),
+    city: new FormControl<number | null>(null),
+    age: new FormControl<number | null>(null),
+    lang: new FormControl<number | null>(null),
+    idGroup: new FormControl<number | null>(null),
+    isAdmin: new FormControl<boolean | null>(null),
+    personCount: new FormControl<number | null>(null)
   })
   quickMessageList: QuickMessage[] | null = null
-  group: Group = {
-    idGroup: null,
-    title: '',
-    country: null,
-    city: null,
-    age: null,
-    lang: null,
-    isAdmin: null,
-    personCount: null
-  }
   chatPersonInfo: ChatPersonInfo = {
     idPerson: null,
     idGroup: null,
@@ -100,6 +130,7 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy{
   isAdminStatusInfo = signal<boolean>(false)
   isDeleteGroupStatus = signal<boolean>(false)
   isNewAdminNotification = signal<boolean>(false)
+  isShowQuickMessages = signal<boolean>(false)
 
   filter: FindPerson = {
     connectionId: '',
@@ -147,8 +178,13 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy{
     else {
       this.chatService.getGroup(this.chatPersonInfo.idGroup!).subscribe({
         next: value => {
-          this.group = value
-          this.updateGroupForm.controls.title.setValue(this.group.title)
+          this.updateGroupForm.patchValue({
+            title: value.title,
+            country: value.country,
+            city: value.city,
+            age: value.age,
+            lang: value.lang
+          });
         },
         error: err => {
           console.log('Error', err)
@@ -157,7 +193,7 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy{
 
       this.groupChatService.setNewAdmin().subscribe(isAdmin => {
         this.isGroupMember.set(false)
-        this.group.isAdmin = isAdmin
+        this.updateGroupForm.controls.isAdmin.setValue(isAdmin)
         this.isNewAdminNotification.set(true)
       })
 
@@ -177,11 +213,13 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy{
 
       this.groupChatService.updateGroupChat().subscribe({
         next: value => {
-          this.group.title = value.title
-          this.group.country = value.country
-          this.group.city = value.city
-          this.group.age = value.age
-          this.group.lang = value.lang
+          this.updateGroupForm.patchValue({
+            title: value.title,
+            country: value.country,
+            city: value.city,
+            age: value.age,
+            lang: value.lang
+          });
         }
       })
     }
@@ -312,7 +350,7 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy{
       })
     }
     else {
-      if (!this.group.isAdmin){
+      if (!this.updateGroupForm.controls.isAdmin.value){
         this.groupMemberService.deleteFromGroup(this.chatPersonInfo.idGroup!).subscribe({
           next: async () =>{
             await this.router.navigate(['/'])
@@ -330,7 +368,7 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy{
   }
 
   deleteGroupChat(){
-    this.chatService.deleteGroup(this.group.idGroup!).subscribe({
+    this.chatService.deleteGroup(this.updateGroupForm.controls.idGroup.value!).subscribe({
       next: () => {
         this.router.navigate(['/'])
       },
@@ -375,13 +413,29 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy{
       this.updateGroupForm.markAllAsTouched()
       return
     }
-    this.group.title = this.updateGroupForm.value.title!
-    this.chatService.updateGroup(this.group).subscribe({
-      next: value=>{
-        const isAdmin = this.group.isAdmin
+    this.updateGroupForm.controls.title.setValue(this.updateGroupForm.value.title!)
+    const rawValue = this.updateGroupForm.getRawValue()
+    const payload: Group = {
+      title: rawValue.title!,
+      country: rawValue.country ? +rawValue.country : null,
+      city: rawValue.city ? +rawValue.city : null,
+      age: rawValue.age ? +rawValue.age : null,
+      lang: rawValue.lang ? +rawValue.lang : null,
+      idGroup: rawValue.idGroup ? +rawValue.idGroup : 0,
+      isAdmin: rawValue.isAdmin,
+      personCount: rawValue.personCount ? +rawValue.personCount : null
+    };
 
-        this.group = value
-        this.group.isAdmin = isAdmin
+    console.log('payload isAdmin = ', payload.isAdmin)
+
+    this.chatService.updateGroup(payload).subscribe({
+      next: value=>{
+        this.updateGroupForm.controls.title.setValue(value.title)
+        this.updateGroupForm.controls.country.setValue(value.country)
+        this.updateGroupForm.controls.city.setValue(value.city)
+        this.updateGroupForm.controls.age.setValue(value.age)
+        this.updateGroupForm.controls.lang.setValue(value.lang)
+        this.updateGroupForm.controls.isAdmin.setValue(value.isAdmin)
       },
       error: (err) => {
         if (err.status === 400 && err.error && err.error.errors) {
@@ -437,24 +491,44 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy{
     })
   }
 
-  protected readonly CountryList = CountryList;
-  protected readonly CityList = CityList;
-  protected readonly AgeList = AgeList;
-  protected readonly LangList = LangList;
+  countryList = this.enumToKeyValue(CountryList);
+  cityList = this.enumToKeyValue(CityList);
+  ageList = this.enumToKeyValue(AgeList);
+  langList = this.enumToKeyValue(LangList);
 
-  countryList = Object.keys(CountryList)
-    .filter(k => isNaN(Number(k)))
-    .map(name => ({label: name, value: CountryList[name as keyof typeof CountryList]}))
+  private enumToKeyValue(enumObj: any) {
+    return Object.keys(enumObj)
+      .filter(k => isNaN(Number(k)))
+      .map(name => ({ label: name, value: enumObj[name] }))
+      .filter(item => item.value !== 0);
+  }
+  isMessageGrouped(currentIndex: number): boolean {
+    if (currentIndex === 0) return false;
 
-  cityList = Object.keys(CityList)
-    .filter(k => isNaN(Number(k)))
-    .map(name => ({ label: name, value: CityList[name as keyof typeof CityList]}))
+    const currentMsg = this.messages[currentIndex];
+    const prevMsg = this.messages[currentIndex - 1];
 
-  ageList = Object.keys(AgeList)
-    .filter(k => isNaN(Number(k)))
-    .map(name => ({ label: name, value: AgeList[name as keyof typeof AgeList]}))
+    if (currentMsg.idSender !== prevMsg.idSender) {
+      return false;
+    }
 
-  langList = Object.keys(LangList)
-    .filter(k => isNaN(Number(k)))
-    .map(name => ({ label: name, value: LangList[name as keyof typeof LangList]}))
+    const currentDate = new Date(currentMsg.createdAt);
+    const prevDate = new Date(prevMsg.createdAt);
+
+    const isSameHour = currentDate.getHours() === prevDate.getHours();
+    const isSameMinute = currentDate.getMinutes() === prevDate.getMinutes();
+
+    return isSameHour && isSameMinute;
+  }
+
+  cancelFindPerson(){
+    this.mainService.cancelFindPerson().subscribe({
+      next: () => {
+        this.router.navigate(['/'])
+      },
+      error: err => {
+        console.error('Error', err)
+      }
+    })
+  }
 }
