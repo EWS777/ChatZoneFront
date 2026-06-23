@@ -3,7 +3,7 @@
     <div class="w-[120px] shrink-0 my-auto">
       ChatZone
     </div>
-    <div class=""> @if (authService.isAuthenticatedValue){
+    <div class=""> @if (authService.isAuthenticated()){
       <div class="relative w-6 h-6 md:hidden">
         <button (click)="isMenuOpen.set(!isMenuOpen())" class="relative flex flex-col justify-center items-center w-6 h-6 focus:outline-none z-50">
           <span class="block absolute h-0.5 w-6 bg-white rounded-full transition-all duration-300 ease-in-out" [class.rotate-45]="isMenuOpen()" [class.-translate-y-2]="!isMenuOpen()"></span>
