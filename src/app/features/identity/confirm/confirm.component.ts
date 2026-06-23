@@ -22,6 +22,7 @@ export class ConfirmComponent implements OnInit{
   successMessage = signal<string>('')
 
   isConfirmed = signal<boolean | null>(null)
+  isEmailConfirmed = signal<boolean | null>(null)
   confirmEmailForm = new FormGroup({
     email: new FormControl<string | null>(null, {validators: [
         Validators.email,
@@ -37,8 +38,7 @@ export class ConfirmComponent implements OnInit{
     if (token){
       this.confirmService.confirm(token).subscribe({
         next: () => {
-          this.isConfirmed.set(true)
-          this.router.navigate([''])
+          this.isEmailConfirmed.set(true)
         },
         error: (err) => {
           this.isConfirmed.set(false)

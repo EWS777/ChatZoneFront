@@ -1,57 +1,5 @@
 <div class="h-[100dvh] flex justify-center items-center">
-  @if (!isConfirmed()) {
-    <div class="border-out px-2 py-4 md:p-10 mx-auto">
-      <div class="border-in px-4 pt-10 pb-5 md:px-5 w-[338px] md:w-[390px] md:max-w-full text-center">
-        <p class="text-2xl lg:text-3xl mt-5 uppercase">Email is not confirmed?</p>
-        <div class="max-w-[210px] md:max-w-[270px] lg:max-w-[350px] text-[#B4B4B4] text-sm md:text-base mt-2.5 md:mt-5 lg:mt-6 mx-auto">
-          No worries! Enter your email address to confirm your email again.
-        </div>
-        <form [formGroup]="confirmEmailForm" (ngSubmit)="reconfirm()" class="mt-6">
-          @if (commonError) {
-            <div class="common-backend-error">{{ commonError }}</div>
-          }
-          <label class="input-auth-name text-left">Email</label>
-          <div class="border-input" [class.border-input-error]="confirmEmailForm.controls.email.invalid && confirmEmailForm.controls.email.touched">
-            <svg class="input-icon" fill="none" viewBox="0 0 16 16">
-              <path d="M2.66665 2.6665H13.3333C14.0666 2.6665 14.6666 3.2665 14.6666 3.99984V11.9998C14.6666 12.7332 14.0666 13.3332 13.3333 13.3332H2.66665C1.93331 13.3332 1.33331 12.7332 1.33331 11.9998V3.99984C1.33331 3.2665 1.93331 2.6665 2.66665 2.6665Z" stroke="currentColor" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M14.6666 4L7.99998 8.66667L1.33331 4" stroke="currentColor" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round" />
-            </svg>
-            <input
-              [class.text-[#EA4550]]="confirmEmailForm.controls.email.invalid && confirmEmailForm.controls.email.touched"
-              [class.placeholder:text-[#EA4550]]="confirmEmailForm.controls.email.invalid && confirmEmailForm.controls.email.touched"
-              class="input-text" formControlName="email" type="email" placeholder="Enter your email">
-          </div>
-          @if (confirmEmailForm.controls.email.invalid && confirmEmailForm.controls.email.touched) {
-            <div class="text-left">
-              @if (confirmEmailForm.controls.email.hasError('email')) {
-                <small class="error-input-text">Email is not valid</small>
-              }
-              @if (confirmEmailForm.controls.email.errors?.["required"]) {
-                <small class="error-input-text">email is required</small>
-              }
-              @if (confirmEmailForm.controls.email.errors?.["minLength"]) {
-                <small class="error-input-text">Min length is 5</small>
-              }
-              @if (confirmEmailForm.controls.email.errors?.["maxLength"]) {
-                <small class="error-input-text">Max length is 254</small>
-              }
-              @if (confirmEmailForm.controls.email.errors?.["spaces"]) {
-                <small class="error-input-text">Can not contains spaces</small>
-              }
-            </div>
-          }
-          @if (confirmEmailForm.controls.email.errors?.['backend']; as backendErrors) {
-            @for (err of backendErrors; track err) {
-              <small class="error-input-text" >{{ err }}</small>
-            }
-          }
-          <button type="submit" [disabled]="confirmEmailForm.invalid" class="login-button blue-background-button mt-6 md:mt-8 lg:mt-14">
-            Confirm email
-          </button>
-        </form>
-      </div>
-    </div>
-  } @else {
+  @if (isEmailConfirmed()){
     <div class="border-out px-2 py-4 md:p-10 mx-auto">
       <div class="border-in px-4 pt-10 pb-5 md:px-5 w-[338px] md:w-[390px] md:max-w-full text-center">
         <svg class="mx-auto" width="70" height="70" viewBox="0 0 70 70" fill="none">
@@ -59,16 +7,88 @@
           <path d="M64.1667 11.667L35 40.8628L26.25 32.1128" stroke="#3AC556" stroke-width="5.83333" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
         <div class="text-2xl md:text-xl lg:text-3xl mt-5 md:mt-10">
-          Link was sent<br>successfully!
+          Email was confirmed<br>successfully!
         </div>
         <div class="text-[#5AD5A1] text-sm lg:text-base mt-2.5 md:mt-6 mb-11 md:mb-14">
-          Go to your email to confirm<br>
-          your email again.
+          Please go to log in page
         </div>
-        <button [routerLink]="['/']" class="login-button blue-background-button">
+        <button [routerLink]="['/login']" class="login-button blue-background-button">
           Great! 🎉
         </button>
       </div>
     </div>
+  } @else {
+    @if (!isConfirmed()) {
+      <div class="border-out px-2 py-4 md:p-10 mx-auto">
+        <div class="border-in px-4 pt-10 pb-5 md:px-5 w-[338px] md:w-[390px] md:max-w-full text-center">
+          <p class="text-2xl lg:text-3xl mt-5 uppercase">Email is not confirmed?</p>
+          <div class="max-w-[210px] md:max-w-[270px] lg:max-w-[350px] text-[#B4B4B4] text-sm md:text-base mt-2.5 md:mt-5 lg:mt-6 mx-auto">
+            No worries! Enter your email address to confirm your email again.
+          </div>
+          <form [formGroup]="confirmEmailForm" (ngSubmit)="reconfirm()" class="mt-6">
+            @if (commonError) {
+              <div class="common-backend-error">{{ commonError }}</div>
+            }
+            <label class="input-auth-name text-left">Email</label>
+            <div class="border-input" [class.border-input-error]="confirmEmailForm.controls.email.invalid && confirmEmailForm.controls.email.touched">
+              <svg class="input-icon" fill="none" viewBox="0 0 16 16">
+                <path d="M2.66665 2.6665H13.3333C14.0666 2.6665 14.6666 3.2665 14.6666 3.99984V11.9998C14.6666 12.7332 14.0666 13.3332 13.3333 13.3332H2.66665C1.93331 13.3332 1.33331 12.7332 1.33331 11.9998V3.99984C1.33331 3.2665 1.93331 2.6665 2.66665 2.6665Z" stroke="currentColor" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M14.6666 4L7.99998 8.66667L1.33331 4" stroke="currentColor" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+              <input
+                [class.text-[#EA4550]]="confirmEmailForm.controls.email.invalid && confirmEmailForm.controls.email.touched"
+                [class.placeholder:text-[#EA4550]]="confirmEmailForm.controls.email.invalid && confirmEmailForm.controls.email.touched"
+                class="input-text" formControlName="email" type="email" placeholder="Enter your email">
+            </div>
+            @if (confirmEmailForm.controls.email.invalid && confirmEmailForm.controls.email.touched) {
+              <div class="text-left">
+                @if (confirmEmailForm.controls.email.hasError('email')) {
+                  <small class="error-input-text">Email is not valid</small>
+                }
+                @if (confirmEmailForm.controls.email.errors?.["required"]) {
+                  <small class="error-input-text">email is required</small>
+                }
+                @if (confirmEmailForm.controls.email.errors?.["minLength"]) {
+                  <small class="error-input-text">Min length is 5</small>
+                }
+                @if (confirmEmailForm.controls.email.errors?.["maxLength"]) {
+                  <small class="error-input-text">Max length is 254</small>
+                }
+                @if (confirmEmailForm.controls.email.errors?.["spaces"]) {
+                  <small class="error-input-text">Can not contains spaces</small>
+                }
+              </div>
+            }
+            @if (confirmEmailForm.controls.email.errors?.['backend']; as backendErrors) {
+              @for (err of backendErrors; track err) {
+                <small class="error-input-text" >{{ err }}</small>
+              }
+            }
+            <button type="submit" [disabled]="confirmEmailForm.invalid" class="login-button blue-background-button mt-6 md:mt-8 lg:mt-14">
+              Confirm email
+            </button>
+          </form>
+        </div>
+      </div>
+    } @else {
+      <div class="border-out px-2 py-4 md:p-10 mx-auto">
+        <div class="border-in px-4 pt-10 pb-5 md:px-5 w-[338px] md:w-[390px] md:max-w-full text-center">
+          <svg class="mx-auto" width="70" height="70" viewBox="0 0 70 70" fill="none">
+            <path d="M64.1666 32.3164V34.9998C64.163 41.2893 62.1264 47.4092 58.3605 52.4468C54.5946 57.4843 49.3012 61.1695 43.2697 62.9528C37.2383 64.7361 30.7919 64.522 24.8921 62.3423C18.9923 60.1626 13.9552 56.1342 10.5319 50.8579C7.10861 45.5815 5.48264 39.34 5.89648 33.064C6.31031 26.7881 8.74177 20.8141 12.8282 16.0329C16.9147 11.2517 22.4372 7.91963 28.5721 6.53353C34.7071 5.14742 41.1257 5.78158 46.8708 8.34144" stroke="#3AC556" stroke-width="5.83333" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M64.1667 11.667L35 40.8628L26.25 32.1128" stroke="#3AC556" stroke-width="5.83333" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <div class="text-2xl md:text-xl lg:text-3xl mt-5 md:mt-10">
+            Link was sent<br>successfully!
+          </div>
+          <div class="text-[#5AD5A1] text-sm lg:text-base mt-2.5 md:mt-6 mb-11 md:mb-14">
+            Go to your email to confirm<br>
+            your email again.
+          </div>
+          <button [routerLink]="['/']" class="login-button blue-background-button">
+            Great! 🎉
+          </button>
+        </div>
+      </div>
+    }
   }
 </div>
