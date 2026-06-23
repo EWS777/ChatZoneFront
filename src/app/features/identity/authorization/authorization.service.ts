@@ -29,17 +29,9 @@ export class AuthorizationService {
     )
   }
 
-  get isAuthenticatedValue(): boolean {
-    return this.authState.value;
-  }
-
   isAuthenticated()
   {
     return this.authState.asObservable();
-  }
-
-  clearAuth(){
-    this.authState.next(false)
   }
 
   postLogin(payload: {usernameOrEmail: string, Password: string}){
