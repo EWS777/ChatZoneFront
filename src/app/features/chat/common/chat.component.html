@@ -19,7 +19,7 @@
     </button>
 
     <div class="fixed inset-0 z-40 transition-all duration-300 ease-in-out md:bg-transparent md:backdrop-blur-none md:pointer-events-none" [ngClass]="isShowQuickMessages() ? 'opacity-100 bg-[#1111114D] backdrop-blur-xs pointer-events-auto' : 'opacity-0 bg-transparent backdrop-blur-none pointer-events-none md:opacity-100'">
-      <div class="absolute w-max grid gap-6 md:gap-11 md:grid-cols-3 left-1/2 bottom-[25%] md:bottom-[12%] rounded-[10px] px-10 py-20 md:p-0 transition-all duration-300 ease-in-out md:pointer-events-auto md:translate-y-0 md:scale-100" [ngClass]="isShowQuickMessages() ? '-translate-x-1/2 translate-y-0 scale-100' : '-translate-x-1/2 translate-y-8 scale-95'">
+      <div class="absolute w-max flex flex-wrap justify-center flex-col md:flex-row gap-6 md:gap-11 left-1/2 bottom-[25%] md:bottom-[12%] rounded-[10px] px-10 py-20 md:p-0 transition-all duration-300 ease-in-out md:pointer-events-auto md:translate-y-0 md:scale-100" [ngClass]="isShowQuickMessages() ? '-translate-x-1/2 translate-y-0 scale-100' : '-translate-x-1/2 translate-y-8 scale-95'">
         @for (quickMessage of quickMessageList; track quickMessage.idQuickMessage) {
           <button class="quick-message-border text-center text-[10px] px-3 py-2 h-20 w-[180px] break-words lg:text-sm lg:w-[200px]" (click)="sendQuickMessage(quickMessage.message)">
             {{ quickMessage.message }}
