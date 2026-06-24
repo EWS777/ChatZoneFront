@@ -69,14 +69,12 @@
         </div>
       }
     }
-    <div class="border-buttons h-full flex items-center max-w-[1000px] w-full">
-      <input [formControl]="currentMessageControl" class="placeholder:text-[#FFFFFF33] outline-0 text-xs px-5 w-full h-full" type="text" placeholder="Type here">
+    <div class="flex flex-col h-full max-w-[1000px] w-full relative">
+      <div class="border-buttons flex items-center h-full">
+        <input [formControl]="currentMessageControl" class="placeholder:text-[#FFFFFF33] outline-0 text-xs px-5 w-full h-full" type="text" placeholder="Type here">
+      </div>
       @if (currentMessageControl.invalid && currentMessageControl.touched) {
-        <div>
-          @if (currentMessageControl.hasError('required')) {<small>Message is required</small>}
-          @if (currentMessageControl.hasError('minLength')) {<small>Min length is {{ currentMessageControl.errors?.['minLength'].requiredLength }}</small>}
-          @if (currentMessageControl.hasError('maxLength')) {<small>Max length is {{ currentMessageControl.errors?.['maxLength'].requiredLength }}</small>}
-        </div>
+        @if (currentMessageControl.hasError('maxLength')) {<small class="absolute top-[-70%] error-input-text">Max length is {{ currentMessageControl.errors?.['maxLength'].requiredLength }}</small>}
       }
     </div>
     <button (click)="sendMessage()" class="button-send text-xs py-3 px-5 md:py-2.5 md:px-9 md:text-sm lg:text-base">
