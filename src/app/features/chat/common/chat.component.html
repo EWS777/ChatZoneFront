@@ -1,21 +1,23 @@
 <div class="flex flex-col h-[100dvh] max-w-[1000px] mx-auto">
   <div class="flex w-full justify-between mx-auto px-8 mt-5 md:mt-10 lg:mt-8 pb-2">
-    <button (click)="isOtherPersonLeft() ? router.navigate(['/']) : changeIsDisconnectStatus('exit')" type="button" class="flex items-center justify-center p-0 bg-transparent border-0 cursor-pointer my-auto focus:outline-none">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#B4B4B4">
-        <path d="M9 14L4 9L9 4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        <path d="M22.5 16C22.5 15 23.5 9 16.1757 9H4.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <button (click)="isOtherPersonLeft() ? router.navigate(['/']) : changeIsDisconnectStatus('exit')" class="flex items-center justify-center p-0 bg-transparent border-0 cursor-pointer my-auto focus:outline-none" type="button">
+      <svg fill="none" height="24" stroke="#B4B4B4" viewBox="0 0 24 24" width="24">
+        <path d="M9 14L4 9L9 4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+        <path d="M22.5 16C22.5 15 23.5 9 16.1757 9H4.5" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
       </svg>
     </button>
     @if (chatPersonInfo.isSingleChat || (!chatPersonInfo.isSingleChat && updateGroupForm.controls.isAdmin.value)) {
       <button (click)="isActivateSettings.set(!isActivateSettings())" type="button" class="flex items-center justify-center p-0 bg-transparent border-0 cursor-pointer my-auto focus:outline-none">
-        <svg width="24" height="24" viewBox="0 0 24 24"><path fill="none" stroke="#B4B4B4" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7.05 6.462a2 2 0 0 0 2.63-1.519l.32-1.72a9 9 0 0 1 3.998 0l.322 1.72a2 2 0 0 0 2.63 1.519l1.649-.58a9 9 0 0 1 2.001 3.46l-1.33 1.14a2 2 0 0 0 0 3.037l1.33 1.139a9 9 0 0 1-2.001 3.46l-1.65-.58a2 2 0 0 0-2.63 1.519L14 20.777a9 9 0 0 1-3.998 0l-.322-1.72a2 2 0 0 0-2.63-1.519l-1.649.58a9 9 0 0 1-2.001-3.46l1.33-1.14a2 2 0 0 0 0-3.036L3.4 9.342a9 9 0 0 1 2-3.46zM12 9a3 3 0 1 1 0 6a3 3 0 0 1 0-6" clip-rule="evenodd"/></svg>
+        <svg width="24" height="24" viewBox="0 0 24 24">
+          <path fill="none" stroke="#B4B4B4" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7.05 6.462a2 2 0 0 0 2.63-1.519l.32-1.72a9 9 0 0 1 3.998 0l.322 1.72a2 2 0 0 0 2.63 1.519l1.649-.58a9 9 0 0 1 2.001 3.46l-1.33 1.14a2 2 0 0 0 0 3.037l1.33 1.139a9 9 0 0 1-2.001 3.46l-1.65-.58a2 2 0 0 0-2.63 1.519L14 20.777a9 9 0 0 1-3.998 0l-.322-1.72a2 2 0 0 0-2.63-1.519l-1.649.58a9 9 0 0 1-2.001-3.46l1.33-1.14a2 2 0 0 0 0-3.036L3.4 9.342a9 9 0 0 1 2-3.46zM12 9a3 3 0 1 1 0 6a3 3 0 0 1 0-6" clip-rule="evenodd"/>
+        </svg>
       </button>
     }
   </div>
 
   @if (!chatPersonInfo.isSentMessage) {
     <button class="md:hidden text-xs quick-message-border py-2 px-5 w-fit absolute z-50 bottom-[12%] left-1/2 -translate-x-1/2" (click)="isShowQuickMessages.set(!isShowQuickMessages())">
-      @if (!isShowQuickMessages()){
+      @if (!isShowQuickMessages()) {
         Quick messages
       } @else {
         Close
@@ -33,20 +35,19 @@
     </div>
   }
 
-  <div class="relative px-2 min-[500px]:px-6 md:px-10 max-h-[80vh] overflow-y-auto no-scrollbar mb-5" #chatContainer (scroll)="onScroll()">
+  <div #chatContainer (scroll)="onScroll()" class="relative px-2 min-[500px]:px-6 md:px-10 max-h-[80vh] overflow-y-auto no-scrollbar mb-5">
     <ul class="flex flex-col">
       @for (msg of messages; track $index) {
-        <li class="text-white text-sm max-w-[80%] md:max-w-[60%] relative"
-            [ngClass]="{
+        <li class="text-white text-sm max-w-[80%] md:max-w-[60%] relative" [ngClass]="{
             'mine-message': msg.idSender === chatPersonInfo.idPerson,
             'another-message': msg.idSender !== chatPersonInfo.idPerson,
             'mt-[6px]': isMessageGrouped($index),
             'mt-3': !isMessageGrouped($index) && $index !== 0
             }">
-          <span class="break-words">{{msg.message}}</span>
+          <span class="break-words">{{ msg.message }}</span>
           <span class="inline-block w-8 h-1">&#8203;</span>
           <span class="absolute bottom-2 right-3 select-none text-[10px] opacity-50 whitespace-nowrap">
-            {{msg.createdAt | date:'HH:mm'}}
+            {{ msg.createdAt | date:'HH:mm' }}
         </span>
         </li>
       }
@@ -60,13 +61,13 @@
   </div>
 
   <div class="flex justify-center items-center px-2 min-[500px]:px-6 md:px-10 lg:px-12 gap-3 md:gap-5 h-10 mt-auto mb-10">
-    @if (chatPersonInfo.isSingleChat){
-      @if (isDisconnect() === null){
+    @if (chatPersonInfo.isSingleChat) {
+      @if (isDisconnect() === null) {
         <button (click)="changeIsDisconnectStatus('skip')" class="border-buttons text-xs py-3 px-5 md:py-2.5 md:px-9 md:text-sm lg:text-base">
           Skip
         </button>
       }
-      @if (isDisconnect() === 'skip'){
+      @if (isDisconnect() === 'skip') {
         <div class="grid grid-cols-2 gap-2 h-full text-xs w-20 shrink-0 md:w-[130px] md:text-sm lg:text-base">
           <button class="border-buttons" (click)="exitChat(false)">Yes</button>
           <button class="button-send" (click)="changeIsDisconnectStatus(null)">No</button>
@@ -75,10 +76,12 @@
     }
     <div class="flex flex-col h-full max-w-[1000px] w-full relative">
       <div class="border-buttons flex items-center h-full">
-        <input [formControl]="currentMessageControl" class="placeholder:text-[#FFFFFF33] outline-0 text-xs px-5 w-full h-full" type="text" placeholder="Type here">
+        <input [formControl]="currentMessageControl" class="placeholder:text-[#FFFFFF33] outline-0 text-xs px-5 w-full h-full" placeholder="Type here" type="text">
       </div>
       @if (currentMessageControl.invalid && currentMessageControl.touched) {
-        @if (currentMessageControl.hasError('maxLength')) {<small class="absolute top-[-70%] error-input-text">Max length is {{ currentMessageControl.errors?.['maxLength'].requiredLength }}</small>}
+        @if (currentMessageControl.hasError('maxLength')) {
+          <small class="absolute top-[-70%] error-input-text">Max length is {{ currentMessageControl.errors?.['maxLength'].requiredLength }}</small>
+        }
       }
     </div>
     <button (click)="sendMessage()" class="button-send text-xs py-3 px-5 md:py-2.5 md:px-9 md:text-sm lg:text-base">
@@ -87,7 +90,7 @@
   </div>
 </div>
 
-@if (isDisconnect() === 'exit'){
+@if (isDisconnect() === 'exit') {
   <div class="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-xs bg-black/10 transition-all duration-300">
     <div class="border-out px-2 py-4 md:p-5 mx-auto">
       <div class="border-in px-4 pt-10 pb-5 md:px-5 w-[338px] md:w-[390px] text-center">
@@ -103,7 +106,7 @@
   </div>
 }
 
-@if (isPersonBlocked()){
+@if (isPersonBlocked()) {
   <div class="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-xs bg-black/10 transition-all duration-300">
     <div class="border-out px-2 py-4 md:p-5 mx-auto">
       <div class="border-in px-4 pt-10 pb-5 md:px-5 w-[338px] md:w-[390px] text-center">
@@ -116,7 +119,7 @@
   </div>
 }
 
-@if(isNewAdminNotification() && updateGroupForm.controls.isAdmin.value){
+@if (isNewAdminNotification() && updateGroupForm.controls.isAdmin.value) {
   <div class="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-xs bg-black/10 transition-all duration-300">
     <div class="border-out px-2 py-4 md:p-5 mx-auto">
       <div class="border-in px-4 pt-10 pb-5 md:px-5 w-[338px] md:w-[390px] text-center">
@@ -143,7 +146,7 @@
   </div>
 }
 
-@if (isShowNewFinder()){
+@if (isShowNewFinder()) {
   <div class="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-xs bg-black/10 transition-all duration-300">
     <div class="border-out px-2 py-4 md:p-5 mx-auto">
       <div class="border-in px-4 pt-10 pb-5 md:px-5 w-[338px] md:w-[390px] text-center">
@@ -166,7 +169,7 @@
   </div>
 }
 
-@if (isAdminStatusInfo()){
+@if (isAdminStatusInfo()) {
   <div class="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-xs bg-black/10 transition-all duration-300">
     <div class="border-out px-2 py-4 md:p-5 mx-auto">
       <div class="border-in px-4 pt-10 pb-5 md:px-5 w-[338px] md:w-[390px] text-center">
@@ -182,7 +185,7 @@
   </div>
 }
 
-@if (isActivateSettings()){
+@if (isActivateSettings()) {
   <div class="fixed inset-0 z-50 flex items-center flex-col justify-center backdrop-blur-xs bg-black/10 transition-all duration-300 px-4">
     @if (!chatPersonInfo.isSingleChat && updateGroupForm.controls.isAdmin.value) {
       <div class="flex justify-between w-full max-w-[600px] lg:max-w-[800px] mb-4">
@@ -200,7 +203,7 @@
     <div class="border-out px-2 py-4 md:p-10 mx-auto w-full max-w-[600px] lg:max-w-[800px]">
       <div class="border-in px-4 pb-5 md:px-5 text-center pt-4 md:pt-10">
 
-        @if (chatPersonInfo.isSingleChat){
+        @if (chatPersonInfo.isSingleChat) {
           <div class="text-2xl lg:text-3xl">
             Do you want to block person?
           </div>
@@ -223,10 +226,9 @@
               <div>
                 <label class="input-auth-name">Title</label>
                 <div class="border-input" [class.border-input-error]="updateGroupForm.controls.title.invalid && updateGroupForm.controls.title.touched">
-                  <input
-                    [class.text-[#EA4550]]="updateGroupForm.controls.title.invalid && updateGroupForm.controls.title.touched"
-                    [class.placeholder:text-[#EA4550]]="updateGroupForm.controls.title.invalid && updateGroupForm.controls.title.touched"
-                    class="input-text" formControlName="title" type="text" placeholder="Enter title">
+                  <input [class.text-[#EA4550]]="updateGroupForm.controls.title.invalid && updateGroupForm.controls.title.touched"
+                         [class.placeholder:text-[#EA4550]]="updateGroupForm.controls.title.invalid && updateGroupForm.controls.title.touched"
+                         class="input-text" formControlName="title" type="text" placeholder="Enter title">
                 </div>
                 @if (updateGroupForm.controls.title.touched && updateGroupForm.controls.title.invalid) {
                   <div>
@@ -294,7 +296,7 @@
   </div>
 }
 
-@if (isGroupMember()){
+@if (isGroupMember()) {
   <div class="fixed flex-col inset-0 z-50 flex items-center justify-center backdrop-blur-xs bg-black/10 transition-all duration-300 px-4">
     <div class="w-full max-w-[600px] lg:max-w-[800px] mb-4">
       <button class="text-[#B4B4B4] flex gap-2 justify-center hover:text-[#C9C9C9] transition-colors duration-200 my-auto" (click)="isGroupMember.set(false)">
@@ -309,20 +311,20 @@
         <div class="text-xl lg:text-2xl">
           List of group members
         </div>
-        @if (commonErrorBlockGroupMember){
-          <div class="common-backend-error">{{commonErrorBlockGroupMember}}</div>
+        @if (commonErrorBlockGroupMember) {
+          <div class="common-backend-error">{{ commonErrorBlockGroupMember }}</div>
         }
-        @if (commonErrorSetNewAdmin){
-          <div class="common-backend-error">{{commonErrorSetNewAdmin}}</div>
+        @if (commonErrorSetNewAdmin) {
+          <div class="common-backend-error">{{ commonErrorSetNewAdmin }}</div>
         }
-        @if (commonErrorGetGroupMembers){
-          <div class="common-backend-error">{{commonErrorGetGroupMembers}}</div>
+        @if (commonErrorGetGroupMembers) {
+          <div class="common-backend-error">{{ commonErrorGetGroupMembers }}</div>
         }
         <div class="grid gap-5 mt-6">
           @for (members of groupMembers; track members.idPerson) {
             <div class="flex flex-col md:flex-row md:justify-between md:items-center bg-[#21262d] border border-gray-800 md:pl-8 rounded-2xl p-4 gap-2 w-full min-w-0 md:gap-0 lg:bg-transparent lg:border-0 border-profile-desktop">
               <div class="text-base w-full md:w-auto md:flex-1 md:min-w-0 truncate md:text-left" [title]="members.idPerson">
-                {{members.username}}
+                {{ members.username }}
               </div>
               <div class="flex justify-between items-center md:gap-5">
                 <button class="text-[#B4B4B4] text-sm md:text-base" (click)="setNewAdmin(members.idPerson)">Set admin</button>

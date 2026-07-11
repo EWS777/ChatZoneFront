@@ -1,7 +1,7 @@
 <div class="h-[100dvh] flex justify-center items-center">
   <div class="border-out px-2 py-4 md:p-10 mx-auto">
     <div class="border-in px-4 pt-10 pb-5 md:px-5 w-[338px] md:w-[390px] md:max-w-full lg:w-[500px] text-center">
-      @if (!isDeleteProfile()){
+      @if (!isDeleteProfile()) {
         <p class="text-2xl lg:text-3xl mt-5 uppercase">Do you want to delete<br>
           your profile?</p>
         <div class="text-[#B4B4B4] text-sm md:text-base mt-2.5 md:mt-5 lg:mt-6 mx-auto">
@@ -23,11 +23,11 @@
                 @if (!hidePassword()) {
                   <svg class="w-4 h-4 shrink-0 my-auto text-[#494A4E]" fill="none" viewBox="0 0 16 16">
                     <path d="M0.666748 7.99984C0.666748 7.99984 3.33341 2.6665 8.00008 2.6665C12.6667 2.6665 15.3334 7.99984 15.3334 7.99984C15.3334 7.99984 12.6667 13.3332 8.00008 13.3332C3.33341 13.3332 0.666748 7.99984 0.666748 7.99984Z" stroke="currentColor" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M8 10C9.10457 10 10 9.10457 10 8C10 6.89543 9.10457 6 8 6C6.89543 6 6 6.89543 6 8C6 9.10457 6.89543 10 8 10Z" stroke="currentColor" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M8 10C9.10457 10 10 9.10457 10 8C10 6.89543 9.10457 6 8 6C6.89543 6 6 6.89543 6 8C6 9.10457 6.89543 10 8 10Z" stroke="currentColor" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round"/>
                   </svg>
                 } @else {
                   <svg class="w-4 h-4 shrink-0 my-auto text-[#494A4E]" fill="none" viewBox="0 0 16 16">
-                    <path d="M11.96 11.9599C10.8204 12.8285 9.4327 13.3098 7.99996 13.3332C3.33329 13.3332 0.666626 7.99985 0.666626 7.99985C1.49589 6.45445 2.64605 5.10426 4.03996 4.03985M6.59996 2.82652C7.05885 2.71911 7.52867 2.66652 7.99996 2.66652C12.6666 2.66652 15.3333 7.99985 15.3333 7.99985C14.9286 8.75693 14.446 9.46968 13.8933 10.1265M9.41329 9.41319C9.23019 9.60969 9.00939 9.76729 8.76406 9.8766C8.51873 9.98591 8.25389 10.0447 7.98535 10.0494C7.71681 10.0542 7.45007 10.0048 7.20103 9.90418C6.952 9.80359 6.72577 9.65387 6.53586 9.46396C6.34594 9.27404 6.19622 9.04782 6.09563 8.79878C5.99504 8.54975 5.94564 8.283 5.95038 8.01446C5.95512 7.74592 6.0139 7.48108 6.12321 7.23575C6.23252 6.99042 6.39013 6.76962 6.58663 6.58652" stroke="currentColor" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M11.96 11.9599C10.8204 12.8285 9.4327 13.3098 7.99996 13.3332C3.33329 13.3332 0.666626 7.99985 0.666626 7.99985C1.49589 6.45445 2.64605 5.10426 4.03996 4.03985M6.59996 2.82652C7.05885 2.71911 7.52867 2.66652 7.99996 2.66652C12.6666 2.66652 15.3333 7.99985 15.3333 7.99985C14.9286 8.75693 14.446 9.46968 13.8933 10.1265M9.41329 9.41319C9.23019 9.60969 9.00939 9.76729 8.76406 9.8766C8.51873 9.98591 8.25389 10.0447 7.98535 10.0494C7.71681 10.0542 7.45007 10.0048 7.20103 9.90418C6.952 9.80359 6.72577 9.65387 6.53586 9.46396C6.34594 9.27404 6.19622 9.04782 6.09563 8.79878C5.99504 8.54975 5.94564 8.283 5.95038 8.01446C5.95512 7.74592 6.0139 7.48108 6.12321 7.23575C6.23252 6.99042 6.39013 6.76962 6.58663 6.58652" stroke="currentColor" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round"/>
                     <path d="M0.666626 0.666504L15.3333 15.3332" stroke="currentColor" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round"/>
                   </svg>
                 }
@@ -59,7 +59,7 @@
               <a class="underline" [routerLink]="['/reset-password']">Click here</a>
             </div>
             <button class="login-button blue-background-button" type="submit" [disabled]="isLoading() || deleteProfileForm.invalid">
-              @if (isLoading()){
+              @if (isLoading()) {
                 <div class="w-6 h-6 my-auto mx-auto">
                   <svg class="animate-spin" width="24" height="24" viewBox="0 0 24 24" fill="none">
                     <path d="M12 2V6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>

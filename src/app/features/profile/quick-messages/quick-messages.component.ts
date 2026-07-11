@@ -1,12 +1,12 @@
-import {Component, inject, OnInit, signal} from '@angular/core';
-import {QuickMessageService} from './quick-message.service';
-import {QuickMessage} from './quick-message';
-import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {map} from 'rxjs';
-import {CommonValidator} from '../../../shared/validation/CommonValidator';
-import {AuthorizationService} from '../../identity/authorization/authorization.service';
-import {RouterLink} from '@angular/router';
-import {MENU_ITEMS} from '../../../shared/profile-side-bar/profile-side-bar.component';
+import { Component, inject, OnInit, signal } from '@angular/core';
+import { QuickMessageService } from './quick-message.service';
+import { QuickMessage } from './quick-message';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { map } from 'rxjs';
+import { CommonValidator } from '../../../shared/validation/CommonValidator';
+import { AuthorizationService } from '../../identity/authorization/authorization.service';
+import { RouterLink } from '@angular/router';
+import { MENU_ITEMS } from '../../../shared/profile-side-bar/profile-side-bar.component';
 
 @Component({
   selector: 'app-quick-messages',
@@ -19,17 +19,15 @@ import {MENU_ITEMS} from '../../../shared/profile-side-bar/profile-side-bar.comp
   standalone: true,
   styleUrl: './quick-messages.component.css'
 })
-export class QuickMessagesComponent implements OnInit{
+export class QuickMessagesComponent implements OnInit {
   quickMessageService = inject(QuickMessageService)
   authService = inject(AuthorizationService);
-
   quickMessageList: QuickMessage[] | null = null
   quickMessage: QuickMessage = { idQuickMessage: 0, message: '' };
   isCreateOn = signal<boolean>(false)
   isCreateFirstQuickMessage = signal<boolean>(false)
   isMenuOpen = signal<boolean>(false)
   commonError: string = ''
-
   messageForm = new FormGroup({
     message: new FormControl(null, [
       CommonValidator.required,
@@ -38,9 +36,10 @@ export class QuickMessagesComponent implements OnInit{
       CommonValidator.noWhitespace, // just for required
     ])
   })
+  protected readonly MENU_ITEMS = MENU_ITEMS;
 
   changeStatus() {
-    if (this.quickMessageList && this.quickMessageList.length >=3){
+    if (this.quickMessageList && this.quickMessageList.length >= 3) {
       this.isCreateFirstQuickMessage.set(true)
       this.commonError = 'You cannot create more than 3 messages!'
       return
@@ -48,11 +47,12 @@ export class QuickMessagesComponent implements OnInit{
     this.isCreateOn.update(x => !x)
     this.isCreateFirstQuickMessage.set(true)
   }
+
   ngOnInit() {
     this.quickMessageService.getQuickMessages().subscribe({
       next: value => {
         this.quickMessageList = value
-        if (this.quickMessageList && this.quickMessageList.length ==3){
+        if (this.quickMessageList && this.quickMessageList.length == 3) {
           this.isCreateFirstQuickMessage.set(true)
         }
       },
@@ -60,14 +60,14 @@ export class QuickMessagesComponent implements OnInit{
     })
   }
 
-  create(){
+  create() {
     this.commonError = ''
-    if (this.quickMessageList && this.quickMessageList.length >=3){
+    if (this.quickMessageList && this.quickMessageList.length >= 3) {
       this.commonError = 'You cannot create more than 3 messages!'
       this.isCreateFirstQuickMessage.set(true)
       return
     }
-    if (this.messageForm.invalid){
+    if (this.messageForm.invalid) {
       this.messageForm.markAllAsTouched()
       return
     }
@@ -76,17 +76,17 @@ export class QuickMessagesComponent implements OnInit{
 
     this.quickMessageService.createQuickMessage(this.quickMessage).subscribe({
       next: value => {
-        this.quickMessageList = [...this.quickMessageList??[], value]
+        this.quickMessageList = [...this.quickMessageList ?? [], value]
         this.isCreateOn.set(false)
         this.quickMessage.message = ''
         this.messageForm.reset()
         this.isCreateFirstQuickMessage.set(false)
-        if (this.quickMessageList && this.quickMessageList.length ==3){
+        if (this.quickMessageList && this.quickMessageList.length == 3) {
           this.isCreateFirstQuickMessage.set(true)
         }
       },
       error: (err) => {
-        if(err.status === 400 && err.error && err.error.errors){
+        if (err.status === 400 && err.error && err.error.errors) {
           const errors = err.error.errors;
 
           Object.keys(errors).forEach(key => {
@@ -96,8 +96,7 @@ export class QuickMessagesComponent implements OnInit{
               control.markAsTouched()
             }
           });
-        }
-        else{
+        } else {
           this.commonError = err.error.title || 'Unhandled exception. To repair'
         }
       }
@@ -110,8 +109,7 @@ export class QuickMessagesComponent implements OnInit{
     this.messageForm.get('message')?.setErrors(null)
     this.quickMessageService.updateQuickMessage(message).subscribe({
       next: value => {
-        const index = this.quickMessageList?.
-        findIndex(m => m.idQuickMessage === message.idQuickMessage);
+        const index = this.quickMessageList?.findIndex(m => m.idQuickMessage === message.idQuickMessage);
         if (index !== undefined && index > -1 && this.quickMessageList) {
           this.quickMessageList[index] = value;
         }
@@ -120,7 +118,7 @@ export class QuickMessagesComponent implements OnInit{
         this.messageForm.reset()
       },
       error: (err) => {
-        if(err.status === 400 && err.error && err.error.errors){
+        if (err.status === 400 && err.error && err.error.errors) {
           const errors = err.error.errors;
 
           Object.keys(errors).forEach(key => {
@@ -130,8 +128,7 @@ export class QuickMessagesComponent implements OnInit{
               control.markAsTouched()
             }
           });
-        }
-        else{
+        } else {
           this.commonError = err.error.title || 'Unhandled exception. To repair'
         }
       }
@@ -151,27 +148,25 @@ export class QuickMessagesComponent implements OnInit{
     this.commonError = '';
   }
 
-  onChange(message: QuickMessage){
+  onChange(message: QuickMessage) {
     message.isEditing = message.message !== message.originalMessage;
   }
 
-  onStart(message: QuickMessage){
+  onStart(message: QuickMessage) {
     if (message.originalMessage === undefined) message.originalMessage = message.message
   }
 
-  delete(id: number){
+  delete(id: number) {
     this.quickMessageService.deleteQuickMessage(id).pipe(
-      map(() => this.quickMessageList?.filter(x=>x.idQuickMessage !==id)??[])
+      map(() => this.quickMessageList?.filter(x => x.idQuickMessage !== id) ?? [])
     ).subscribe({
-        next: newList => {
-          this.quickMessageList = newList
-          if (this.quickMessageList && this.quickMessageList.length < 3){
-            this.isCreateFirstQuickMessage.set(false)
-          }
-        },
-        error: () => {}
+      next: newList => {
+        this.quickMessageList = newList
+        if (this.quickMessageList && this.quickMessageList.length < 3) {
+          this.isCreateFirstQuickMessage.set(false)
+        }
+      },
+      error: () => {}
     })
   }
-
-  protected readonly MENU_ITEMS = MENU_ITEMS;
 }

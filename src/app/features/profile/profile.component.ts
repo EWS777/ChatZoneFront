@@ -1,11 +1,11 @@
-import {Component, inject, OnInit, signal} from '@angular/core';
-import {ProfileService} from './profile.service';
-import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
-import {Profile} from './profile';
-import {Router, RouterLink} from '@angular/router';
-import {CommonValidator} from '../../shared/validation/CommonValidator';
-import {MENU_ITEMS} from '../../shared/profile-side-bar/profile-side-bar.component';
-import {AuthorizationService} from '../identity/authorization/authorization.service';
+import { Component, inject, OnInit, signal } from '@angular/core';
+import { ProfileService } from './profile.service';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Profile } from './profile';
+import { Router, RouterLink } from '@angular/router';
+import { CommonValidator } from '../../shared/validation/CommonValidator';
+import { MENU_ITEMS } from '../../shared/profile-side-bar/profile-side-bar.component';
+import { AuthorizationService } from '../identity/authorization/authorization.service';
 
 @Component({
   selector: 'app-profile',
@@ -18,16 +18,14 @@ import {AuthorizationService} from '../identity/authorization/authorization.serv
   standalone: true,
   styleUrl: './profile.component.css'
 })
-export class ProfileComponent implements OnInit{
+export class ProfileComponent implements OnInit {
   authService = inject(AuthorizationService);
   profileService = inject(ProfileService)
   router = inject(Router)
   isMenuOpen = signal<boolean>(false)
-
   profile!: Profile;
   oldUsername!: string;
   commonError: string = ''
-
   updateProfileForm = new FormGroup({
     username: new FormControl('', [
       CommonValidator.required,
@@ -37,6 +35,7 @@ export class ProfileComponent implements OnInit{
       Validators.pattern(/^[a-zA-Z0-9_-]+$/)
     ])
   })
+  protected readonly MENU_ITEMS = MENU_ITEMS;
 
   ngOnInit() {
     this.profileService.getProfile()
@@ -49,9 +48,9 @@ export class ProfileComponent implements OnInit{
       })
   }
 
-  onClickUpdate(){
+  onClickUpdate() {
     this.commonError = ''
-    if (this.updateProfileForm.invalid){
+    if (this.updateProfileForm.invalid) {
       this.updateProfileForm.markAllAsTouched()
       return
     }
@@ -67,7 +66,7 @@ export class ProfileComponent implements OnInit{
           this.updateProfileForm.controls.username.markAsPristine();
         },
         error: (err) => {
-          if(err.status === 400 && err.error && err.error.errors){
+          if (err.status === 400 && err.error && err.error.errors) {
             const errors = err.error.errors;
 
             Object.keys(errors).forEach(key => {
@@ -77,19 +76,18 @@ export class ProfileComponent implements OnInit{
                 control.markAsTouched()
               }
             });
-          }
-          else{
+          } else {
             this.commonError = err.error.title || 'Unhandled exception. To repair'
           }
         }
       })
   }
 
-  onClickDeleteProfile(){
+  onClickDeleteProfile() {
     this.router.navigate([`delete-profile`])
   }
 
-  onClickUpdatePassword(){
+  onClickUpdatePassword() {
     this.router.navigate([`update-password`])
   }
 
@@ -98,6 +96,4 @@ export class ProfileComponent implements OnInit{
       username: this.oldUsername
     });
   }
-
-  protected readonly MENU_ITEMS = MENU_ITEMS;
 }

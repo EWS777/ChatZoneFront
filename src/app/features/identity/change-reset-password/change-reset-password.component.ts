@@ -1,10 +1,10 @@
-import {Component, inject, OnInit, signal} from '@angular/core';
-import {ActivatedRoute, RouterLink} from '@angular/router';
-import {ResetPassword} from './resetPassword';
-import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
-import {ChangePasswordService} from './change-password.service';
-import {CommonValidator} from '../../../shared/validation/CommonValidator';
-import {matchValidator} from '../../../shared/validation/MatchValidator';
+import { Component, inject, OnInit, signal } from '@angular/core';
+import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ResetPassword } from './resetPassword';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ChangePasswordService } from './change-password.service';
+import { CommonValidator } from '../../../shared/validation/CommonValidator';
+import { matchValidator } from '../../../shared/validation/MatchValidator';
 
 @Component({
   selector: 'app-change-reset-password',
@@ -44,7 +44,7 @@ export class ChangeResetPasswordComponent implements OnInit {
       CommonValidator.maxLength(64),
       CommonValidator.noSpaces, //just for strict attributes
     ])
-  }, {validators: matchValidator('newPassword', 'confirmedPassword')})
+  }, { validators: matchValidator('newPassword', 'confirmedPassword') })
 
   resetPassword: ResetPassword = {
     token: '',
@@ -58,9 +58,9 @@ export class ChangeResetPasswordComponent implements OnInit {
     this.resetPassword.token = this.route.snapshot.queryParamMap.get('link') ?? ''
   }
 
-  update(){
+  update() {
     this.commonError = ''
-    if (this.resetPasswordForm.invalid){
+    if (this.resetPasswordForm.invalid) {
       this.resetPasswordForm.markAllAsTouched()
       return
     }
@@ -74,7 +74,7 @@ export class ChangeResetPasswordComponent implements OnInit {
         this.isPasswordChanged.set(true)
       },
       error: (err) => {
-        if(err.status === 400 && err.error && err.error.errors){
+        if (err.status === 400 && err.error && err.error.errors) {
           const errors = err.error.errors;
 
           Object.keys(errors).forEach(key => {
@@ -84,8 +84,7 @@ export class ChangeResetPasswordComponent implements OnInit {
               control.markAsTouched()
             }
           });
-        }
-        else{
+        } else {
           this.commonError = err.error.title || 'Unhandled exception. To repair'
         }
       }

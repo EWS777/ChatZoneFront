@@ -1,21 +1,21 @@
-import {Component, HostListener, inject, OnInit, signal} from '@angular/core';
-import {ProfileService} from '../profile/profile.service';
-import {Router} from '@angular/router';
-import {AuthorizationService} from '../identity/authorization/authorization.service';
-import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {CountryList} from '../profile/filter/enums/country-list';
-import {AgeList} from '../profile/filter/enums/age-list';
-import {CityList} from '../profile/filter/enums/city-list';
-import {LangList} from '../profile/filter/enums/lang-list';
-import {ThemeList} from '../profile/filter/enums/theme-list';
-import {GenderList} from '../profile/filter/enums/gender-list';
-import {MainService} from './main.service';
-import {FilterService} from '../profile/filter/filter.service';
-import {SingleChatFilter, SingleChatService} from '../chat/single-chat.service';
-import {environment} from '../../../environments/environment';
-import {ChatService} from '../chat/chat.service';
-import {DropdownSelectComponent} from '../../shared/dropdown/dropdown-select.component';
-import {HttpXsrfTokenExtractor} from '@angular/common/http';
+import { Component, HostListener, inject, OnInit, signal } from '@angular/core';
+import { ProfileService } from '../profile/profile.service';
+import { Router } from '@angular/router';
+import { AuthorizationService } from '../identity/authorization/authorization.service';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CountryList } from '../profile/filter/enums/country-list';
+import { AgeList } from '../profile/filter/enums/age-list';
+import { CityList } from '../profile/filter/enums/city-list';
+import { LangList } from '../profile/filter/enums/lang-list';
+import { ThemeList } from '../profile/filter/enums/theme-list';
+import { GenderList } from '../profile/filter/enums/gender-list';
+import { MainService } from './main.service';
+import { FilterService } from '../profile/filter/filter.service';
+import { SingleChatFilter, SingleChatService } from '../chat/single-chat.service';
+import { environment } from '../../../environments/environment';
+import { ChatService } from '../chat/chat.service';
+import { DropdownSelectComponent } from '../../shared/dropdown/dropdown-select.component';
+import { HttpXsrfTokenExtractor } from '@angular/common/http';
 
 @Component({
   selector: 'app-main',
@@ -28,13 +28,47 @@ import {HttpXsrfTokenExtractor} from '@angular/common/http';
   standalone: true,
   styleUrl: './main.component.css'
 })
-export class MainComponent implements OnInit{
+export class MainComponent implements OnInit {
   isStartFindPerson = signal<boolean>(false)
+  router = inject(Router)
+  authService = inject(AuthorizationService)
+  signalService = inject(SingleChatService)
+  mainService = inject(MainService)
+  profile = inject(ProfileService)
+  filterService = inject(FilterService)
+  chatService = inject(ChatService)
+  username: string | null = null;
+  isFilterActivated = signal<boolean>(false)
+  isFindPerson = signal<boolean>(false)
+  isAnyActiveChat = signal<boolean>(false)
+  isMenuOpen = signal<boolean>(false)
+  findSingleChatForm = new FormGroup({
+    connectionId: new FormControl<string | null>(null),
+    theme: new FormControl<number | null>(null),
+    country: new FormControl<number | null>(null),
+    city: new FormControl<number | null>(null),
+    age: new FormControl<number | null>(null),
+    yourGender: new FormControl<number | null>(null),
+    language: new FormControl<number | null>(null),
+    partnerGender: new FormControl<number | null>(null),
+    isSearchAgain: new FormControl<boolean>(false),
+    isFindRandomPerson: new FormControl<boolean>(false)
+  })
+  themeList = this.enumToKeyValue(ThemeList);
+  countryList = this.enumToKeyValue(CountryList);
+  cityList = this.enumToKeyValue(CityList);
+  ageList = this.enumToKeyValue(AgeList);
+  langList = this.enumToKeyValue(LangList);
+  genderList = this.enumToKeyValue(GenderList);
   private tokenExtractor = inject(HttpXsrfTokenExtractor)
+
+  get maleAndFemaleOnly() {
+    return this.genderList.filter(g => g.label === 'male' || g.label === 'female');
+  }
 
   @HostListener('window:beforeunload')
   unloadHandler() {
-    if (this.isStartFindPerson()){
+    if (this.isStartFindPerson()) {
       const url = `${environment.apiUrl}Search/cancel`
       const xsrfToken = this.tokenExtractor.getToken()
 
@@ -56,52 +90,7 @@ export class MainComponent implements OnInit{
     }
   }
 
-  router = inject(Router)
-  authService = inject(AuthorizationService)
-  signalService = inject(SingleChatService)
-  mainService = inject(MainService)
-  profile = inject(ProfileService)
-  filterService = inject(FilterService)
-  chatService = inject(ChatService)
-
-  username: string | null = null;
-  isFilterActivated = signal<boolean>(false)
-  isFindPerson = signal<boolean>(false)
-  isAnyActiveChat = signal<boolean>(false)
-  isMenuOpen = signal<boolean>(false)
-
-  findSingleChatForm = new FormGroup({
-    connectionId: new FormControl<string | null>(null),
-    theme: new FormControl<number | null>(null),
-    country: new FormControl<number | null>(null),
-    city: new FormControl<number | null>(null),
-    age: new FormControl<number | null>(null),
-    yourGender: new FormControl<number | null>(null),
-    language: new FormControl<number | null>(null),
-    partnerGender: new FormControl<number | null>(null),
-    isSearchAgain: new FormControl<boolean>(false),
-    isFindRandomPerson: new FormControl<boolean>(false)
-  })
-
-  themeList = this.enumToKeyValue(ThemeList);
-  countryList = this.enumToKeyValue(CountryList);
-  cityList = this.enumToKeyValue(CityList);
-  ageList = this.enumToKeyValue(AgeList);
-  langList = this.enumToKeyValue(LangList);
-  genderList = this.enumToKeyValue(GenderList);
-
-  get maleAndFemaleOnly() {
-    return this.genderList.filter(g => g.label === 'male' || g.label === 'female');
-  }
-
-  private enumToKeyValue(enumObj: any) {
-    return Object.keys(enumObj)
-      .filter(k => isNaN(Number(k)))
-      .map(name => ({ label: name, value: enumObj[name] }))
-      .filter(item => item.value !== 0);
-  }
-
-  ngOnInit(){
+  ngOnInit() {
     this.profile.getProfile()
       .subscribe({
         next: value => {
@@ -114,20 +103,20 @@ export class MainComponent implements OnInit{
       this.isAnyActiveChat.set(true);
     });
 
-    this.signalService.startSearch(() =>{
+    this.signalService.startSearch(() => {
       this.isFindPerson.set(true)
     })
   }
 
-  onClickLogin(){
+  onClickLogin() {
     this.router.navigate(['login'])
   }
 
-  onClickProfile(){
+  onClickProfile() {
     this.router.navigate([`profile`])
   }
 
-  activateFilter(){
+  activateFilter() {
     this.isFilterActivated.set(!this.isFilterActivated())
     this.filterService.getFilter().subscribe({
       next: value => {
@@ -142,7 +131,7 @@ export class MainComponent implements OnInit{
     })
   }
 
-  cancelFindPerson(){
+  cancelFindPerson() {
     this.mainService.cancelFindPerson().subscribe({
       next: () => {
         this.isFindPerson.set(false)
@@ -152,13 +141,12 @@ export class MainComponent implements OnInit{
     })
   }
 
-  findPerson(isFindRandom: boolean){
+  findPerson(isFindRandom: boolean) {
     this.chatService.getActiveChat().subscribe({
       next: value => {
-        if(value.isSingleChat!==null){
+        if (value.isSingleChat !== null) {
           this.isAnyActiveChat.set(true)
-        }
-        else {
+        } else {
           this.findSingleChatForm.get('isFindRandomPerson')?.setValue(isFindRandom)
           this.startFindPerson()
         }
@@ -166,18 +154,18 @@ export class MainComponent implements OnInit{
     })
   }
 
-  startFindPerson(){
+  startFindPerson() {
     this.isFilterActivated.set(false)
 
     const filterData: SingleChatFilter = {
       connectionId: this.findSingleChatForm.value.connectionId ?? null,
       theme: this.findSingleChatForm.value.isFindRandomPerson === true ? null : this.findSingleChatForm.value.theme ?? null,
-      country: this.findSingleChatForm.value.isFindRandomPerson === true ? null :  this.findSingleChatForm.value.country ?? null,
-      city: this.findSingleChatForm.value.isFindRandomPerson === true ? null :  this.findSingleChatForm.value.city ?? null,
-      age: this.findSingleChatForm.value.isFindRandomPerson === true ? null :  this.findSingleChatForm.value.age ?? null,
-      yourGender: this.findSingleChatForm.value.isFindRandomPerson === true ? null :  this.findSingleChatForm.value.yourGender ?? null,
-      language: this.findSingleChatForm.value.isFindRandomPerson === true ? null :  this.findSingleChatForm.value.language ?? null,
-      partnerGender: this.findSingleChatForm.value.isFindRandomPerson === true ? null :  this.findSingleChatForm.value.partnerGender ?? null,
+      country: this.findSingleChatForm.value.isFindRandomPerson === true ? null : this.findSingleChatForm.value.country ?? null,
+      city: this.findSingleChatForm.value.isFindRandomPerson === true ? null : this.findSingleChatForm.value.city ?? null,
+      age: this.findSingleChatForm.value.isFindRandomPerson === true ? null : this.findSingleChatForm.value.age ?? null,
+      yourGender: this.findSingleChatForm.value.isFindRandomPerson === true ? null : this.findSingleChatForm.value.yourGender ?? null,
+      language: this.findSingleChatForm.value.isFindRandomPerson === true ? null : this.findSingleChatForm.value.language ?? null,
+      partnerGender: this.findSingleChatForm.value.isFindRandomPerson === true ? null : this.findSingleChatForm.value.partnerGender ?? null,
       isSearchAgain: !!this.findSingleChatForm.value.isSearchAgain,
       isFindRandomPerson: !!this.findSingleChatForm.value.isFindRandomPerson
     }
@@ -189,5 +177,12 @@ export class MainComponent implements OnInit{
       .catch(() => {
         this.isFindPerson.set(false);
       });
+  }
+
+  private enumToKeyValue(enumObj: any) {
+    return Object.keys(enumObj)
+      .filter(k => isNaN(Number(k)))
+      .map(name => ({ label: name, value: enumObj[name] }))
+      .filter(item => item.value !== 0);
   }
 }

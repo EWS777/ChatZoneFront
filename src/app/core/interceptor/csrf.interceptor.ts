@@ -1,4 +1,4 @@
-﻿import {HttpInterceptorFn} from '@angular/common/http';
+﻿import { HttpInterceptorFn } from '@angular/common/http';
 
 export const csrfInterceptor: HttpInterceptorFn = (req, next) => {
   const getCookie = (name: string) => {
@@ -10,7 +10,7 @@ export const csrfInterceptor: HttpInterceptorFn = (req, next) => {
 
   const xsrfToken = getCookie('XSRF-TOKEN');
 
-  if (xsrfToken && !['GET', 'HEAD', 'OPTIONS'].includes(req.method)){
+  if (xsrfToken && !['GET', 'HEAD', 'OPTIONS'].includes(req.method)) {
     req = req.clone({
       headers: req.headers.set('X-XSRF-TOKEN', xsrfToken)
     });

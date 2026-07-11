@@ -1,9 +1,9 @@
-﻿import {AbstractControl, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
+﻿import { AbstractControl, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 
 const getLength = (c: AbstractControl) => (c.value || '').toString().trim().length
 
 export class CommonValidator {
-  static required = (c: AbstractControl) => getLength(c) === 0 ? {required: true} : null
+  static required = (c: AbstractControl) => getLength(c) === 0 ? { required: true } : null
 
   static minLength = (min: number): ValidatorFn => (c: AbstractControl) => {
     const len = getLength(c);
@@ -34,8 +34,7 @@ export class CommonValidator {
       if (minErr) return minErr;
       const maxErr = CommonValidator.maxLength(254)(control);
       if (maxErr) return maxErr;
-    }
-    else {
+    } else {
       const minErr = CommonValidator.minLength(8)(control);
       if (minErr) return minErr;
       const maxErr = CommonValidator.maxLength(30)(control);

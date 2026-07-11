@@ -1,9 +1,9 @@
-﻿import {Component, inject, signal} from '@angular/core';
-import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {AuthorizationService} from './authorization.service';
-import {Router, RouterLink} from '@angular/router';
-import {CommonValidator} from '../../../shared/validation/CommonValidator';
-import {matchValidator} from '../../../shared/validation/MatchValidator';
+﻿import { Component, inject, signal } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AuthorizationService } from './authorization.service';
+import { Router, RouterLink } from '@angular/router';
+import { CommonValidator } from '../../../shared/validation/CommonValidator';
+import { matchValidator } from '../../../shared/validation/MatchValidator';
 
 @Component({
   selector: 'authorization-app', //the name of Component, also should be as unique
@@ -16,7 +16,7 @@ import {matchValidator} from '../../../shared/validation/MatchValidator';
   styleUrl: 'authorization.component.css'
 })
 
-export class AuthorizationComponent{
+export class AuthorizationComponent {
   authService = inject(AuthorizationService)
   route = inject(Router)
 
@@ -28,17 +28,17 @@ export class AuthorizationComponent{
   commonErrorLogin: string = ''
 
   loginForm = new FormGroup({
-    usernameOrEmail: new FormControl<string | null>(null, {validators:[
-      CommonValidator.required,
+    usernameOrEmail: new FormControl<string | null>(null, { validators: [
+        CommonValidator.required,
         CommonValidator.noSpaces,
         CommonValidator.usernameOrEmailSmart
-      ]}),
-    password: new FormControl<string | null>(null, {validators: [
+      ] }),
+    password: new FormControl<string | null>(null, { validators: [
         CommonValidator.required,
         CommonValidator.minLength(8),
         CommonValidator.maxLength(64),
         CommonValidator.noSpaces, //just for strict attributes
-      ]})
+      ] })
   })
 
   registrationForm = new FormGroup({
@@ -49,30 +49,30 @@ export class AuthorizationComponent{
       CommonValidator.noSpaces, //just for strict attributes
       Validators.pattern(/^[a-zA-Z0-9_-]+$/)
     ]),
-    email: new FormControl<string | null>(null, {validators: [
-      Validators.email,
-      CommonValidator.required,
-      CommonValidator.minLength(5),
-      CommonValidator.maxLength(254),
-      CommonValidator.noSpaces, //just for strict attributes
-      ]}),
-    password: new FormControl<string | null>(null, {validators: [
+    email: new FormControl<string | null>(null, { validators: [
+        Validators.email,
+        CommonValidator.required,
+        CommonValidator.minLength(5),
+        CommonValidator.maxLength(254),
+        CommonValidator.noSpaces, //just for strict attributes
+      ] }),
+    password: new FormControl<string | null>(null, { validators: [
         CommonValidator.required,
         CommonValidator.minLength(8),
         CommonValidator.maxLength(64),
         CommonValidator.noSpaces, //just for strict attributes
-      ]}),
-    confirmedPassword: new FormControl<string | null>(null, {validators: [
+      ] }),
+    confirmedPassword: new FormControl<string | null>(null, { validators: [
         CommonValidator.required,
         CommonValidator.minLength(8),
         CommonValidator.maxLength(64),
         CommonValidator.noSpaces, //just for strict attributes
-      ]})
-  }, {validators: matchValidator('password', 'confirmedPassword')})
+      ] })
+  }, { validators: matchValidator('password', 'confirmedPassword') })
 
-  onLoginSubmit(){
+  onLoginSubmit() {
     this.commonErrorLogin = ''
-    if (this.loginForm.invalid){
+    if (this.loginForm.invalid) {
       this.loginForm.markAllAsTouched()
       return
     }
@@ -90,7 +90,7 @@ export class AuthorizationComponent{
       },
       error: (err) => {
         this.isLoading.set(false)
-        if(err.status === 400 && err.error && err.error.errors){
+        if (err.status === 400 && err.error && err.error.errors) {
           const errors = err.error.errors;
 
           Object.keys(errors).forEach(key => {
@@ -100,17 +100,16 @@ export class AuthorizationComponent{
               control.markAsTouched()
             }
           });
-        }
-        else{
+        } else {
           this.commonErrorLogin = err.error.title || 'Unhandled exception. To repair'
         }
       }
     })
   }
 
-  onRegistrationSubmit(){
+  onRegistrationSubmit() {
     this.commonError = ''
-    if (this.registrationForm.invalid){
+    if (this.registrationForm.invalid) {
       this.registrationForm.markAllAsTouched()
       return
     }
@@ -128,7 +127,7 @@ export class AuthorizationComponent{
       },
       error: (err) => {
         this.isLoading.set(false)
-        if(err.status === 400 && err.error && err.error.errors){
+        if (err.status === 400 && err.error && err.error.errors) {
           const errors = err.error.errors;
 
           Object.keys(errors).forEach(key => {
@@ -138,8 +137,7 @@ export class AuthorizationComponent{
               control.markAsTouched()
             }
           });
-        }
-        else{
+        } else {
           this.commonError = err.error.title || 'Unhandled exception. To repair'
         }
       }

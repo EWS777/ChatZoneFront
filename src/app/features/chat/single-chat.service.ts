@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import {BaseChatService} from './abstract/base-chat.service';
+import { BaseChatService } from './abstract/base-chat.service';
 
-export interface SingleChatFilter{
+export interface SingleChatFilter {
   connectionId: string | null,
   theme: number | null,
   country: number | null,
@@ -17,23 +17,23 @@ export interface SingleChatFilter{
 @Injectable({
   providedIn: 'root'
 })
-export class SingleChatService extends BaseChatService{
+export class SingleChatService extends BaseChatService {
 
   constructor() {
     super();
   }
 
-  personLeftChat(result: ()=>void){
-    this.hubConnection.on('LeftChat', ()=>{
+  personLeftChat(result: () => void) {
+    this.hubConnection.on('LeftChat', () => {
       this.ngZone.run(() => result())
     })
   }
 
-  offPersonLeftChat(){
+  offPersonLeftChat() {
     this.hubConnection.off('LeftChat')
   }
 
-  async startSearchSingleChat(filter: SingleChatFilter) : Promise<void>{
+  async startSearchSingleChat(filter: SingleChatFilter): Promise<void> {
     await this.ensureConnection()
     return this.hubConnection.invoke('StartSearchSingleChat', filter);
   }

@@ -1,7 +1,7 @@
 ﻿import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AuthorizationComponent } from './authorization.component';
 import { AuthorizationService } from './authorization.service';
-import {Router, provideRouter} from '@angular/router';
+import { provideRouter, Router } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { ReactiveFormsModule } from '@angular/forms';
 

@@ -1,7 +1,7 @@
-import {CanActivateFn, Router} from '@angular/router';
-import {inject} from '@angular/core';
-import {AuthorizationService} from '../../features/identity/authorization/authorization.service';
-import {of, switchMap, take, tap} from 'rxjs';
+import { CanActivateFn, Router } from '@angular/router';
+import { inject } from '@angular/core';
+import { AuthorizationService } from '../../features/identity/authorization/authorization.service';
+import { of, switchMap, take, tap } from 'rxjs';
 
 export const guardGuard: CanActivateFn = () => {
 

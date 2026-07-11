@@ -1,11 +1,11 @@
-import {Component, inject} from '@angular/core';
-import {Router, RouterLink, RouterLinkActive, RouterOutlet} from '@angular/router';
-import {AuthorizationService} from '../../features/identity/authorization/authorization.service';
+import { Component, inject } from '@angular/core';
+import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { AuthorizationService } from '../../features/identity/authorization/authorization.service';
 
 export const MENU_ITEMS = [
-  { name: 'Profile', link: '/profile', icon: 'profile'},
-  { name: 'Quick messages', link: '/profile/quick-messages', icon: 'messages'},
-  { name: 'Blocked users', link: '/profile/blocked-users', icon: 'blocked'}
+  { name: 'Profile', link: '/profile', icon: 'profile' },
+  { name: 'Quick messages', link: '/profile/quick-messages', icon: 'messages' },
+  { name: 'Blocked users', link: '/profile/blocked-users', icon: 'blocked' }
 ]
 
 @Component({

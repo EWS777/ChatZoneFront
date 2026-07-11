@@ -1,6 +1,6 @@
-import {inject, Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {environment} from '../../../environments/environment';
+import { inject, Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +9,7 @@ export class MainService {
   http = inject(HttpClient)
   url = `${environment.apiUrl}Search/`
 
-  cancelFindPerson(){
+  cancelFindPerson() {
     return this.http.post(`${this.url}cancel`, {}, {
       withCredentials: true
     })

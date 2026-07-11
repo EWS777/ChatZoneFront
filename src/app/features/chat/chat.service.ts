@@ -1,8 +1,8 @@
-import {inject, Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {ChatPersonInfo} from './chat-person-info';
-import {Group} from './group';
-import {environment} from '../../../environments/environment';
+import { inject, Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { ChatPersonInfo } from './chat-person-info';
+import { Group } from './group';
+import { environment } from '../../../environments/environment';
 
 export interface CreateGroupInterface {
   title: string
@@ -19,50 +19,50 @@ export class ChatService {
   http = inject(HttpClient)
   url = `${environment.apiUrl}Chat`
 
-  getActiveChat(){
-    return this.http.get<{idChat: number | null, isSingleChat: boolean | null}>(`${this.url}/active-chat`,{
+  getActiveChat() {
+    return this.http.get<{ idChat: number | null, isSingleChat: boolean | null }>(`${this.url}/active-chat`, {
       withCredentials: true
     })
   }
 
-  getChatPersonInfo(){
+  getChatPersonInfo() {
     return this.http.get<ChatPersonInfo>(`${this.url}`, {
       withCredentials: true
     })
   }
 
-  createGroup(request: CreateGroupInterface){
+  createGroup(request: CreateGroupInterface) {
     return this.http.post<number>(`${this.url}/create`, request, {
       withCredentials: true
     })
   }
 
-  getGroups(){
-    return this.http.get<Group[]>(`${this.url}/get`,{
+  getGroups() {
+    return this.http.get<Group[]>(`${this.url}/get`, {
       withCredentials: true
     })
   }
 
-  getGroup(idGroup: number){
+  getGroup(idGroup: number) {
     return this.http.get<Group>(`${this.url}/get-group?idGroup=${idGroup}`, {
       withCredentials: true
     })
   }
 
-  updateGroup(group: Group){
+  updateGroup(group: Group) {
     return this.http.put<Group>(`${this.url}/update`, group, {
       withCredentials: true
     })
   }
 
-  deleteGroup(idGroup: number){
-    return this.http.delete(`${this.url}/delete?idGroup=${idGroup}`,{
+  deleteGroup(idGroup: number) {
+    return this.http.delete(`${this.url}/delete?idGroup=${idGroup}`, {
       withCredentials: true
     })
   }
 
-  finishSingleChat(idGroup: number){
-    return this.http.put(`${this.url}/finish?idChat=${idGroup}`,{},{
+  finishSingleChat(idGroup: number) {
+    return this.http.put(`${this.url}/finish?idChat=${idGroup}`, {}, {
       withCredentials: true
     })
   }

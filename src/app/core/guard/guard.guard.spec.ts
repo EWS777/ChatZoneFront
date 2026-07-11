@@ -3,9 +3,9 @@ import { Router } from '@angular/router';
 import { guardGuard } from './guard.guard';
 import { AuthorizationService } from '../../features/identity/authorization/authorization.service';
 
-import { Observable, of, lastValueFrom } from 'rxjs';
+import { lastValueFrom, Observable, of } from 'rxjs';
 
-describe('guardGuard', () =>{
+describe('guardGuard', () => {
   let mockAuthService: jasmine.SpyObj<AuthorizationService>;
   let mockRouter: jasmine.SpyObj<Router>;
 

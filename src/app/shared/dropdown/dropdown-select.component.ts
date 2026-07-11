@@ -1,5 +1,5 @@
-import {Component, ElementRef, forwardRef, HostListener, Input, ViewChild} from '@angular/core';
-import {NG_VALUE_ACCESSOR} from '@angular/forms';
+import { Component, ElementRef, forwardRef, HostListener, Input, ViewChild } from '@angular/core';
+import { NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
   selector: 'app-dropdown-select',
@@ -15,7 +15,7 @@ import {NG_VALUE_ACCESSOR} from '@angular/forms';
     }
   ]
 })
-export class DropdownSelectComponent{
+export class DropdownSelectComponent {
   @Input() items: Array<{ value: any, label: string }> = [];
   @Input() placeholder: string = 'Choose options';
 

@@ -1,8 +1,8 @@
-import {Component, inject, signal} from '@angular/core';
-import {FormControl, FormGroup, ReactiveFormsModule} from "@angular/forms";
-import {CommonValidator} from '../../../shared/validation/CommonValidator';
-import {Router, RouterLink} from '@angular/router';
-import {DeleteProfileRequest, DeleteProfileService} from './delete-profile.service';
+import { Component, inject, signal } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
+import { CommonValidator } from '../../../shared/validation/CommonValidator';
+import { Router, RouterLink } from '@angular/router';
+import { DeleteProfileRequest, DeleteProfileService } from './delete-profile.service';
 
 @Component({
   selector: 'app-delete-profile',
@@ -24,17 +24,17 @@ export class DeleteProfileComponent {
   commonError: string = ''
 
   deleteProfileForm = new FormGroup({
-    password: new FormControl(null, {validators: [
+    password: new FormControl(null, { validators: [
         CommonValidator.required,
         CommonValidator.minLength(8),
         CommonValidator.maxLength(64),
         CommonValidator.noSpaces, //just for strict attributes
-      ]})
+      ] })
   })
 
-  deleteProfileSubmit(){
+  deleteProfileSubmit() {
     this.commonError = ''
-    if (this.deleteProfileForm.invalid){
+    if (this.deleteProfileForm.invalid) {
       this.deleteProfileForm.markAllAsTouched()
       return
     }
@@ -45,13 +45,13 @@ export class DeleteProfileComponent {
     }
 
     this.service.deleteProfileService(payload).subscribe({
-      next: () =>{
+      next: () => {
         this.isLoading.set(false)
         this.isDeleteProfile.set(true)
       },
       error: (err) => {
         this.isLoading.set(false)
-        if(err.status === 400 && err.error && err.error.errors){
+        if (err.status === 400 && err.error && err.error.errors) {
           const errors = err.error.errors;
 
           Object.keys(errors).forEach(key => {
@@ -61,8 +61,7 @@ export class DeleteProfileComponent {
               control.markAsTouched()
             }
           });
-        }
-        else{
+        } else {
           this.commonError = err.error.title || 'Unhandled exception. To repair'
         }
       }

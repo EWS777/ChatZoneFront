@@ -1,8 +1,8 @@
-import {Component, inject, signal} from '@angular/core';
-import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
-import {RouterLink} from '@angular/router';
-import {ResetPasswordService} from './reset-password.service';
-import {CommonValidator} from '../../../shared/validation/CommonValidator';
+import { Component, inject, signal } from '@angular/core';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { RouterLink } from '@angular/router';
+import { ResetPasswordService } from './reset-password.service';
+import { CommonValidator } from '../../../shared/validation/CommonValidator';
 
 @Component({
   selector: 'app-reset-password',
@@ -23,18 +23,18 @@ export class ResetPasswordComponent {
   commonError: string = ''
 
   resetPasswordForm = new FormGroup({
-    email: new FormControl(null, {validators: [
+    email: new FormControl(null, { validators: [
         Validators.email,
         CommonValidator.required,
         CommonValidator.minLength(5),
         CommonValidator.maxLength(254),
         CommonValidator.noSpaces, //just for strict attributes
-      ]})
+      ] })
   })
 
-  onClick(){
+  onClick() {
     this.commonError = ''
-    if (this.resetPasswordForm.invalid){
+    if (this.resetPasswordForm.invalid) {
       this.resetPasswordForm.markAllAsTouched()
       return
     }
@@ -47,7 +47,7 @@ export class ResetPasswordComponent {
       },
       error: (err) => {
         this.isLoading.set(false)
-        if(err.status === 400 && err.error && err.error.errors){
+        if (err.status === 400 && err.error && err.error.errors) {
           const errors = err.error.errors;
 
           Object.keys(errors).forEach(key => {
@@ -57,8 +57,7 @@ export class ResetPasswordComponent {
               control.markAsTouched()
             }
           });
-        }
-        else{
+        } else {
           this.commonError = err.error.title || 'Unhandled exception. To repair'
         }
       }

@@ -4,7 +4,7 @@
       ChatZone
     </div>
     <div class="text-[#C9C9C9] flex gap-2 mt-[115px] hover:text-[#FFFFFF] transition-colors duration-200">
-      <svg class="my-auto" width="8" height="13" viewBox="0 0 8 13" fill="none">
+      <svg class="my-auto" fill="none" height="13" viewBox="0 0 8 13" width="8">
         <path d="M6.81691 0.318242C7.23941 0.740742 7.23941 1.42324 6.81691 1.84574L2.61358 6.04908L6.81691 10.2524C7.23941 10.6749 7.23941 11.3574 6.81691 11.7799C6.39441 12.2024 5.71191 12.2024 5.28941 11.7799L0.316914 6.80741C-0.105586 6.38491 -0.105586 5.70241 0.316914 5.27991L5.28941 0.307409C5.70108 -0.104258 6.39441 -0.104258 6.81691 0.318242Z" fill="currentColor"/>
       </svg>
       <a [routerLink]="['/']" class="block uppercase text-sm">
@@ -13,33 +13,32 @@
     </div>
     <div class="grid gap-6 pr-7 mt-12">
       @for (menuItem of MENU_ITEMS; track menuItem.name) {
-          <button [routerLink]="menuItem.link" routerLinkActive="active-menu-button text-white h-[38px] pl-2" [routerLinkActiveOptions]="{exact: true}"
-                  class="text-[#A6A6A6] whitespace-nowrap w-full h-[24px] rounded-xl transition-all duration-300 ease-in-out hover:text-gray-200 flex items-center justify-start gap-[14px]">
-              @switch (menuItem.icon){
-                @case ('profile'){
-                  <svg class="my-auto" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                    <path d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M12 11C14.2091 11 16 9.20914 16 7C16 4.79086 14.2091 3 12 3C9.79086 3 8 4.79086 8 7C8 9.20914 9.79086 11 12 11Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                }
-                @case ('messages'){
-                  <svg class="my-auto" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                    <path d="M21 15C21 15.5304 20.7893 16.0391 20.4142 16.4142C20.0391 16.7893 19.5304 17 19 17H7L3 21V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H19C19.5304 3 20.0391 3.21071 20.4142 3.58579C20.7893 3.96086 21 4.46957 21 5V15Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                }
-                @case ('blocked'){
-                  <svg class="my-auto" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                    <path d="M16 21V19C16 17.9391 15.5786 16.9217 14.8284 16.1716C14.0783 15.4214 13.0609 15 12 15H5C3.93913 15 2.92172 15.4214 2.17157 16.1716C1.42143 16.9217 1 17.9391 1 19V21" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M8.5 11C10.7091 11 12.5 9.20914 12.5 7C12.5 4.79086 10.7091 3 8.5 3C6.29086 3 4.5 4.79086 4.5 7C4.5 9.20914 6.29086 11 8.5 11Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M18 8L23 13" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M23 8L18 13" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                }
-              }
-              <span class="my-auto text-base">
-                {{menuItem.name}}
+        <button [routerLink]="menuItem.link" routerLinkActive="active-menu-button text-white h-[38px] pl-2" [routerLinkActiveOptions]="{exact: true}" class="text-[#A6A6A6] whitespace-nowrap w-full h-[24px] rounded-xl transition-all duration-300 ease-in-out hover:text-gray-200 flex items-center justify-start gap-[14px]">
+          @switch (menuItem.icon) {
+            @case ('profile') {
+              <svg class="my-auto" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M12 11C14.2091 11 16 9.20914 16 7C16 4.79086 14.2091 3 12 3C9.79086 3 8 4.79086 8 7C8 9.20914 9.79086 11 12 11Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            }
+            @case ('messages') {
+              <svg class="my-auto" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M21 15C21 15.5304 20.7893 16.0391 20.4142 16.4142C20.0391 16.7893 19.5304 17 19 17H7L3 21V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H19C19.5304 3 20.0391 3.21071 20.4142 3.58579C20.7893 3.96086 21 4.46957 21 5V15Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            }
+            @case ('blocked') {
+              <svg class="my-auto" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M16 21V19C16 17.9391 15.5786 16.9217 14.8284 16.1716C14.0783 15.4214 13.0609 15 12 15H5C3.93913 15 2.92172 15.4214 2.17157 16.1716C1.42143 16.9217 1 17.9391 1 19V21" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M8.5 11C10.7091 11 12.5 9.20914 12.5 7C12.5 4.79086 10.7091 3 8.5 3C6.29086 3 4.5 4.79086 4.5 7C4.5 9.20914 6.29086 11 8.5 11Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M18 8L23 13" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M23 8L18 13" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            }
+          }
+          <span class="my-auto text-base">
+                {{ menuItem.name }}
               </span>
-          </button>
+        </button>
       }
     </div>
   </nav>
@@ -47,6 +46,6 @@
     <button (click)="authService.logoutUser()" class="text-[#494A4E] grey-button py-2.5 px-5 w-[150px] text-center text-base lg:block ml-auto mr-[60px] hidden">
       Log out
     </button>
-      <router-outlet></router-outlet>
+    <router-outlet></router-outlet>
   </div>
 </div>

@@ -2,27 +2,27 @@
   <div class="flex w-full justify-between mx-auto px-4 mb-10 md:mb-6 md:px-0 lg:hidden">
     <div>
       <button (click)="isMenuOpen.set(!isMenuOpen())" class="relative flex flex-col justify-center items-center w-6 h-6 focus:outline-none z-50">
-        <span class="block absolute h-0.5 w-6 bg-white rounded-full transition-all duration-300 ease-in-out" [class.rotate-45]="isMenuOpen()" [class.-translate-y-2]="!isMenuOpen()"></span>
-        <span class="block absolute h-0.5 w-6 bg-white rounded-full transition-all duration-300 ease-in-out" [class.opacity-0]="isMenuOpen()"></span>
-        <span class="block absolute h-0.5 w-6 bg-white rounded-full transition-all duration-300 ease-in-out" [class.-rotate-45]="isMenuOpen()" [class.translate-y-2]="!isMenuOpen()"></span>
+        <span [class.-translate-y-2]="!isMenuOpen()" [class.rotate-45]="isMenuOpen()" class="block absolute h-0.5 w-6 bg-white rounded-full transition-all duration-300 ease-in-out"></span>
+        <span [class.opacity-0]="isMenuOpen()" class="block absolute h-0.5 w-6 bg-white rounded-full transition-all duration-300 ease-in-out"></span>
+        <span [class.-rotate-45]="isMenuOpen()" [class.translate-y-2]="!isMenuOpen()" class="block absolute h-0.5 w-6 bg-white rounded-full transition-all duration-300 ease-in-out"></span>
       </button>
     </div>
     <div class="shrink-0 my-auto w-fit">
       ChatZone
     </div>
   </div>
-  @if (!isMenuOpen()){
+  @if (!isMenuOpen()) {
     <div class="border-out w-fit px-2 py-4 md:p-10 mx-auto md:mt-16 lg:p-0 lg:mt-[100px] mt-10 lg:!bg-transparent">
       <div class="border-in px-5 w-[327px] md:w-[389px] lg:w-[574px] py-4 md:pt-10 xl:w-[720px] lg:p-10 xl:p-20 lg:before:hidden lg:!bg-[#111111]/20">
         <div class="text-2xl md:text-3xl text-center">
           Quick<br class="md:hidden"> messages
         </div>
-        @if (quickMessageList?.length === 3){
+        @if (quickMessageList?.length === 3) {
           <div class="font-semibold text-center pt-5 text-[#B4B4B4]">
             You can save only 3 messages.
           </div>
         }
-        @if (quickMessageList?.length === 0){
+        @if (quickMessageList?.length === 0) {
           <div class="text-base text-center text-[#B4B4B4] pt-2.5 md:pt-5 mb-8 md:mb-10">
             You don’t have any messages<br class="lg:hidden">
             at this moment.<br>
@@ -33,13 +33,13 @@
             <div class="common-backend-error mt-5">{{ commonError }}</div>
           }
           <div class="grid gap-8 mt-10 md:mt-8">
-            @for(messages of quickMessageList; track messages.idQuickMessage){
+            @for (messages of quickMessageList; track messages.idQuickMessage) {
               <div class="w-full min-w-0">
                 <div>
                   <div class="flex justify-between">
                     <label class="input-auth-name">Message</label>
                     <div class="flex mb-1 mr-1 gap-4 md:gap-5">
-                      @if (messages.isEditing){
+                      @if (messages.isEditing) {
                         <div class="flex gap-2 md:gap-3">
                           <button type="button" (click)="update(messages)">
                             <svg class="m-auto" width="16" height="16" viewBox="0 0 16 16" fill="none">
@@ -65,13 +65,13 @@
                   </div>
                   @if (msgInput.touched && msgInput.invalid) {
                     <div>
-                      @if(msgInput.errors?.["required"]){
+                      @if (msgInput.errors?.["required"]) {
                         <small class="error-input-text">message is required</small>
                       }
-                      @if(msgInput.errors?.["minlength"]){
+                      @if (msgInput.errors?.["minlength"]) {
                         <small class="error-input-text">Min length is 1</small>
                       }
-                      @if(msgInput.errors?.["maxlength"]){
+                      @if (msgInput.errors?.["maxlength"]) {
                         <small class="error-input-text">Max length is 50</small>
                       }
                     </div>
@@ -86,48 +86,48 @@
             }
           </div>
         }
-        @if (isCreateOn()){
+        @if (isCreateOn()) {
           <div [formGroup]="messageForm" class="mt-8">
-              <div class="flex justify-between">
-                <label class="input-auth-name">Message</label>
-                <div class="flex gap-3 mb-1 mr-1">
-                  <button type="button" (click)="create()">
-                    <svg class="m-auto" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                      <path d="M13.3332 4L5.99984 11.3333L2.6665 8" stroke="#5AD5A1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                  </button>
-                  <button type="button" (click)="cancelCreation()">
-                    <svg class="m-auto" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                      <path d="M12 4L4 12" stroke="#EA4550" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                      <path d="M4 4L12 12" stroke="#EA4550" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                  </button>
-                </div>
+            <div class="flex justify-between">
+              <label class="input-auth-name">Message</label>
+              <div class="flex gap-3 mb-1 mr-1">
+                <button type="button" (click)="create()">
+                  <svg class="m-auto" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                    <path d="M13.3332 4L5.99984 11.3333L2.6665 8" stroke="#5AD5A1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </button>
+                <button type="button" (click)="cancelCreation()">
+                  <svg class="m-auto" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                    <path d="M12 4L4 12" stroke="#EA4550" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M4 4L12 12" stroke="#EA4550" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </button>
               </div>
+            </div>
             <div class="border-input lg:!bg-[#111111]/20 items-start w-full" [class.border-input-error]="messageForm.controls.message.invalid && messageForm.controls.message.touched">
               <svg class="input-icon mt-1" width="17" height="17" viewBox="0 0 17 17" fill="none">
                 <path d="M16.5 11.1667C16.5 11.6382 16.3127 12.0903 15.9793 12.4237C15.6459 12.7571 15.1937 12.9444 14.7222 12.9444H4.05556L0.5 16.5V2.27778C0.5 1.80628 0.687301 1.3541 1.0207 1.0207C1.3541 0.687301 1.80628 0.5 2.27778 0.5H14.7222C15.1937 0.5 15.6459 0.687301 15.9793 1.0207C16.3127 1.3541 16.5 1.80628 16.5 2.27778V11.1667Z" stroke="white" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
               <textarea formControlName="message" rows="1" class="input-text resize-none [field-sizing:content] overflow-hidden w-full bg-transparent outline-none align-middle break-all" placeholder="Enter quick message"></textarea>
             </div>
-              @if (messageForm.controls.message.touched && messageForm.controls.message.invalid) {
-                <div>
-                  @if (messageForm.controls.message.errors?.["required"]) {
-                    <small class="error-input-text">message is required</small>
-                  }
-                  @if (messageForm.controls.message.errors?.["minLength"]) {
-                    <small class="error-input-text">Min length is 1</small>
-                  }
-                  @if (messageForm.controls.message.errors?.["maxLength"]) {
-                    <small class="error-input-text">Max length is 50</small>
-                  }
-                </div>
-              }
-              @if (messageForm.controls.message.errors?.['backend']; as backendErrors) {
-                @for (err of backendErrors; track err) {
-                  <small class="error-input-text">{{ err }}</small>
+            @if (messageForm.controls.message.touched && messageForm.controls.message.invalid) {
+              <div>
+                @if (messageForm.controls.message.errors?.["required"]) {
+                  <small class="error-input-text">message is required</small>
                 }
+                @if (messageForm.controls.message.errors?.["minLength"]) {
+                  <small class="error-input-text">Min length is 1</small>
+                }
+                @if (messageForm.controls.message.errors?.["maxLength"]) {
+                  <small class="error-input-text">Max length is 50</small>
+                }
+              </div>
+            }
+            @if (messageForm.controls.message.errors?.['backend']; as backendErrors) {
+              @for (err of backendErrors; track err) {
+                <small class="error-input-text">{{ err }}</small>
               }
+            }
           </div>
         }
         <button class="text-base login-button lg:!w-[239px] lg:block lg:mx-auto disabled:text-[#494A4E] mt-8 lg:mt-14" [disabled]="(quickMessageList?.length || 0) >= 3" (click)="changeStatus()">
@@ -149,19 +149,19 @@
         @for (menuItem of MENU_ITEMS; track menuItem.name) {
           <button [routerLink]="menuItem.link" (click)="isMenuOpen.set(false)"
                   class="text-white whitespace-nowrap w-full rounded-xl transition-all duration-300 ease-in-out flex items-center justify-center gap-[14px]">
-            @switch (menuItem.icon){
-              @case ('profile'){
+            @switch (menuItem.icon) {
+              @case ('profile') {
                 <svg class="my-auto" width="24" height="24" viewBox="0 0 24 24" fill="none">
                   <path d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                   <path d="M12 11C14.2091 11 16 9.20914 16 7C16 4.79086 14.2091 3 12 3C9.79086 3 8 4.79086 8 7C8 9.20914 9.79086 11 12 11Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
               }
-              @case ('messages'){
+              @case ('messages') {
                 <svg class="my-auto" width="24" height="24" viewBox="0 0 24 24" fill="none">
                   <path d="M21 15C21 15.5304 20.7893 16.0391 20.4142 16.4142C20.0391 16.7893 19.5304 17 19 17H7L3 21V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H19C19.5304 3 20.0391 3.21071 20.4142 3.58579C20.7893 3.96086 21 4.46957 21 5V15Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
               }
-              @case ('blocked'){
+              @case ('blocked') {
                 <svg class="my-auto" width="24" height="24" viewBox="0 0 24 24" fill="none">
                   <path d="M16 21V19C16 17.9391 15.5786 16.9217 14.8284 16.1716C14.0783 15.4214 13.0609 15 12 15H5C3.93913 15 2.92172 15.4214 2.17157 16.1716C1.42143 16.9217 1 17.9391 1 19V21" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                   <path d="M8.5 11C10.7091 11 12.5 9.20914 12.5 7C12.5 4.79086 10.7091 3 8.5 3C6.29086 3 4.5 4.79086 4.5 7C4.5 9.20914 6.29086 11 8.5 11Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -171,7 +171,7 @@
               }
             }
             <span class="my-auto text-base">
-                {{menuItem.name}}
+                {{ menuItem.name }}
               </span>
           </button>
         }
