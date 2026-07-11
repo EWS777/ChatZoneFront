@@ -9,12 +9,13 @@ export const csrfInterceptor: HttpInterceptorFn = (req, next) => {
   }
 
   const xsrfToken = getCookie('XSRF-TOKEN');
+  let clonedReq = req;
 
   if (xsrfToken && !['GET', 'HEAD', 'OPTIONS'].includes(req.method)) {
-    req = req.clone({
+    clonedReq = req.clone({
       headers: req.headers.set('X-XSRF-TOKEN', xsrfToken)
     });
   }
 
-  return next(req);
+  return next(clonedReq);
 }

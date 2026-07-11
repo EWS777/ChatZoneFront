@@ -16,7 +16,7 @@ export abstract class BaseChatService {
   private messageSubject = new Subject<{ idSender: number, message: string, createdAt: Date }>();
   private connectionPromise: Promise<void> | null = null
 
-  constructor() {
+  protected constructor() {
     this.hubConnection = new HubConnectionBuilder()
       .withUrl(`${environment.apiUrl}chat`, {
         withCredentials: true
@@ -29,9 +29,9 @@ export abstract class BaseChatService {
       this.ngZone.run(() => {
         if (this.router.url === '/chat') {
           this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-            this.router.navigate(['chat']);
+            void this.router.navigate(['chat']);
           })
-        } else this.router.navigate(['chat']);
+        } else void this.router.navigate(['chat']);
       })
     });
 

@@ -83,7 +83,7 @@ export class AuthorizationService {
 
   logoutUser() {
     this.logout().subscribe(() => {
-      this.router.navigate(['/login']);
+      void this.router.navigate(['/login']);
     });
   }
 }

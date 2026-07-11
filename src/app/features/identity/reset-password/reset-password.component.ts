@@ -3,6 +3,7 @@ import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { RouterLink } from '@angular/router';
 import { ResetPasswordService } from './reset-password.service';
 import { CommonValidator } from '../../../shared/validation/CommonValidator';
+import { handleBackendErrors } from '../../../shared/utils/backend-error-handler';
 
 @Component({
   selector: 'app-reset-password',
@@ -45,22 +46,7 @@ export class ResetPasswordComponent {
         this.isLoading.set(false)
         this.isSend.set(true);
       },
-      error: (err) => {
-        this.isLoading.set(false)
-        if (err.status === 400 && err.error && err.error.errors) {
-          const errors = err.error.errors;
-
-          Object.keys(errors).forEach(key => {
-            const control = this.resetPasswordForm.get(key.charAt(0).toLowerCase() + key.slice(1))
-            if (control) {
-              control.setErrors({ backend: errors[key] });
-              control.markAsTouched()
-            }
-          });
-        } else {
-          this.commonError = err.error.title || 'Unhandled exception. To repair'
-        }
-      }
+      error: (err) => handleBackendErrors(err, this.resetPasswordForm, this)
     });
 
   }

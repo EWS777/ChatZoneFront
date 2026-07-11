@@ -7,6 +7,7 @@ import { CommonValidator } from '../../../shared/validation/CommonValidator';
 import { AuthorizationService } from '../../identity/authorization/authorization.service';
 import { RouterLink } from '@angular/router';
 import { MENU_ITEMS } from '../../../shared/profile-side-bar/profile-side-bar.component';
+import { handleBackendErrors } from '../../../shared/utils/backend-error-handler';
 
 @Component({
   selector: 'app-quick-messages',
@@ -52,7 +53,7 @@ export class QuickMessagesComponent implements OnInit {
     this.quickMessageService.getQuickMessages().subscribe({
       next: value => {
         this.quickMessageList = value
-        if (this.quickMessageList && this.quickMessageList.length == 3) {
+        if (this.quickMessageList && this.quickMessageList.length === 3) {
           this.isCreateFirstQuickMessage.set(true)
         }
       },
@@ -81,25 +82,11 @@ export class QuickMessagesComponent implements OnInit {
         this.quickMessage.message = ''
         this.messageForm.reset()
         this.isCreateFirstQuickMessage.set(false)
-        if (this.quickMessageList && this.quickMessageList.length == 3) {
+        if (this.quickMessageList && this.quickMessageList.length === 3) {
           this.isCreateFirstQuickMessage.set(true)
         }
       },
-      error: (err) => {
-        if (err.status === 400 && err.error && err.error.errors) {
-          const errors = err.error.errors;
-
-          Object.keys(errors).forEach(key => {
-            const control = this.messageForm.get(key.charAt(0).toLowerCase() + key.slice(1))
-            if (control) {
-              control.setErrors({ backend: errors[key] });
-              control.markAsTouched()
-            }
-          });
-        } else {
-          this.commonError = err.error.title || 'Unhandled exception. To repair'
-        }
-      }
+      error: (err) => handleBackendErrors(err, this.messageForm, this)
     })
   }
 
@@ -117,21 +104,7 @@ export class QuickMessagesComponent implements OnInit {
         delete message.originalMessage;
         this.messageForm.reset()
       },
-      error: (err) => {
-        if (err.status === 400 && err.error && err.error.errors) {
-          const errors = err.error.errors;
-
-          Object.keys(errors).forEach(key => {
-            const control = this.messageForm.get(key.charAt(0).toLowerCase() + key.slice(1))
-            if (control) {
-              control.setErrors({ backend: errors[key] });
-              control.markAsTouched()
-            }
-          });
-        } else {
-          this.commonError = err.error.title || 'Unhandled exception. To repair'
-        }
-      }
+      error: (err) => handleBackendErrors(err, this.messageForm, this)
     })
   }
 

@@ -5,6 +5,7 @@ import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { ChangePasswordService } from './change-password.service';
 import { CommonValidator } from '../../../shared/validation/CommonValidator';
 import { matchValidator } from '../../../shared/validation/MatchValidator';
+import { handleBackendErrors } from '../../../shared/utils/backend-error-handler';
 
 @Component({
   selector: 'app-change-reset-password',
@@ -73,21 +74,7 @@ export class ChangeResetPasswordComponent implements OnInit {
       next: () => {
         this.isPasswordChanged.set(true)
       },
-      error: (err) => {
-        if (err.status === 400 && err.error && err.error.errors) {
-          const errors = err.error.errors;
-
-          Object.keys(errors).forEach(key => {
-            const control = this.resetPasswordForm.get(key.charAt(0).toLowerCase() + key.slice(1))
-            if (control) {
-              control.setErrors({ backend: errors[key] });
-              control.markAsTouched()
-            }
-          });
-        } else {
-          this.commonError = err.error.title || 'Unhandled exception. To repair'
-        }
-      }
+      error: (err) => handleBackendErrors(err, this.resetPasswordForm, this)
     })
   }
 }

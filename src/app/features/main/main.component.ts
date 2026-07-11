@@ -80,13 +80,7 @@ export class MainComponent implements OnInit {
         headers['X-XSRF-TOKEN'] = xsrfToken;
       }
 
-      fetch(url, {
-        method: 'POST',
-        headers: headers,
-        body: JSON.stringify({}),
-        keepalive: true,
-        credentials: "include"
-      });
+      void fetch(url, { method: 'POST', headers: headers, body: JSON.stringify({}), keepalive: true, credentials: "include" });
     }
   }
 
@@ -109,11 +103,11 @@ export class MainComponent implements OnInit {
   }
 
   onClickLogin() {
-    this.router.navigate(['login'])
+    void this.router.navigate(['login'])
   }
 
   onClickProfile() {
-    this.router.navigate([`profile`])
+    void this.router.navigate([`profile`])
   }
 
   activateFilter() {

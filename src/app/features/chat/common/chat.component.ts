@@ -140,13 +140,7 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
         headers['X-XSRF-TOKEN'] = xsrfToken;
       }
 
-      fetch(url, {
-        method: 'POST',
-        headers: headers,
-        body: JSON.stringify({}),
-        keepalive: true,
-        credentials: "include"
-      });
+      void fetch(url, { method: 'POST', headers: headers, body: JSON.stringify({}), keepalive: true, credentials: "include" });
     }
   }
 
@@ -164,7 +158,7 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
     await this.baseChatService.startConnect()
 
     this.chatPersonInfo = await firstValueFrom(this.chatService.getChatPersonInfo())
-    if (this.chatPersonInfo.idGroup === null) this.router.navigate([''])
+    if (this.chatPersonInfo.idGroup === null) await this.router.navigate([''])
     await this.loadPreviousMessages();
     this.scrollToBottom()
 
@@ -324,7 +318,7 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
   deleteGroupChat() {
     this.chatService.deleteGroup(this.updateGroupForm.controls.idGroup.value!).subscribe({
       next: () => {
-        this.router.navigate(['/'])
+        void this.router.navigate(['/'])
       },
       error: err => {
         this.commonErrorDeleteGroupChat = err.error.title || 'Unhandled exception. To repair'
@@ -462,7 +456,7 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
   cancelFindPerson() {
     this.mainService.cancelFindPerson().subscribe({
       next: () => {
-        this.router.navigate(['/'])
+        void this.router.navigate(['/'])
       },
       error: () => {}
     })
