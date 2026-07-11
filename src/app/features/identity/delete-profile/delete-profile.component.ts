@@ -10,8 +10,7 @@ import { DeleteProfileRequest, DeleteProfileService } from './delete-profile.ser
     ReactiveFormsModule,
     RouterLink
   ],
-  templateUrl: './delete-profile.component.html',
-  styleUrl: './delete-profile.component.css'
+  templateUrl: './delete-profile.component.html'
 })
 export class DeleteProfileComponent {
   service = inject(DeleteProfileService)
