@@ -1,11 +1,15 @@
 <div class="flex flex-col h-[100dvh] max-w-[1000px] mx-auto">
   <div class="flex w-full justify-between mx-auto px-8 mt-5 md:mt-10 lg:mt-8 pb-2">
-    <svg (click)="isOtherPersonLeft() ? router.navigate(['/']) : changeIsDisconnectStatus('exit')" class="my-auto" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#B4B4B4">
-      <path d="M9 14L4 9L9 4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-      <path d="M22.5 16C22.5 15 23.5 9 16.1757 9H4.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
+    <button (click)="isOtherPersonLeft() ? router.navigate(['/']) : changeIsDisconnectStatus('exit')" type="button" class="flex items-center justify-center p-0 bg-transparent border-0 cursor-pointer my-auto focus:outline-none">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#B4B4B4">
+        <path d="M9 14L4 9L9 4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M22.5 16C22.5 15 23.5 9 16.1757 9H4.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
     @if (chatPersonInfo.isSingleChat || (!chatPersonInfo.isSingleChat && updateGroupForm.controls.isAdmin.value)) {
-      <svg (click)="isActivateSettings.set(!isActivateSettings())" class="my-auto" width="24" height="24" viewBox="0 0 24 24"><path fill="none" stroke="#B4B4B4" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7.05 6.462a2 2 0 0 0 2.63-1.519l.32-1.72a9 9 0 0 1 3.998 0l.322 1.72a2 2 0 0 0 2.63 1.519l1.649-.58a9 9 0 0 1 2.001 3.46l-1.33 1.14a2 2 0 0 0 0 3.037l1.33 1.139a9 9 0 0 1-2.001 3.46l-1.65-.58a2 2 0 0 0-2.63 1.519L14 20.777a9 9 0 0 1-3.998 0l-.322-1.72a2 2 0 0 0-2.63-1.519l-1.649.58a9 9 0 0 1-2.001-3.46l1.33-1.14a2 2 0 0 0 0-3.036L3.4 9.342a9 9 0 0 1 2-3.46zM12 9a3 3 0 1 1 0 6a3 3 0 0 1 0-6" clip-rule="evenodd"/></svg>
+      <button (click)="isActivateSettings.set(!isActivateSettings())" type="button" class="flex items-center justify-center p-0 bg-transparent border-0 cursor-pointer my-auto focus:outline-none">
+        <svg width="24" height="24" viewBox="0 0 24 24"><path fill="none" stroke="#B4B4B4" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7.05 6.462a2 2 0 0 0 2.63-1.519l.32-1.72a9 9 0 0 1 3.998 0l.322 1.72a2 2 0 0 0 2.63 1.519l1.649-.58a9 9 0 0 1 2.001 3.46l-1.33 1.14a2 2 0 0 0 0 3.037l1.33 1.139a9 9 0 0 1-2.001 3.46l-1.65-.58a2 2 0 0 0-2.63 1.519L14 20.777a9 9 0 0 1-3.998 0l-.322-1.72a2 2 0 0 0-2.63-1.519l-1.649.58a9 9 0 0 1-2.001-3.46l1.33-1.14a2 2 0 0 0 0-3.036L3.4 9.342a9 9 0 0 1 2-3.46zM12 9a3 3 0 1 1 0 6a3 3 0 0 1 0-6" clip-rule="evenodd"/></svg>
+      </button>
     }
   </div>
 
