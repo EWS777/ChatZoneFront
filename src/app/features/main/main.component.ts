@@ -103,11 +103,11 @@ export class MainComponent implements OnInit {
   }
 
   onClickLogin() {
-    void this.router.navigate(['login'])
+    this.router.navigate(['login']).then()
   }
 
   onClickProfile() {
-    void this.router.navigate([`profile`])
+    this.router.navigate([`profile`]).then()
   }
 
   activateFilter() {

@@ -84,11 +84,11 @@ export class ProfileComponent implements OnInit {
   }
 
   onClickDeleteProfile() {
-    void this.router.navigate([`delete-profile`])
+    this.router.navigate([`delete-profile`]).then()
   }
 
   onClickUpdatePassword() {
-    void this.router.navigate([`update-password`])
+    this.router.navigate([`update-password`]).then()
   }
 
   onClickCancelUsername() {

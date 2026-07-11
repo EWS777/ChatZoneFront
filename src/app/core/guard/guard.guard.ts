@@ -15,7 +15,7 @@ export const guardGuard: CanActivateFn = () => {
 
       return authService.checkAuth().pipe(
         tap(auth => {
-          if (!auth) void router.navigate(['/login']);
+          if (!auth) router.navigate(['/login']).then();
         })
       );
     })

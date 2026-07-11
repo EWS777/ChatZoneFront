@@ -305,7 +305,7 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
       if (!this.updateGroupForm.controls.isAdmin.value) {
         this.groupMemberService.deleteFromGroup(this.chatPersonInfo.idGroup!).subscribe({
           next: async () => {
-            await this.router.navigate(['/'])
+            this.router.navigate(['/']).then()
           },
           error: () => {}
         })
@@ -318,7 +318,7 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
   deleteGroupChat() {
     this.chatService.deleteGroup(this.updateGroupForm.controls.idGroup.value!).subscribe({
       next: () => {
-        void this.router.navigate(['/'])
+        this.router.navigate(['/']).then()
       },
       error: err => {
         this.commonErrorDeleteGroupChat = err.error.title || 'Unhandled exception. To repair'
@@ -456,7 +456,7 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
   cancelFindPerson() {
     this.mainService.cancelFindPerson().subscribe({
       next: () => {
-        void this.router.navigate(['/'])
+        this.router.navigate(['/']).then()
       },
       error: () => {}
     })

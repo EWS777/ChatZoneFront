@@ -29,9 +29,9 @@ export abstract class BaseChatService {
       this.ngZone.run(() => {
         if (this.router.url === '/chat') {
           this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-            void this.router.navigate(['chat']);
+            this.router.navigate(['chat']).then();
           })
-        } else void this.router.navigate(['chat']);
+        } else this.router.navigate(['chat']).then();
       })
     });
 

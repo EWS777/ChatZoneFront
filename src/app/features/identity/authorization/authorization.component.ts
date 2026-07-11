@@ -86,7 +86,7 @@ export class AuthorizationComponent {
     this.authService.postLogin(loginPayload).subscribe({
       next: () => {
         this.isLoading.set(false)
-        void this.route.navigate([''])
+        this.route.navigate(['']).then()
       },
       error: (err) => {
         this.isLoading.set(false)
