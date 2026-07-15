@@ -134,14 +134,14 @@
 
   @if (isFilterActivated()) {
     <div class="fixed inset-0 z-50 flex flex-col items-center justify-center backdrop-blur-xs bg-black/10 transition-all duration-300 px-4 min-[500px]:px-7 md:px-11 lg:px-14 pt-[100px] py-14 md:py-0 md:pt-0">
-      <div class="text-[#B4B4B4] flex gap-2 justify-start w-full hover:text-[#C9C9C9] transition-colors duration-200 my-auto mb-4 max-w-[600px] md:mt-0 lg:max-w-[1000px]">
+      <button type="button" (click)="isFilterActivated.set(false)" class="text-[#B4B4B4] flex gap-2 justify-start w-full hover:text-[#C9C9C9] transition-colors duration-200 my-auto mb-4 max-w-[600px] md:mt-0 lg:max-w-[1000px]">
         <svg class="my-auto" width="8" height="13" viewBox="0 0 8 13" fill="none">
           <path d="M6.81691 0.318242C7.23941 0.740742 7.23941 1.42324 6.81691 1.84574L2.61358 6.04908L6.81691 10.2524C7.23941 10.6749 7.23941 11.3574 6.81691 11.7799C6.39441 12.2024 5.71191 12.2024 5.28941 11.7799L0.316914 6.80741C-0.105586 6.38491 -0.105586 5.70241 0.316914 5.27991L5.28941 0.307409C5.70108 -0.104258 6.39441 -0.104258 6.81691 0.318242Z" fill="currentColor"/>
         </svg>
-        <a (click)="isFilterActivated.set(false)" class="block uppercase text-sm">
+        <span class="uppercase text-sm">
           Back to the groups
-        </a>
-      </div>
+        </span>
+      </button>
       <div class="w-full max-w-[600px] max-h-full overflow-y-auto no-scrollbar lg:max-w-[1000px]">
         <div class="border-out px-2 py-4 md:p-10 mx-auto w-full md:max-w-full">
           <div class="border-in px-3 pb-5 md:px-5 text-center pt-4 md:pt-10">

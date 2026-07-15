@@ -3,14 +3,14 @@
     <div class="w-[120px] mt-10">
       ChatZone
     </div>
-    <div class="text-[#C9C9C9] flex gap-2 mt-[115px] hover:text-[#FFFFFF] transition-colors duration-200">
+    <button type="button" [routerLink]="['/']" class="text-[#C9C9C9] flex gap-2 mt-[115px] hover:text-[#FFFFFF] transition-colors duration-200">
       <svg class="my-auto" fill="none" height="13" viewBox="0 0 8 13" width="8">
         <path d="M6.81691 0.318242C7.23941 0.740742 7.23941 1.42324 6.81691 1.84574L2.61358 6.04908L6.81691 10.2524C7.23941 10.6749 7.23941 11.3574 6.81691 11.7799C6.39441 12.2024 5.71191 12.2024 5.28941 11.7799L0.316914 6.80741C-0.105586 6.38491 -0.105586 5.70241 0.316914 5.27991L5.28941 0.307409C5.70108 -0.104258 6.39441 -0.104258 6.81691 0.318242Z" fill="currentColor"/>
       </svg>
-      <a [routerLink]="['/']" class="block uppercase text-sm">
+      <span class="uppercase text-sm">
         Back to MAIN PAGE
-      </a>
-    </div>
+      </span>
+    </button>
     <div class="grid gap-6 pr-7 mt-12">
       @for (menuItem of MENU_ITEMS; track menuItem.name) {
         <button [routerLink]="menuItem.link" routerLinkActive="active-menu-button text-white h-[38px] pl-2" [routerLinkActiveOptions]="{exact: true}" class="text-[#A6A6A6] whitespace-nowrap w-full h-[24px] rounded-xl transition-all duration-300 ease-in-out hover:text-gray-200 flex items-center justify-start gap-[14px]">

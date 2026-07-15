@@ -1,19 +1,13 @@
 <div class="flex flex-col h-[100dvh] px-4 md:px-11 lg:px-14 pt-[120px] md:pt-[100px] max-w-[1212px] w-full mx-auto">
   <div class="flex justify-between pb-6 md:pb-5">
-    <div class="text-[#494A4E] flex gap-2 justify-center hover:text-[#C9C9C9] transition-colors duration-200 my-auto">
+    <button type="button" [routerLink]="!isCreateGroup() ? [''] : null" (click)="isCreateGroup() && isCreateGroup.set(false)" class="text-[#494A4E] flex gap-2 justify-center hover:text-[#C9C9C9] transition-colors duration-200 my-auto select-none">
       <svg class="my-auto" fill="none" height="13" viewBox="0 0 8 13" width="8">
         <path d="M6.81691 0.318242C7.23941 0.740742 7.23941 1.42324 6.81691 1.84574L2.61358 6.04908L6.81691 10.2524C7.23941 10.6749 7.23941 11.3574 6.81691 11.7799C6.39441 12.2024 5.71191 12.2024 5.28941 11.7799L0.316914 6.80741C-0.105586 6.38491 -0.105586 5.70241 0.316914 5.27991L5.28941 0.307409C5.70108 -0.104258 6.39441 -0.104258 6.81691 0.318242Z" fill="currentColor"/>
       </svg>
-      @if (!isCreateGroup()) {
-        <a [routerLink]="['']" class="block uppercase text-sm">
-          Back to MAIN PAGE
-        </a>
-      } @else {
-        <a (click)="isCreateGroup.set(false)" class="block uppercase text-sm">
-          Back to the groups
-        </a>
-      }
-    </div>
+      <span class="uppercase text-sm">
+        {{ !isCreateGroup() ? 'Back to MAIN PAGE' : 'Back to the groups' }}
+      </span>
+    </button>
     @if (!isCreateGroup()) {
       <button class="text-base py-3 px-5 button-background rounded-[10px]" (click)="isCreateGroup.set(true)">
         Create a group
@@ -97,11 +91,11 @@
           <div class="grid gap-6 md:grid-cols-2 md:gap-y-9 lg:max-w-[750px] lg:mx-auto">
             <div>
               <label class="input-auth-name">Title</label>
-              <div class="border-input" [class.border-input-error]="createGroupForm.controls.title.invalid && createGroupForm.controls.title.touched">
+              <label class="border-input" [class.border-input-error]="createGroupForm.controls.title.invalid && createGroupForm.controls.title.touched">
                 <input [class.text-[#EA4550]]="createGroupForm.controls.title.invalid && createGroupForm.controls.title.touched"
                        [class.placeholder:text-[#EA4550]]="createGroupForm.controls.title.invalid && createGroupForm.controls.title.touched"
                        class="input-text" formControlName="title" type="text" placeholder="Enter title">
-              </div>
+              </label>
               @if (createGroupForm.controls.title.touched && createGroupForm.controls.title.invalid) {
                 <div>
                   @if (createGroupForm.controls.title.errors?.["required"]) {

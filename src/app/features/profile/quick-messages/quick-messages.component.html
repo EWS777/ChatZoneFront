@@ -57,12 +57,12 @@
                       <button class="text-sm text-[#5F6168] underline hover:text-[#CA3A43]" (click)="delete(messages.idQuickMessage)">Delete</button>
                     </div>
                   </div>
-                  <div class="border-input items-start w-full lg:!bg-[#111111]/20" [class.border-input-error]="msgInput.invalid && msgInput.touched">
+                  <label class="border-input items-start w-full lg:!bg-[#111111]/20" [class.border-input-error]="msgInput.invalid && msgInput.touched">
                     <svg class="input-icon mt-1" width="17" height="17" viewBox="0 0 17 17" fill="none">
                       <path d="M16.5 11.1667C16.5 11.6382 16.3127 12.0903 15.9793 12.4237C15.6459 12.7571 15.1937 12.9444 14.7222 12.9444H4.05556L0.5 16.5V2.27778C0.5 1.80628 0.687301 1.3541 1.0207 1.0207C1.3541 0.687301 1.80628 0.5 2.27778 0.5H14.7222C15.1937 0.5 15.6459 0.687301 15.9793 1.0207C16.3127 1.3541 16.5 1.80628 16.5 2.27778V11.1667Z" stroke="white" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                     <textarea [(ngModel)]="messages.message" (focus)="onStart(messages)" (ngModelChange)="onChange(messages)" #msgInput="ngModel" rows="1" class="input-text resize-none [field-sizing:content] overflow-hidden w-full bg-transparent outline-none align-middle break-all" placeholder="Enter quick message"></textarea>
-                  </div>
+                  </label>
                   @if (msgInput.touched && msgInput.invalid) {
                     <div>
                       @if (msgInput.errors?.["required"]) {
@@ -104,12 +104,12 @@
                 </button>
               </div>
             </div>
-            <div class="border-input lg:!bg-[#111111]/20 items-start w-full" [class.border-input-error]="messageForm.controls.message.invalid && messageForm.controls.message.touched">
+            <label class="border-input lg:!bg-[#111111]/20 items-start w-full" [class.border-input-error]="messageForm.controls.message.invalid && messageForm.controls.message.touched">
               <svg class="input-icon mt-1" width="17" height="17" viewBox="0 0 17 17" fill="none">
                 <path d="M16.5 11.1667C16.5 11.6382 16.3127 12.0903 15.9793 12.4237C15.6459 12.7571 15.1937 12.9444 14.7222 12.9444H4.05556L0.5 16.5V2.27778C0.5 1.80628 0.687301 1.3541 1.0207 1.0207C1.3541 0.687301 1.80628 0.5 2.27778 0.5H14.7222C15.1937 0.5 15.6459 0.687301 15.9793 1.0207C16.3127 1.3541 16.5 1.80628 16.5 2.27778V11.1667Z" stroke="white" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
               <textarea formControlName="message" rows="1" class="input-text resize-none [field-sizing:content] overflow-hidden w-full bg-transparent outline-none align-middle break-all" placeholder="Enter quick message"></textarea>
-            </div>
+            </label>
             @if (messageForm.controls.message.touched && messageForm.controls.message.invalid) {
               <div>
                 @if (messageForm.controls.message.errors?.["required"]) {

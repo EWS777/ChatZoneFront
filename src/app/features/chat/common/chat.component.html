@@ -75,9 +75,9 @@
       }
     }
     <div class="flex flex-col h-full max-w-[1000px] w-full relative">
-      <div class="border-buttons flex items-center h-full">
+      <label class="border-buttons flex items-center h-full">
         <input [formControl]="currentMessageControl" class="placeholder:text-[#FFFFFF33] outline-0 text-xs px-5 w-full h-full" placeholder="Type here" type="text">
-      </div>
+      </label>
       @if (currentMessageControl.invalid && currentMessageControl.touched) {
         @if (currentMessageControl.hasError('maxLength')) {
           <small class="absolute top-[-70%] error-input-text">Max length is {{ currentMessageControl.errors?.['maxLength'].requiredLength }}</small>
@@ -193,7 +193,7 @@
           <svg class="my-auto" width="8" height="13" viewBox="0 0 8 13" fill="none">
             <path d="M6.81691 0.318242C7.23941 0.740742 7.23941 1.42324 6.81691 1.84574L2.61358 6.04908L6.81691 10.2524C7.23941 10.6749 7.23941 11.3574 6.81691 11.7799C6.39441 12.2024 5.71191 12.2024 5.28941 11.7799L0.316914 6.80741C-0.105586 6.38491 -0.105586 5.70241 0.316914 5.27991L5.28941 0.307409C5.70108 -0.104258 6.39441 -0.104258 6.81691 0.318242Z" fill="currentColor"/>
           </svg>
-          <span class="block uppercase text-sm">Back to MAIN PAGE</span>
+          <span class="uppercase text-sm">Back to the chat</span>
         </button>
         <button class="text-base py-3 px-5 button-send" (click)="getGroupMembers()">
           List of users
@@ -235,11 +235,11 @@
             <div class="grid gap-6 md:grid-cols-2 md:gap-y-9 lg:max-w-[750px] lg:mx-auto">
               <div>
                 <label class="input-auth-name">Title</label>
-                <div class="border-input" [class.border-input-error]="updateGroupForm.controls.title.invalid && updateGroupForm.controls.title.touched">
+                <label class="border-input" [class.border-input-error]="updateGroupForm.controls.title.invalid && updateGroupForm.controls.title.touched">
                   <input [class.text-[#EA4550]]="updateGroupForm.controls.title.invalid && updateGroupForm.controls.title.touched"
                          [class.placeholder:text-[#EA4550]]="updateGroupForm.controls.title.invalid && updateGroupForm.controls.title.touched"
                          class="input-text" formControlName="title" type="text" placeholder="Enter title">
-                </div>
+                </label>
                 @if (updateGroupForm.controls.title.touched && updateGroupForm.controls.title.invalid) {
                   <div>
                     @if (updateGroupForm.controls.title.errors?.["required"]) {
@@ -313,7 +313,7 @@
         <svg class="my-auto" width="8" height="13" viewBox="0 0 8 13" fill="none">
           <path d="M6.81691 0.318242C7.23941 0.740742 7.23941 1.42324 6.81691 1.84574L2.61358 6.04908L6.81691 10.2524C7.23941 10.6749 7.23941 11.3574 6.81691 11.7799C6.39441 12.2024 5.71191 12.2024 5.28941 11.7799L0.316914 6.80741C-0.105586 6.38491 -0.105586 5.70241 0.316914 5.27991L5.28941 0.307409C5.70108 -0.104258 6.39441 -0.104258 6.81691 0.318242Z" fill="currentColor"/>
         </svg>
-        <span class="block uppercase text-sm">Back to MAIN PAGE</span>
+        <span class="uppercase text-sm">Back</span>
       </button>
     </div>
     <div class="border-out px-2 py-4 md:p-5 mx-auto w-full max-w-[600px] lg:max-w-[800px]">

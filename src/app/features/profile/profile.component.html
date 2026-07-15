@@ -28,7 +28,7 @@
                 <path d="M2.66665 2.6665H13.3333C14.0666 2.6665 14.6666 3.2665 14.6666 3.99984V11.9998C14.6666 12.7332 14.0666 13.3332 13.3333 13.3332H2.66665C1.93331 13.3332 1.33331 12.7332 1.33331 11.9998V3.99984C1.33331 3.2665 1.93331 2.6665 2.66665 2.6665Z" stroke="white" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round"/>
                 <path d="M14.6666 4L7.99998 8.66667L1.33331 4" stroke="white" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
-              <input class="input-text" type="email" [value]="profile.email" readonly>
+              <input class="input-text" type="email" [value]="profile.email" readonly disabled>
             </div>
             <div class="flex pt-6 md:pt-8 justify-between">
               <label class="input-auth-name">Username</label>
@@ -48,13 +48,13 @@
                 </div>
               }
             </div>
-            <div class="border-input lg:!bg-[#111111]/20" [class.border-input-error]="updateProfileForm.controls.username.invalid && updateProfileForm.controls.username.touched">
+            <label class="border-input lg:!bg-[#111111]/20" [class.border-input-error]="updateProfileForm.controls.username.invalid && updateProfileForm.controls.username.touched">
               <svg class="input-icon" fill="none" viewBox="0 0 16 16">
                 <path d="M13.3334 14V12.6667C13.3334 11.9594 13.0525 11.2811 12.5524 10.781C12.0523 10.281 11.374 10 10.6667 10H5.33341C4.62617 10 3.94789 10.281 3.4478 10.781C2.9477 11.2811 2.66675 11.9594 2.66675 12.6667V14" stroke="currentColor" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round"/>
                 <path d="M7.99992 7.33333C9.47268 7.33333 10.6666 6.13943 10.6666 4.66667C10.6666 3.19391 9.47268 2 7.99992 2C6.52716 2 5.33325 3.19391 5.33325 4.66667C5.33325 6.13943 6.52716 7.33333 7.99992 7.33333Z" stroke="currentColor" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
               <input class="input-text" formControlName="username" type="text" placeholder="Enter your username">
-            </div>
+            </label>
             @if (updateProfileForm.controls.username.touched && updateProfileForm.controls.username.invalid) {
               <div>
                 @if (updateProfileForm.controls.username.errors?.["required"]) {
@@ -93,19 +93,18 @@
     </div>
   } @else {
     <div class="border-out w-[345px] mx-auto md:mt-20 md:w-[643px]">
-      <div class="text-[#C9C9C9] flex gap-2 hover:text-[#FFFFFF] transition-colors duration-200 justify-center mt-10">
+      <button type="button" [routerLink]="['/']" class="text-[#C9C9C9] flex gap-2 hover:text-[#FFFFFF] transition-colors duration-200 justify-center mt-10 mx-auto">
         <svg class="my-auto" width="8" height="13" viewBox="0 0 8 13" fill="none">
           <path d="M6.81691 0.318242C7.23941 0.740742 7.23941 1.42324 6.81691 1.84574L2.61358 6.04908L6.81691 10.2524C7.23941 10.6749 7.23941 11.3574 6.81691 11.7799C6.39441 12.2024 5.71191 12.2024 5.28941 11.7799L0.316914 6.80741C-0.105586 6.38491 -0.105586 5.70241 0.316914 5.27991L5.28941 0.307409C5.70108 -0.104258 6.39441 -0.104258 6.81691 0.318242Z" fill="currentColor"/>
         </svg>
-        <a [routerLink]="['/']" class="block uppercase text-sm">
+        <span class="uppercase text-sm">
           Back to MAIN PAGE
-        </a>
-      </div>
-      <div class="grid gap-6 my-14">
+        </span>
+      </button>
+      <div class="grid gap-6 my-14 justify-items-center">
         @for (menuItem of MENU_ITEMS; track menuItem.name) {
           <button [routerLink]="menuItem.link" (click)="isMenuOpen.set(false)"
-                  class="text-white whitespace-nowrap w-full rounded-xl transition-all duration-300
-                  ease-in-out flex items-center justify-center gap-[14px]">
+                  class="text-white whitespace-nowrap w-fit rounded-xl transition-all duration-300 ease-in-out flex items-center justify-center gap-[14px]">
             @switch (menuItem.icon) {
               @case ('profile') {
                 <svg class="my-auto" width="24" height="24" viewBox="0 0 24 24" fill="none">

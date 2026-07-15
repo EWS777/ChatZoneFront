@@ -1,5 +1,5 @@
 <div #dropdownContainer class="relative">
-  <button (click)="toggleDropdown($event)" class="w-full border-input flex items-center justify-between text-xs" type="button">
+  <button (click)="toggleDropdown($event)" class="w-full border-input select-none !cursor-pointer flex items-center justify-between text-xs" type="button">
     <span [class]="selectedValue !== null && selectedValue !== undefined ? 'text-[#FFFFFF]' : 'text-[#494A4E]'">
       {{ selectedLabel || placeholder }}
     </span>
@@ -11,7 +11,7 @@
   @if (isOpen) {
     <div class="absolute z-10 mt-1 w-full bg-[#192337] rounded-[10px] shadow-[0_12px_16px_-4px_rgba(16,24,40,0.10),0_4px_6px_-2px_rgba(16,24,40,0.05)] overflow-auto py-1">
       @for (item of items; track item.value) {
-        <div (click)="selectItem(item)" class="py-2 px-4 hover:bg-[#47588C] text-sm md:text-base text-white transition-colors duration-150">
+        <div (click)="selectItem(item)" class="py-2 px-4 hover:bg-[#47588C] cursor-pointer select-none text-sm md:text-base text-white transition-colors duration-150">
           {{ item.label }}
         </div>
       }
