@@ -200,6 +200,16 @@
         </button>
       </div>
     }
+    @if (chatPersonInfo.isSingleChat) {
+      <button type="button" (click)="isActivateSettings.set(!isActivateSettings())" class="text-[#B4B4B4] flex gap-2 justify-start w-full hover:text-[#C9C9C9] transition-colors duration-200 mb-4 md:mt-0 max-w-[600px] lg:max-w-[800px]">
+        <svg class="my-auto" width="8" height="13" viewBox="0 0 8 13" fill="none">
+          <path d="M6.81691 0.318242C7.23941 0.740742 7.23941 1.42324 6.81691 1.84574L2.61358 6.04908L6.81691 10.2524C7.23941 10.6749 7.23941 11.3574 6.81691 11.7799C6.39441 12.2024 5.71191 12.2024 5.28941 11.7799L0.316914 6.80741C-0.105586 6.38491 -0.105586 5.70241 0.316914 5.27991L5.28941 0.307409C5.70108 -0.104258 6.39441 -0.104258 6.81691 0.318242Z" fill="currentColor"/>
+        </svg>
+        <span class="uppercase text-sm">
+          Back to the chat
+        </span>
+      </button>
+    }
     <div class="border-out px-2 py-4 md:p-10 mx-auto w-full max-w-[600px] lg:max-w-[800px]">
       <div class="border-in px-4 pb-5 md:px-5 text-center pt-4 md:pt-10">
 
