@@ -179,7 +179,8 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
             country: value.country,
             city: value.city,
             age: value.age,
-            lang: value.lang
+            lang: value.lang,
+            isAdmin: value.isAdmin
           });
         },
         error: () => {}
