@@ -27,6 +27,7 @@ import { MainService } from '../../main/main.service';
 import { HttpXsrfTokenExtractor } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
 import { DropdownSelectComponent } from '../../../shared/dropdown/dropdown-select.component';
+import { InfiniteScrollDirective } from '../../../shared/directive/infinite-scroll.directive';
 
 interface HubError {
   message?: string;
@@ -39,7 +40,8 @@ interface HubError {
     NgClass,
     ReactiveFormsModule,
     DatePipe,
-    DropdownSelectComponent
+    DropdownSelectComponent,
+    InfiniteScrollDirective
   ],
   templateUrl: './chat.component.html',
   standalone: true,
@@ -125,6 +127,11 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
   private blockedPersonService = inject(BlockedUserService)
   private tokenExtractor = inject(HttpXsrfTokenExtractor)
   @ViewChild('chatContainer') private chatContainer!: ElementRef
+
+  readonly takePerson = 10
+  isLoading = signal<boolean>(false)
+  hasNextPage = signal<boolean>(true)
+  lastCrusor = signal<string | Date | null>(null)
 
   @HostListener('window:beforeunload')
   unloadHandler() {
@@ -393,14 +400,29 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   getGroupMembers() {
-    this.groupMemberService.getUsers(this.chatPersonInfo.idGroup!).subscribe({
-      next: value => {
-        this.groupMembers = value
+    this.loadMore()
+  }
+
+  loadMore(){
+    if (this.isLoading() || !this.hasNextPage()) return
+
+    this.isLoading.set(true)
+
+    this.groupMemberService.getUsers(this.chatPersonInfo.idGroup!, this.takePerson, this.lastCrusor()).subscribe({
+      next: (newGroups) => {
+        const items = newGroups ?? []
+
         this.isGroupMember.set(true)
+
+        this.groupMembers = [...(this.groupMembers ?? []), ...items];
+
+        if (items.length < this.takePerson) this.hasNextPage.set(false)
+
+        if (items.length > 0) this.lastCrusor.set(items[items.length - 1].joinedAt)
+
+        this.isLoading.set(false)
       },
-      error: err => {
-        this.commonErrorGetGroupMembers = err.error.title || 'Unhandled exception. To repair'
-      }
+      error: () => this.isLoading.set(false)
     })
   }
 

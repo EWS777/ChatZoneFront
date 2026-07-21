@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { GroupMember } from './group-member';
 import { environment } from '../../../../environments/environment';
 
@@ -10,8 +10,18 @@ export class GroupMemberService {
   http = inject(HttpClient)
   url = `${environment.apiUrl}groupMember`
 
-  getUsers(idGroup: number) {
+  getUsers(idGroup: number, takePerson: number = 10, cursor?: string | Date | null) {
+    let params = new HttpParams().set('takePerson', takePerson)
+
+    params = params.set('idGroup', idGroup)
+
+    if (cursor){
+      const dateObj = new Date(cursor);
+      params = params.set('cursor', dateObj.toISOString());
+    }
+
     return this.http.get<GroupMember[]>(`${this.url}/get-list?idGroup=${idGroup}`, {
+      params,
       withCredentials: true
     })
   }
