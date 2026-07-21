@@ -6,12 +6,14 @@ import { DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { MENU_ITEMS } from '../../../shared/profile-side-bar/profile-side-bar.component';
 import { AuthorizationService } from '../../identity/authorization/authorization.service';
+import { InfiniteScrollDirective } from '../../../shared/directive/infinite-scroll.directive';
 
 @Component({
   selector: 'app-blocked-users',
   imports: [
     DatePipe,
-    RouterLink
+    RouterLink,
+    InfiniteScrollDirective
   ],
   templateUrl: './blocked-users.component.html',
   standalone: true,
@@ -24,12 +26,33 @@ export class BlockedUsersComponent implements OnInit {
   isMenuOpen = signal<boolean>(false)
   protected readonly MENU_ITEMS = MENU_ITEMS;
 
+  readonly takePerson = 10
+  isLoading = signal<boolean>(false)
+  hasNextPage = signal<boolean>(true)
+  lastCrusor = signal<string | Date | null>(null)
+
   ngOnInit() {
-    this.blockedUserService.getBlockedPersons().subscribe({
-      next: value => {
-        this.blockedUser = value
+    this.loadMore()
+  }
+
+  loadMore(){
+    if (this.isLoading() || !this.hasNextPage()) return
+
+    this.isLoading.set(true)
+
+    this.blockedUserService.getBlockedPersons(this.takePerson, this.lastCrusor()).subscribe({
+      next: (newPersons) => {
+        const items = newPersons ?? []
+
+        this.blockedUser = [...(this.blockedUser ?? []), ...items];
+
+        if (items.length < this.takePerson) this.hasNextPage.set(false)
+
+        if (items.length > 0) this.lastCrusor.set(items[items.length - 1].createdAt)
+
+        this.isLoading.set(false)
       },
-      error: () => {}
+      error: () => this.isLoading.set(false)
     })
   }
 
