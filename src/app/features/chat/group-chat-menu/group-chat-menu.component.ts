@@ -11,6 +11,7 @@ import { GroupMemberService } from '../group-member/group-member.service';
 import { ChatService, CreateGroupInterface } from '../chat.service';
 import { CommonValidator } from '../../../shared/validation/CommonValidator';
 import { DropdownSelectComponent } from '../../../shared/dropdown/dropdown-select.component';
+import { InfiniteScrollDirective } from '../../../shared/directive/infinite-scroll.directive';
 
 interface CreateGroupForm {
   title: FormControl<string | null>;
@@ -26,7 +27,8 @@ interface CreateGroupForm {
     ReactiveFormsModule,
     FormsModule,
     RouterLink,
-    DropdownSelectComponent
+    DropdownSelectComponent,
+    InfiniteScrollDirective
   ],
   standalone: true,
   templateUrl: './group-chat-menu.component.html',
@@ -70,11 +72,33 @@ export class GroupChatMenuComponent implements OnInit {
     this.isGroupMemberBlocked = state?.['isGroupMemberBlocked']
   }
 
+  readonly takeGroup = 10
+  isLoading = signal<boolean>(false)
+  hasNextPage = signal<boolean>(true)
+  lastCrusor = signal<string | Date | null>(null)
+
   ngOnInit(): void {
-    this.chatService.getGroups().subscribe({
-      next: value => {
-        this.groupList = value
-      }
+    this.loadMore()
+  }
+
+  loadMore(){
+    if (this.isLoading() || !this.hasNextPage()) return
+
+    this.isLoading.set(true)
+
+    this.chatService.getGroups(this.takeGroup, this.lastCrusor()).subscribe({
+      next: (newGroups) => {
+        const items = newGroups ?? []
+
+        this.groupList = [...(this.groupList ?? []), ...items];
+
+        if (items.length < this.takeGroup) this.hasNextPage.set(false)
+
+        if (items.length > 0) this.lastCrusor.set(items[items.length - 1].createdAt)
+
+        this.isLoading.set(false)
+      },
+      error: () => this.isLoading.set(false)
     })
   }
 

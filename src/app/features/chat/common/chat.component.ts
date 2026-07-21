@@ -369,7 +369,8 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
       lang: rawValue.lang ? +rawValue.lang : null,
       idGroup: rawValue.idGroup ? +rawValue.idGroup : 0,
       isAdmin: rawValue.isAdmin,
-      personCount: rawValue.personCount ? +rawValue.personCount : null
+      personCount: rawValue.personCount ? +rawValue.personCount : null,
+      createdAt: null
     };
 
     this.chatService.updateGroup(payload).subscribe({

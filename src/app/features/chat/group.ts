@@ -7,4 +7,5 @@ export interface Group {
   lang: number | null
   isAdmin: boolean | null
   personCount: number | null
+  createdAt: Date | string | null
 }

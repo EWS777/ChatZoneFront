@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { ChatPersonInfo } from './chat-person-info';
 import { Group } from './group';
 import { environment } from '../../../environments/environment';
@@ -37,8 +37,16 @@ export class ChatService {
     })
   }
 
-  getGroups() {
+  getGroups(takeGroup: number = 10, cursor?: string | Date | null) {
+    let params = new HttpParams().set('takeGroup', takeGroup)
+
+    if (cursor){
+      const dateObj = new Date(cursor);
+      params = params.set('cursor', dateObj.toISOString());
+    }
+
     return this.http.get<Group[]>(`${this.url}/get`, {
+      params,
       withCredentials: true
     })
   }
