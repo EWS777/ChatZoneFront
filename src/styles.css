@@ -382,3 +382,8 @@ body {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+.custom-scrollbar{
+  scrollbar-width: thin;
+  scrollbar-color: #6366f1 transparent;
+}
