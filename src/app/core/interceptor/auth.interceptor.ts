@@ -19,7 +19,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
           return refreshTokenSubject.pipe(
             filter(result => result !== null),
             take(1),
-            switchMap(() => next(req))
+            switchMap(result => result ? next(req) : throwError(() => err))
           )
         }
 
