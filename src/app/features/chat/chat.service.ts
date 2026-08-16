@@ -37,12 +37,12 @@ export class ChatService {
     })
   }
 
-  getGroups(takeGroup: number = 10, cursor?: string | Date | null) {
+  getGroups(takeGroup: number = 10, cursor?: string | Date | null, cursorId?: number | null) {
     let params = new HttpParams().set('takeGroup', takeGroup)
 
     if (cursor){
-      const dateObj = new Date(cursor);
-      params = params.set('cursor', dateObj.toISOString());
+      params = params.set('cursor', new Date(cursor).toISOString())
+      if (cursorId != null) params = params.set('cursorId', cursorId)
     }
 
     return this.http.get<Group[]>(`${this.url}/get`, {
