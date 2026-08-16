@@ -391,7 +391,6 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
         this.updateGroupForm.controls.city.setValue(value.city)
         this.updateGroupForm.controls.age.setValue(value.age)
         this.updateGroupForm.controls.lang.setValue(value.lang)
-        this.updateGroupForm.controls.isAdmin.setValue(value.isAdmin)
       },
       error: (err) => {
         if (err.status === 400 && err.error && err.error.errors) {
