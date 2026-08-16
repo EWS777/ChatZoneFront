@@ -48,6 +48,7 @@ export class UpdatePasswordComponent {
       this.passwordForm.markAllAsTouched()
       return
     }
+    this.isLoading.set(true)
     const payload = {
       oldPassword: this.passwordForm.value.oldPassword || null,
       newPassword: this.passwordForm.value.newPassword || null
@@ -55,9 +56,11 @@ export class UpdatePasswordComponent {
 
     this.passwordService.updatePassword(payload).subscribe({
       next: () => {
+        this.isLoading.set(false)
         this.isPasswordChanged.set(true)
       },
       error: (err) => {
+        this.isLoading.set(false)
         if (err.status === 400 && err.error && err.error.errors) {
           const errors = err.error.errors;
 
