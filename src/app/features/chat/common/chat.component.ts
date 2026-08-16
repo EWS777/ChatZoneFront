@@ -199,7 +199,9 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
 
       this.groupChatService.setNewAdmin().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
         this.isGroupMember.set(false)
-        this.updateGroupForm.controls.isAdmin.setValue(isAdmin)
+        this.chatService.getGroup(this.chatPersonInfo.idGroup!).subscribe(group => {
+          this.updateGroupForm.controls.isAdmin.setValue(group.isAdmin)
+        })
         this.isNewAdminNotification.set(true)
       })
 
