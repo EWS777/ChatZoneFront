@@ -3,6 +3,7 @@ import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { CommonValidator } from '../../../shared/validation/CommonValidator';
 import { Router, RouterLink } from '@angular/router';
 import { DeleteProfileRequest, DeleteProfileService } from './delete-profile.service';
+import { AuthorizationService } from '../authorization/authorization.service';
 
 @Component({
   selector: 'app-delete-profile',
@@ -14,6 +15,7 @@ import { DeleteProfileRequest, DeleteProfileService } from './delete-profile.ser
 })
 export class DeleteProfileComponent {
   service = inject(DeleteProfileService)
+  authService = inject(AuthorizationService)
   router = inject(Router)
 
   hidePassword = signal<boolean>(true)
@@ -46,6 +48,7 @@ export class DeleteProfileComponent {
     this.service.deleteProfileService(payload).subscribe({
       next: () => {
         this.isLoading.set(false)
+        this.authService.resetAuthState()
         this.isDeleteProfile.set(true)
       },
       error: (err) => {

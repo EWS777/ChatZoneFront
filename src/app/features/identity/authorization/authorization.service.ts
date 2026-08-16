@@ -33,6 +33,10 @@ export class AuthorizationService {
     return this.authState.asObservable();
   }
 
+  resetAuthState() {
+    this.authState.next(false)
+  }
+
   postLogin(payload: { usernameOrEmail: string, Password: string }) {
     return this.http.post(`${this.baseApiUrl}authentication/login`, payload, {
       withCredentials: true
