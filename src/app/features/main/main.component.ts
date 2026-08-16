@@ -1,4 +1,4 @@
-import { Component, HostListener, inject, OnInit, signal } from '@angular/core';
+import { Component, HostListener, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { ProfileService } from '../profile/profile.service';
 import { Router } from '@angular/router';
 import { AuthorizationService } from '../identity/authorization/authorization.service';
@@ -28,7 +28,7 @@ import { HttpXsrfTokenExtractor } from '@angular/common/http';
   standalone: true,
   styleUrl: './main.component.css'
 })
-export class MainComponent implements OnInit {
+export class MainComponent implements OnInit, OnDestroy {
   isStartFindPerson = signal<boolean>(false)
   router = inject(Router)
   authService = inject(AuthorizationService)
@@ -100,6 +100,11 @@ export class MainComponent implements OnInit {
     this.signalService.startSearch(() => {
       this.isFindPerson.set(true)
     })
+  }
+
+  ngOnDestroy(): void {
+    this.signalService.offChatCreated()
+    this.signalService.offStartSearch()
   }
 
   onClickLogin() {

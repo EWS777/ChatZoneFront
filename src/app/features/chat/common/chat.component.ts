@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, HostListener, inject, OnDestroy, OnInit, signal, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, DestroyRef, ElementRef, HostListener, inject, OnDestroy, OnInit, signal, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DatePipe, NgClass } from '@angular/common';
 import { QuickMessageService } from '../../profile/quick-messages/quick-message.service';
@@ -28,6 +28,7 @@ import { HttpXsrfTokenExtractor } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
 import { DropdownSelectComponent } from '../../../shared/dropdown/dropdown-select.component';
 import { InfiniteScrollDirective } from '../../../shared/directive/infinite-scroll.directive';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 interface HubError {
   message?: string;
@@ -126,6 +127,7 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
   private quickMessageService = inject(QuickMessageService)
   private blockedPersonService = inject(BlockedUserService)
   private tokenExtractor = inject(HttpXsrfTokenExtractor)
+  private readonly destroyRef = inject(DestroyRef);
   @ViewChild('chatContainer') private chatContainer!: ElementRef
 
   readonly takePerson = 10
@@ -152,7 +154,9 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   async ngOnInit() {
-    this.baseChatService.receiveMessage().subscribe(data => {
+    this.baseChatService.receiveMessage()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(data => {
       this.messages.push(data)
 
       requestAnimationFrame(() => {
@@ -193,19 +197,19 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
         error: () => {}
       })
 
-      this.groupChatService.setNewAdmin().subscribe(isAdmin => {
+      this.groupChatService.setNewAdmin().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
         this.isGroupMember.set(false)
         this.updateGroupForm.controls.isAdmin.setValue(isAdmin)
         this.isNewAdminNotification.set(true)
       })
 
-      this.groupChatService.notifyDeleteGroup().subscribe({
+      this.groupChatService.notifyDeleteGroup().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
         next: () => {
           this.isDeleteGroupStatus.set(true)
         }
       })
 
-      this.groupChatService.blockedGroupMember().subscribe({
+      this.groupChatService.blockedGroupMember().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
         next: () => {
           this.router.navigate(['/groups'], {
             state: { isGroupMemberBlocked: true }
@@ -213,7 +217,7 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
         }
       })
 
-      this.groupChatService.updateGroupChat().subscribe({
+      this.groupChatService.updateGroupChat().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
         next: value => {
           this.updateGroupForm.patchValue({
             title: value.title,
