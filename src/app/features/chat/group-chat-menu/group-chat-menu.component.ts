@@ -51,6 +51,7 @@ export class GroupChatMenuComponent implements OnInit {
   cityList = this.enumToKeyValue(CityList);
   ageList = this.enumToKeyValue(AgeList);
   langList = this.enumToKeyValue(LangList);
+  lastCursorId = signal<number | null>(null)
   createGroupForm = new FormGroup<CreateGroupForm>({
     title: new FormControl<string | null>(null, [
       CommonValidator.required,
@@ -86,16 +87,16 @@ export class GroupChatMenuComponent implements OnInit {
 
     this.isLoading.set(true)
 
-    this.chatService.getGroups(this.takeGroup, this.lastCrusor()).subscribe({
+    this.chatService.getGroups(this.takeGroup, this.lastCrusor(), this.lastCursorId()).subscribe({
       next: (newGroups) => {
         const items = newGroups ?? []
-
-        this.groupList = [...(this.groupList ?? []), ...items];
-
+        this.groupList = [...this.groupList, ...items]
         if (items.length < this.takeGroup) this.hasNextPage.set(false)
-
-        if (items.length > 0) this.lastCrusor.set(items[items.length - 1].createdAt)
-
+        if (items.length > 0) {
+          const last = items[items.length - 1]
+          this.lastCrusor.set(last.createdAt)
+          this.lastCursorId.set(last.idGroup)
+        }
         this.isLoading.set(false)
       },
       error: () => this.isLoading.set(false)
