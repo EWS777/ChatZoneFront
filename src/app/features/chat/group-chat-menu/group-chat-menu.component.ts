@@ -134,7 +134,7 @@ export class GroupChatMenuComponent implements OnInit {
             this.titleError = err.error.errors['title'][0];
           }
         } else {
-          this.commonError = err.error.title || 'Unhandled exception. To repair'
+          this.commonError = err.error?.title || 'Unhandled exception. To repair'
         }
       }
     })
@@ -146,7 +146,7 @@ export class GroupChatMenuComponent implements OnInit {
         await this.signalService.addToGroup(idGroup)
       },
       error: err => {
-        this.commonErrorAddToGroup = err.error.title || 'Unhandled exception. To repair'
+        this.commonErrorAddToGroup = err.error?.title || 'Unhandled exception. To repair'
       }
     })
   }

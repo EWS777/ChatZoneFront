@@ -77,7 +77,7 @@ export class ProfileComponent implements OnInit {
               }
             });
           } else {
-            this.commonError = err.error.title || 'Unhandled exception. To repair'
+            this.commonError = err.error?.title || 'Unhandled exception. To repair'
           }
         }
       })

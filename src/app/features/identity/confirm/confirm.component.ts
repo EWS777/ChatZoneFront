@@ -42,7 +42,7 @@ export class ConfirmComponent implements OnInit {
         },
         error: (err) => {
           this.isConfirmed.set(false)
-          this.commonError = err.error.title || 'Unhandled exception. To repair'
+          this.commonError = err.error?.title || 'Unhandled exception. To repair'
         }
       })
     }
@@ -61,7 +61,7 @@ export class ConfirmComponent implements OnInit {
         this.successMessage.set(msg);
       },
       error: (err) => {
-        this.commonError = err.error.title || 'Unhandled exception. To repair'
+        this.commonError = err.error?.title || 'Unhandled exception. To repair'
       }
     })
   }

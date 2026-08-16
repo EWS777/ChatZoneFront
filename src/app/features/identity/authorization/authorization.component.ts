@@ -101,7 +101,7 @@ export class AuthorizationComponent {
             }
           });
         } else {
-          this.commonErrorLogin = err.error.title || 'Unhandled exception. To repair'
+          this.commonErrorLogin = err.error?.title || 'Unhandled exception. To repair'
         }
       }
     })
@@ -138,7 +138,7 @@ export class AuthorizationComponent {
             }
           });
         } else {
-          this.commonError = err.error.title || 'Unhandled exception. To repair'
+          this.commonError = err.error?.title || 'Unhandled exception. To repair'
         }
       }
     });
