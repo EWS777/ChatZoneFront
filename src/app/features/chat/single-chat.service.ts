@@ -18,19 +18,25 @@ export interface SingleChatFilter {
   providedIn: 'root'
 })
 export class SingleChatService extends BaseChatService {
+  private personLeftChatHandler: (() => void) | null = null;
+  private chatCreatedHandler: (() => void) | null = null;
+  private queueJoinedHandler: (() => void) | null = null;
 
   constructor() {
     super();
   }
 
   personLeftChat(result: () => void) {
-    this.hubConnection.on('LeftChat', () => {
-      this.ngZone.run(() => result())
-    })
+    this.offPersonLeftChat();
+    this.personLeftChatHandler = () => this.ngZone.run(() => result());
+    this.hubConnection.on('LeftChat', this.personLeftChatHandler)
   }
 
   offPersonLeftChat() {
-    this.hubConnection.off('LeftChat')
+    if (this.personLeftChatHandler) {
+      this.hubConnection.off('LeftChat', this.personLeftChatHandler)
+      this.personLeftChatHandler = null;
+    }
   }
 
   async startSearchSingleChat(filter: SingleChatFilter): Promise<void> {
@@ -39,14 +45,28 @@ export class SingleChatService extends BaseChatService {
   }
 
   onChatCreated(result: () => void) {
-    this.hubConnection.on('ChatCreated', () => {
-      this.ngZone.run(() => result())
-    });
+    this.offChatCreated();
+    this.chatCreatedHandler = () => this.ngZone.run(() => result());
+    this.hubConnection.on('ChatCreated', this.chatCreatedHandler);
+  }
+
+  offChatCreated() {
+    if (this.chatCreatedHandler) {
+      this.hubConnection.off('ChatCreated', this.chatCreatedHandler);
+      this.chatCreatedHandler = null;
+    }
   }
 
   startSearch(result: () => void) {
-    this.hubConnection.on('QueueJoined', () => {
-      this.ngZone.run(() => result())
-    });
+    this.offStartSearch();
+    this.queueJoinedHandler = () => this.ngZone.run(() => result());
+    this.hubConnection.on('QueueJoined', this.queueJoinedHandler);
+  }
+
+  offStartSearch() {
+    if (this.queueJoinedHandler) {
+      this.hubConnection.off('QueueJoined', this.queueJoinedHandler);
+      this.queueJoinedHandler = null;
+    }
   }
 }

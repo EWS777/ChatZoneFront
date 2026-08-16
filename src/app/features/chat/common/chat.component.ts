@@ -183,6 +183,7 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.chatPersonInfo.isSingleChat) {
       this.singleChatService.personLeftChat(() => this.isOtherPersonLeft.set(true))
     } else {
+      await this.groupChatService.startConnect()
       this.chatService.getGroup(this.chatPersonInfo.idGroup!).subscribe({
         next: value => {
           this.updateGroupForm.patchValue({

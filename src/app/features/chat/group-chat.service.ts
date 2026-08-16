@@ -7,36 +7,37 @@ import { Group } from './group';
   providedIn: 'root'
 })
 export class GroupChatService extends BaseChatService {
-  private adminSubject = new Subject<boolean>();
-  private blockedMember = new Subject();
-  private deleteGroup = new Subject();
+  private adminSubject = new Subject<void>();
+  private blockedMember = new Subject<void>();
+  private deleteGroup = new Subject<void>();
   private updateGroupChatParam = new Subject<Group>();
 
   constructor() {
     super();
 
-    this.hubConnection.on('AdminChanged', (isAdmin: boolean) => {
-      this.adminSubject.next(isAdmin)
-    })
+    this.hubConnection.on('AdminChanged', () => {
+      this.ngZone.run(() => this.adminSubject.next())
+    });
 
     this.hubConnection.on('BlockedIntoGroupChat', () => {
-      this.blockedMember.next(() => {})
+      this.ngZone.run(() => this.blockedMember.next())
     })
 
     this.hubConnection.on('NotifyDeleteGroup', () => {
-      this.deleteGroup.next(() => {})
+      this.ngZone.run(() => this.deleteGroup.next())
     })
 
     this.hubConnection.on('UpdateGroupChatParam', (result: Group) => {
-      this.updateGroupChatParam.next(result)
+      this.ngZone.run(() => this.updateGroupChatParam.next(result))
     })
   }
 
   async addToGroup(groupName: number) {
+    await this.ensureConnection()
     await this.hubConnection.invoke('AddToGroup', groupName)
   }
 
-  setNewAdmin(): Observable<boolean> {
+  setNewAdmin(): Observable<void> {
     return this.adminSubject.asObservable();
   }
 
