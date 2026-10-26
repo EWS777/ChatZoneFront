@@ -10,12 +10,13 @@ export class BlockedUserService {
   http = inject(HttpClient)
   url = `${environment.apiUrl}blockedPerson`
 
-  getBlockedPersons(takePerson: number = 10, cursor?: string | Date | null) {
+  getBlockedPersons(takePerson: number = 10, cursor?: string | Date | null, cursorId?: number | null) {
     let params = new HttpParams().set('takePerson', takePerson)
 
     if (cursor){
       const dateObj = new Date(cursor);
       params = params.set('cursor', dateObj.toISOString());
+      if (cursorId != null) params = params.set('cursorId', cursorId)
     }
 
     return this.http.get<BlockedUser[]>(`${this.url}`, {

@@ -311,7 +311,6 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
           if (isExit) this.router.navigate([''])
           else {
             this.isDisconnect.set(null)
-            this.isShowNewFinder.set(true)
             this.findNewPerson()
           }
         }
@@ -331,7 +330,7 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   deleteGroupChat() {
-    this.chatService.deleteGroup(this.updateGroupForm.controls.idGroup.value!).subscribe({
+    this.chatService.deleteGroup(this.chatPersonInfo.idGroup!).subscribe({
       next: () => {
         this.router.navigate(['/']).then()
       },
@@ -346,14 +345,12 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   findNewPerson() {
+    this.isShowNewFinder.set(true)
     this.filter.connectionId = this.baseChatService.connectionId
     this.filter.isSearchAgain = true
-
     this.singleChatService.startSearchSingleChat(this.filter)
-      .then(() => {
-        window.location.reload();
-      })
       .catch(() => {
+        this.isShowNewFinder.set(false)
       });
   }
 

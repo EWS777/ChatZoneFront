@@ -30,6 +30,7 @@ export class BlockedUsersComponent implements OnInit {
   isLoading = signal<boolean>(false)
   hasNextPage = signal<boolean>(true)
   lastCrusor = signal<string | Date | null>(null)
+  lastCursorId = signal<number | null>(null)
 
   ngOnInit() {
     this.loadMore()
@@ -40,7 +41,7 @@ export class BlockedUsersComponent implements OnInit {
 
     this.isLoading.set(true)
 
-    this.blockedUserService.getBlockedPersons(this.takePerson, this.lastCrusor()).subscribe({
+    this.blockedUserService.getBlockedPersons(this.takePerson, this.lastCrusor(), this.lastCursorId()).subscribe({
       next: (newPersons) => {
         const items = newPersons ?? []
 
@@ -48,7 +49,11 @@ export class BlockedUsersComponent implements OnInit {
 
         if (items.length < this.takePerson) this.hasNextPage.set(false)
 
-        if (items.length > 0) this.lastCrusor.set(items[items.length - 1].createdAt)
+        if (items.length > 0) {
+          const last = items[items.length - 1]
+          this.lastCrusor.set(last.createdAt)
+          this.lastCursorId.set(last.idBlockedPerson)
+        }
 
         this.isLoading.set(false)
       },
