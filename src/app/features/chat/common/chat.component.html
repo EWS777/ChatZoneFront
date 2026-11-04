@@ -6,12 +6,23 @@
         <path d="M22.5 16C22.5 15 23.5 9 16.1757 9H4.5" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
       </svg>
     </button>
+    @if (chatTags.length) {
+      <div class="chat-params-frame flex min-w-0 mx-3 md:mx-6 px-2 py-1.5 md:px-3 md:py-2">
+        <ul class="flex items-center gap-2 md:gap-3 overflow-x-auto no-scrollbar">
+          @for (tag of chatTags; track $index) {
+            <li class="chat-param-tag text-[10px] md:text-xs px-3 py-1 whitespace-nowrap">{{ tag }}</li>
+          }
+        </ul>
+      </div>
+    }
     @if (chatPersonInfo.isSingleChat || (!chatPersonInfo.isSingleChat && updateGroupForm.controls.isAdmin.value)) {
       <button (click)="isActivateSettings.set(!isActivateSettings())" type="button" class="flex items-center justify-center p-0 bg-transparent border-0 cursor-pointer my-auto focus:outline-none">
         <svg width="24" height="24" viewBox="0 0 24 24">
           <path fill="none" stroke="#B4B4B4" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7.05 6.462a2 2 0 0 0 2.63-1.519l.32-1.72a9 9 0 0 1 3.998 0l.322 1.72a2 2 0 0 0 2.63 1.519l1.649-.58a9 9 0 0 1 2.001 3.46l-1.33 1.14a2 2 0 0 0 0 3.037l1.33 1.139a9 9 0 0 1-2.001 3.46l-1.65-.58a2 2 0 0 0-2.63 1.519L14 20.777a9 9 0 0 1-3.998 0l-.322-1.72a2 2 0 0 0-2.63-1.519l-1.649.58a9 9 0 0 1-2.001-3.46l1.33-1.14a2 2 0 0 0 0-3.036L3.4 9.342a9 9 0 0 1 2-3.46zM12 9a3 3 0 1 1 0 6a3 3 0 0 1 0-6" clip-rule="evenodd"/>
         </svg>
       </button>
+    } @else {
+      <span class="w-6 shrink-0"></span>
     }
   </div>
 

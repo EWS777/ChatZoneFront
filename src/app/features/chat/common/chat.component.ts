@@ -13,6 +13,7 @@ import { CountryList } from '../../profile/filter/enums/country-list';
 import { CityList } from '../../profile/filter/enums/city-list';
 import { AgeList } from '../../profile/filter/enums/age-list';
 import { LangList } from '../../profile/filter/enums/lang-list';
+import { ThemeList } from '../../profile/filter/enums/theme-list';
 import { GroupMemberService } from '../group-member/group-member.service';
 import { GroupMember } from '../group-member/group-member';
 import { GroupChatService } from '../group-chat.service';
@@ -91,7 +92,9 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
     idGroup: null,
     isSingleChat: null,
     idPartnerPerson: null,
-    isSentMessage: null
+    isSentMessage: null,
+    partnerUsername: null,
+    search: null
   }
   groupMembers!: GroupMember[]
   isOtherPersonLeft = signal<boolean>(false)
@@ -232,6 +235,32 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
         }
       })
     }
+  }
+
+  get chatTags(): string[] {
+    const label = (list: Record<number, string>, value: number | null | undefined) =>
+      value === null || value === undefined ? null : (list[value] ?? null)
+
+    if (this.chatPersonInfo.isSingleChat) {
+      const search = this.chatPersonInfo.search
+      return [
+        this.chatPersonInfo.partnerUsername,
+        label(ThemeList, search?.theme),
+        label(AgeList, search?.age),
+        label(CountryList, search?.country),
+        label(CityList, search?.city),
+        label(LangList, search?.language)
+      ].filter((tag): tag is string => !!tag)
+    }
+
+    const group = this.updateGroupForm.getRawValue()
+    return [
+      group.title,
+      label(AgeList, group.age),
+      label(CountryList, group.country),
+      label(CityList, group.city),
+      label(LangList, group.lang)
+    ].filter((tag): tag is string => !!tag)
   }
 
   ngOnDestroy(): void {

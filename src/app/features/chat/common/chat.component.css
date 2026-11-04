@@ -4,6 +4,20 @@
   box-shadow: 0 1px 2px 0 #4629F2, 0 0 0 1px #4629F2, 0 14px 40px -18px #2D0277;
 }
 
+.chat-params-frame {
+  border-radius: 10px;
+  border: 1px solid #2556EB;
+  background: rgba(27, 33, 46, 0.10);
+  box-shadow: 0 1px 2px 0 #4629F2, 0 0 0 1px #4629F2, 0 14px 40px -18px #2D0277;
+}
+
+.chat-param-tag {
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.20);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.85);
+}
+
 .button-send {
   border-radius: 10px;
   background: linear-gradient(90deg, #2556EB 0%, #153185 100%);
