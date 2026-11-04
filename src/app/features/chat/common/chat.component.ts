@@ -190,6 +190,7 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
       this.chatService.getGroup(this.chatPersonInfo.idGroup!).subscribe({
         next: value => {
           this.updateGroupForm.patchValue({
+            idGroup: this.chatPersonInfo.idGroup,
             title: value.title,
             country: value.country,
             city: value.city,
@@ -420,6 +421,8 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
         this.updateGroupForm.controls.city.setValue(value.city)
         this.updateGroupForm.controls.age.setValue(value.age)
         this.updateGroupForm.controls.lang.setValue(value.lang)
+        this.titleError = ''
+        this.isActivateSettings.set(false)
       },
       error: (err) => {
         if (err.status === 400 && err.error && err.error.errors) {
