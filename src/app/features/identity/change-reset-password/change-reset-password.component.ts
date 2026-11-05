@@ -70,11 +70,17 @@ export class ChangeResetPasswordComponent implements OnInit {
       email: this.resetPasswordForm.controls.email.value!,
       password: this.resetPasswordForm.value.newPassword!
     };
+    if (this.isLoading()) return
+    this.isLoading.set(true)
     this.service.resetPassword(dataToSend).subscribe({
       next: () => {
+        this.isLoading.set(false)
         this.isPasswordChanged.set(true)
       },
-      error: (err) => handleBackendErrors(err, this.resetPasswordForm, this)
+      error: (err) => {
+        this.isLoading.set(false)
+        handleBackendErrors(err, this.resetPasswordForm, this)
+      }
     })
   }
 }
