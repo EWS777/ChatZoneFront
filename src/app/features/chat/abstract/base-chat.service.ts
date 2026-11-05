@@ -9,21 +9,40 @@ import { environment } from '../../../../environments/environment';
   providedIn: 'root'
 })
 export abstract class BaseChatService {
-  connectionId: string = ''
+  private static sharedConnection: HubConnection | null = null
+  private static sharedConnectionPromise: Promise<void> | null = null
+  private static sharedConnectionId = ''
+  private static handlersRegistered = false
+  private static readonly messageSubject = new Subject<{ idSender: number, message: string, createdAt: Date }>();
+
   protected router = inject(Router)
   protected ngZone = inject(NgZone)
   protected readonly hubConnection: HubConnection;
-  private messageSubject = new Subject<{ idSender: number, message: string, createdAt: Date }>();
-  private connectionPromise: Promise<void> | null = null
+
+  get connectionId(): string {
+    return BaseChatService.sharedConnectionId
+  }
+
+  set connectionId(value: string) {
+    BaseChatService.sharedConnectionId = value
+  }
 
   protected constructor() {
-    this.hubConnection = new HubConnectionBuilder()
+    BaseChatService.sharedConnection ??= new HubConnectionBuilder()
       .withUrl(`${environment.apiUrl}chat`, {
         withCredentials: true
       })
       .withAutomaticReconnect()
       .configureLogging(signalR.LogLevel.Information)
       .build()
+    this.hubConnection = BaseChatService.sharedConnection
+
+    if (BaseChatService.handlersRegistered) return
+    BaseChatService.handlersRegistered = true
+
+    this.hubConnection.onclose(() => {
+      BaseChatService.sharedConnectionPromise = null
+    })
 
     this.hubConnection.on("ChatCreated", () => {
       this.ngZone.run(() => {
@@ -37,7 +56,7 @@ export abstract class BaseChatService {
 
     this.hubConnection.on('Receive', (idSender: number, message: string, createdAt: Date) => {
       this.ngZone.run(() => {
-        this.messageSubject.next({ idSender: idSender, message: message, createdAt: createdAt });
+        BaseChatService.messageSubject.next({ idSender: idSender, message: message, createdAt: createdAt });
       });
     })
   }
@@ -50,20 +69,20 @@ export abstract class BaseChatService {
     if (this.hubConnection.state === HubConnectionState.Connected) {
       return;
     }
-    if (this.connectionPromise) {
-      return this.connectionPromise
+    if (BaseChatService.sharedConnectionPromise) {
+      return BaseChatService.sharedConnectionPromise
     }
 
-    this.connectionPromise = this.hubConnection.start()
+    BaseChatService.sharedConnectionPromise = this.hubConnection.start()
       .then(async () => {
         this.connectionId = await this.hubConnection.invoke('GetConnectionId')
       })
       .catch(error => {
-        this.connectionPromise = null
+        BaseChatService.sharedConnectionPromise = null
         throw error
       })
 
-    return this.connectionPromise
+    return BaseChatService.sharedConnectionPromise
   }
 
   async sendMessage(idGroup: number, message: string, isSingleChat: boolean) {
@@ -72,6 +91,6 @@ export abstract class BaseChatService {
   }
 
   receiveMessage(): Observable<{ idSender: number, message: string, createdAt: Date }> {
-    return this.messageSubject.asObservable();
+    return BaseChatService.messageSubject.asObservable();
   }
 }
