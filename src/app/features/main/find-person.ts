@@ -1,12 +1,12 @@
 export interface FindPerson {
   connectionId: string
   theme: number | null,
-  country: number | null,
-  city: number | null,
+  idCountry: number | null,
+  idCity: number | null,
   age: number | null,
   yourGender: number | null,
   partnerGender: number | null,
-  language: number | null,
+  idLanguage: number | null,
   isSearchAgain: boolean,
   isFindRandomPerson: false
 }

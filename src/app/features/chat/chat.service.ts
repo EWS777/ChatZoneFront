@@ -1,15 +1,15 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { ChatPersonInfo } from './chat-person-info';
-import { Group } from './group';
+import { Group, UpdateGroupRequest } from './group';
 import { environment } from '../../../environments/environment';
 
 export interface CreateGroupInterface {
   title: string
-  country: number | null
-  city: number | null
+  idCountry: number | null
+  idCity: number | null
   age: number | null
-  lang: number | null
+  idLanguage: number | null
 }
 
 @Injectable({
@@ -57,7 +57,7 @@ export class ChatService {
     })
   }
 
-  updateGroup(group: Group) {
+  updateGroup(group: UpdateGroupRequest) {
     return this.http.put<Group>(`${this.url}/update`, group, {
       withCredentials: true
     })

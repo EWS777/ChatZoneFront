@@ -1,3 +1,5 @@
+import { NamedItem } from '../../shared/location/location';
+
 export interface ChatPersonInfo {
   idPerson: number | null
   idGroup: number | null
@@ -10,8 +12,8 @@ export interface ChatPersonInfo {
 
 export interface ChatSearchInfo {
   theme: number | null
-  country: number | null
-  city: number | null
+  country: NamedItem | null
+  city: NamedItem | null
   age: number | null
-  language: number | null
+  language: NamedItem | null
 }

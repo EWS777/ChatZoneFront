@@ -4,11 +4,11 @@ import { BaseChatService } from './abstract/base-chat.service';
 export interface SingleChatFilter {
   connectionId: string | null,
   theme: number | null,
-  country: number | null,
-  city: number | null,
+  idCountry: number | null,
+  idCity: number | null,
   age: number | null,
   yourGender: number | null,
-  language: number | null,
+  idLanguage: number | null,
   partnerGender: number | null,
   isSearchAgain: boolean,
   isFindRandomPerson: boolean

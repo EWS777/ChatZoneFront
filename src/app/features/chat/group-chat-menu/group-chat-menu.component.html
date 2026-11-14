@@ -33,20 +33,20 @@
                 <div class="flex flex-wrap gap-2 md:overflow-x-auto md:flex-nowrap md:max-w-[66%] no-scrollbar">
                   <span class="group-chat-params">{{ groups.title }} </span>
 
-                  @if (groups.lang !== null) {
-                    <span class="group-chat-params"> {{ LangList[groups.lang] }} </span>
+                  @if (groups.language) {
+                    <span class="group-chat-params"> {{ groups.language.name }} </span>
                   }
 
                   @if (groups.age !== null) {
                     <span class="group-chat-params"> {{ AgeList[groups.age] }} </span>
                   }
 
-                  @if (groups.country !== null) {
-                    <span class="group-chat-params"> {{ CountryList[groups.country] }} </span>
+                  @if (groups.country) {
+                    <span class="group-chat-params"> {{ groups.country.name }} </span>
                   }
 
-                  @if (groups.city !== null) {
-                    <span class="group-chat-params"> {{ CityList[groups.city] }} </span>
+                  @if (groups.city) {
+                    <span class="group-chat-params"> {{ groups.city.name }} </span>
                   }
 
                 </div>
@@ -130,7 +130,7 @@
             </div>
             <div>
               <label class="input-auth-name">Country</label>
-              <app-dropdown-select [items]="countryList" placeholder="Choose country" formControlName="country"></app-dropdown-select>
+              <app-dropdown-select [items]="countryList()" [searchable]="true" clearLabel="Any country" placeholder="Choose country" formControlName="country"></app-dropdown-select>
               @if (createGroupForm.controls.country.errors?.['backend']; as backendErrors) {
                 @for (err of backendErrors; track err) {
                   <small class="error-input-text">{{ err }}</small>
@@ -139,7 +139,7 @@
             </div>
             <div>
               <label class="input-auth-name">City</label>
-              <app-dropdown-select [items]="cityList" placeholder="Choose city" formControlName="city"></app-dropdown-select>
+              <app-dropdown-select [items]="cityOptions.items()" [searchable]="true" [remoteSearch]="true" (searchChange)="cityOptions.search($event)" clearLabel="Any city" [placeholder]="createGroupForm.controls.country.value === null ? 'Choose country first' : 'Choose city'" formControlName="city"></app-dropdown-select>
               @if (createGroupForm.controls.city.errors?.['backend']; as backendErrors) {
                 @for (err of backendErrors; track err) {
                   <small class="error-input-text">{{ err }}</small>
@@ -157,7 +157,7 @@
             </div>
             <div>
               <label class="input-auth-name">Language</label>
-              <app-dropdown-select [items]="langList" placeholder="Choose language" formControlName="lang"></app-dropdown-select>
+              <app-dropdown-select [items]="langList()" [searchable]="true" clearLabel="Any language" placeholder="Choose language" formControlName="lang"></app-dropdown-select>
               @if (createGroupForm.controls.lang.errors?.['backend']; as backendErrors) {
                 @for (err of backendErrors; track err) {
                   <small class="error-input-text">{{ err }}</small>

@@ -1,10 +1,7 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Group } from '../group';
-import { CountryList } from '../../profile/filter/enums/country-list';
-import { CityList } from '../../profile/filter/enums/city-list';
 import { AgeList } from '../../profile/filter/enums/age-list';
-import { LangList } from '../../profile/filter/enums/lang-list';
 import { GroupChatService } from '../group-chat.service';
 import { Router, RouterLink } from '@angular/router';
 import { GroupMemberService } from '../group-member/group-member.service';
@@ -12,6 +9,9 @@ import { ChatService, CreateGroupInterface } from '../chat.service';
 import { CommonValidator } from '../../../shared/validation/CommonValidator';
 import { DropdownSelectComponent } from '../../../shared/dropdown/dropdown-select.component';
 import { InfiniteScrollDirective } from '../../../shared/directive/infinite-scroll.directive';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { LocationService } from '../../../shared/location/location.service';
+import { CityOptions } from '../../../shared/location/city-options';
 
 interface CreateGroupForm {
   title: FormControl<string | null>;
@@ -40,6 +40,7 @@ export class GroupChatMenuComponent implements OnInit {
   chatService = inject(ChatService)
   signalService = inject(GroupChatService)
   groupMemberService = inject(GroupMemberService)
+  locationService = inject(LocationService)
 
   isGroupMemberBlocked = false;
   groupList: Group[] = []
@@ -47,10 +48,9 @@ export class GroupChatMenuComponent implements OnInit {
   commonError: string = ''
   commonErrorAddToGroup: string = ''
   titleError: string = ''
-  countryList = this.enumToKeyValue(CountryList);
-  cityList = this.enumToKeyValue(CityList);
+  countryList = toSignal(this.locationService.countryItems(), { initialValue: [] });
   ageList = this.enumToKeyValue(AgeList);
-  langList = this.enumToKeyValue(LangList);
+  langList = toSignal(this.locationService.languageItems(), { initialValue: [] });
   lastCursorId = signal<number | null>(null)
   createGroupForm = new FormGroup<CreateGroupForm>({
     title: new FormControl<string | null>(null, [
@@ -63,10 +63,8 @@ export class GroupChatMenuComponent implements OnInit {
     age: new FormControl(null),
     lang: new FormControl(null)
   })
-  protected readonly CountryList = CountryList;
-  protected readonly CityList = CityList;
+  cityOptions = new CityOptions(this.locationService, this.createGroupForm.controls.country, this.createGroupForm.controls.city, inject(DestroyRef));
   protected readonly AgeList = AgeList;
-  protected readonly LangList = LangList;
 
   constructor() {
     const state = this.router.currentNavigation()?.extras.state
@@ -115,12 +113,13 @@ export class GroupChatMenuComponent implements OnInit {
       return
     }
 
+    const form = this.createGroupForm.getRawValue()
     const groupData: CreateGroupInterface = {
-      title: this.createGroupForm.value.title!,
-      country: this.createGroupForm.value.country ?? null,
-      city: this.createGroupForm.value.city ?? null,
-      age: this.createGroupForm.value.age ?? null,
-      lang: this.createGroupForm.value.lang ?? null,
+      title: form.title!,
+      idCountry: form.country ?? null,
+      idCity: form.city ?? null,
+      age: form.age ?? null,
+      idLanguage: form.lang ?? null,
     }
 
     this.chatService.createGroup(groupData).subscribe({

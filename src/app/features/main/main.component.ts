@@ -1,12 +1,9 @@
-import { Component, HostListener, inject, OnDestroy, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, HostListener, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { ProfileService } from '../profile/profile.service';
 import { Router } from '@angular/router';
 import { AuthorizationService } from '../identity/authorization/authorization.service';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { CountryList } from '../profile/filter/enums/country-list';
 import { AgeList } from '../profile/filter/enums/age-list';
-import { CityList } from '../profile/filter/enums/city-list';
-import { LangList } from '../profile/filter/enums/lang-list';
 import { ThemeList } from '../profile/filter/enums/theme-list';
 import { GenderList } from '../profile/filter/enums/gender-list';
 import { MainService } from './main.service';
@@ -16,6 +13,9 @@ import { environment } from '../../../environments/environment';
 import { ChatService } from '../chat/chat.service';
 import { DropdownSelectComponent } from '../../shared/dropdown/dropdown-select.component';
 import { HttpXsrfTokenExtractor } from '@angular/common/http';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { LocationService } from '../../shared/location/location.service';
+import { CityOptions } from '../../shared/location/city-options';
 
 @Component({
   selector: 'app-main',
@@ -37,6 +37,7 @@ export class MainComponent implements OnInit, OnDestroy {
   profile = inject(ProfileService)
   filterService = inject(FilterService)
   chatService = inject(ChatService)
+  locationService = inject(LocationService)
   username: string | null = null;
   isFilterActivated = signal<boolean>(false)
   isFindPerson = signal<boolean>(false)
@@ -55,10 +56,10 @@ export class MainComponent implements OnInit, OnDestroy {
     isFindRandomPerson: new FormControl<boolean>(false)
   })
   themeList = this.enumToKeyValue(ThemeList);
-  countryList = this.enumToKeyValue(CountryList);
-  cityList = this.enumToKeyValue(CityList);
+  countryList = toSignal(this.locationService.countryItems(), { initialValue: [] });
+  cityOptions = new CityOptions(this.locationService, this.findSingleChatForm.controls.country, this.findSingleChatForm.controls.city, inject(DestroyRef));
   ageList = this.enumToKeyValue(AgeList);
-  langList = this.enumToKeyValue(LangList);
+  langList = toSignal(this.locationService.languageItems(), { initialValue: [] });
   genderList = this.enumToKeyValue(GenderList);
   private tokenExtractor = inject(HttpXsrfTokenExtractor)
 
@@ -119,13 +120,12 @@ export class MainComponent implements OnInit, OnDestroy {
     this.isFilterActivated.set(!this.isFilterActivated())
     this.filterService.getFilter().subscribe({
       next: value => {
-        this.findSingleChatForm.get('country')?.setValue(value.country)
+        this.cityOptions.setValue(value.country, value.city)
         this.findSingleChatForm.get('age')?.setValue(value.age)
         this.findSingleChatForm.get('theme')?.setValue(value.theme)
-        this.findSingleChatForm.get('city')?.setValue(value.city)
         this.findSingleChatForm.get('yourGender')?.setValue(value.yourGender)
         this.findSingleChatForm.get('partnerGender')?.setValue(value.partnerGender)
-        this.findSingleChatForm.get('language')?.setValue(value.language)
+        this.findSingleChatForm.get('language')?.setValue(value.language?.id ?? null)
       }
     })
   }
@@ -156,17 +156,19 @@ export class MainComponent implements OnInit, OnDestroy {
   startFindPerson() {
     this.isFilterActivated.set(false)
 
+    const form = this.findSingleChatForm.getRawValue()
+    const isRandom = form.isFindRandomPerson === true
     const filterData: SingleChatFilter = {
-      connectionId: this.findSingleChatForm.value.connectionId ?? null,
-      theme: this.findSingleChatForm.value.isFindRandomPerson === true ? null : this.findSingleChatForm.value.theme ?? null,
-      country: this.findSingleChatForm.value.isFindRandomPerson === true ? null : this.findSingleChatForm.value.country ?? null,
-      city: this.findSingleChatForm.value.isFindRandomPerson === true ? null : this.findSingleChatForm.value.city ?? null,
-      age: this.findSingleChatForm.value.isFindRandomPerson === true ? null : this.findSingleChatForm.value.age ?? null,
-      yourGender: this.findSingleChatForm.value.isFindRandomPerson === true ? null : this.findSingleChatForm.value.yourGender ?? null,
-      language: this.findSingleChatForm.value.isFindRandomPerson === true ? null : this.findSingleChatForm.value.language ?? null,
-      partnerGender: this.findSingleChatForm.value.isFindRandomPerson === true ? null : this.findSingleChatForm.value.partnerGender ?? null,
-      isSearchAgain: !!this.findSingleChatForm.value.isSearchAgain,
-      isFindRandomPerson: !!this.findSingleChatForm.value.isFindRandomPerson
+      connectionId: form.connectionId ?? null,
+      theme: isRandom ? null : form.theme ?? null,
+      idCountry: isRandom ? null : form.country ?? null,
+      idCity: isRandom ? null : form.city ?? null,
+      age: isRandom ? null : form.age ?? null,
+      yourGender: isRandom ? null : form.yourGender ?? null,
+      idLanguage: isRandom ? null : form.language ?? null,
+      partnerGender: isRandom ? null : form.partnerGender ?? null,
+      isSearchAgain: !!form.isSearchAgain,
+      isFindRandomPerson: isRandom
     }
 
     this.signalService.startSearchSingleChat(filterData)

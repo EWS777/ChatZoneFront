@@ -8,11 +8,8 @@ import { FindPerson } from '../../main/find-person';
 import { BlockedUserService } from '../../profile/blocked-users/blocked-user.service';
 import { SingleChatService } from '../single-chat.service';
 import { BaseChatService } from '../abstract/base-chat.service';
-import { Group } from '../group';
-import { CountryList } from '../../profile/filter/enums/country-list';
-import { CityList } from '../../profile/filter/enums/city-list';
+import { Group, UpdateGroupRequest } from '../group';
 import { AgeList } from '../../profile/filter/enums/age-list';
-import { LangList } from '../../profile/filter/enums/lang-list';
 import { ThemeList } from '../../profile/filter/enums/theme-list';
 import { GroupMemberService } from '../group-member/group-member.service';
 import { GroupMember } from '../group-member/group-member';
@@ -29,7 +26,9 @@ import { HttpXsrfTokenExtractor } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
 import { DropdownSelectComponent } from '../../../shared/dropdown/dropdown-select.component';
 import { InfiniteScrollDirective } from '../../../shared/directive/infinite-scroll.directive';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { LocationService } from '../../../shared/location/location.service';
+import { CityOptions } from '../../../shared/location/city-options';
 
 interface HubError {
   message?: string;
@@ -59,6 +58,7 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
   mainService = inject(MainService)
   router = inject(Router)
   messageService = inject(MessageService)
+  locationService = inject(LocationService)
   commonError: string = ''
   commonErrorUpdateChat: string = ''
   commonErrorBlockGroupMember: string = ''
@@ -110,11 +110,11 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
   filter: FindPerson = {
     connectionId: '',
     theme: null,
-    country: null,
-    city: null,
+    idCountry: null,
+    idCity: null,
     age: null,
     yourGender: null,
-    language: null,
+    idLanguage: null,
     partnerGender: null,
     isSearchAgain: true,
     isFindRandomPerson: false
@@ -123,10 +123,10 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
   isAllMessagesLoaded: boolean = false
   skipMessage: number = 0
   isUserAtBottom = true;
-  countryList = this.enumToKeyValue(CountryList);
-  cityList = this.enumToKeyValue(CityList);
+  countryList = toSignal(this.locationService.countryItems(), { initialValue: [] });
+  cityOptions = new CityOptions(this.locationService, this.updateGroupForm.controls.country, this.updateGroupForm.controls.city, inject(DestroyRef));
   ageList = this.enumToKeyValue(AgeList);
-  langList = this.enumToKeyValue(LangList);
+  langList = toSignal(this.locationService.languageItems(), { initialValue: [] });
   private quickMessageService = inject(QuickMessageService)
   private blockedPersonService = inject(BlockedUserService)
   private tokenExtractor = inject(HttpXsrfTokenExtractor)
@@ -189,13 +189,9 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
       await this.groupChatService.startConnect()
       this.chatService.getGroup(this.chatPersonInfo.idGroup!).subscribe({
         next: value => {
+          this.setGroupForm(value)
           this.updateGroupForm.patchValue({
             idGroup: this.chatPersonInfo.idGroup,
-            title: value.title,
-            country: value.country,
-            city: value.city,
-            age: value.age,
-            lang: value.lang,
             isAdmin: value.isAdmin
           });
         },
@@ -225,17 +221,17 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
       })
 
       this.groupChatService.updateGroupChat().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-        next: value => {
-          this.updateGroupForm.patchValue({
-            title: value.title,
-            country: value.country,
-            city: value.city,
-            age: value.age,
-            lang: value.lang
-          });
-        }
+        next: value => this.setGroupForm(value)
       })
     }
+  }
+
+  groupTags: { country: string | null, city: string | null, language: string | null } = { country: null, city: null, language: null }
+
+  private setGroupForm(group: Group) {
+    this.updateGroupForm.patchValue({ title: group.title, age: group.age, lang: group.language?.id ?? null })
+    this.cityOptions.setValue(group.country, group.city)
+    this.groupTags = { country: group.country?.name ?? null, city: group.city?.name ?? null, language: group.language?.name ?? null }
   }
 
   get chatTags(): string[] {
@@ -248,9 +244,9 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
         this.chatPersonInfo.partnerUsername,
         label(ThemeList, search?.theme),
         label(AgeList, search?.age),
-        label(CountryList, search?.country),
-        label(CityList, search?.city),
-        label(LangList, search?.language)
+        search?.country?.name ?? null,
+        search?.city?.name ?? null,
+        search?.language?.name ?? null
       ].filter((tag): tag is string => !!tag)
     }
 
@@ -258,9 +254,9 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
     return [
       group.title,
       label(AgeList, group.age),
-      label(CountryList, group.country),
-      label(CityList, group.city),
-      label(LangList, group.lang)
+      this.groupTags.country,
+      this.groupTags.city,
+      this.groupTags.language
     ].filter((tag): tag is string => !!tag)
   }
 
@@ -402,25 +398,18 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     this.updateGroupForm.controls.title.setValue(this.updateGroupForm.value.title!)
     const rawValue = this.updateGroupForm.getRawValue()
-    const payload: Group = {
-      title: rawValue.title!,
-      country: rawValue.country ? +rawValue.country : null,
-      city: rawValue.city ? +rawValue.city : null,
-      age: rawValue.age ? +rawValue.age : null,
-      lang: rawValue.lang ? +rawValue.lang : null,
+    const payload: UpdateGroupRequest = {
       idGroup: rawValue.idGroup ? +rawValue.idGroup : 0,
-      isAdmin: rawValue.isAdmin,
-      personCount: rawValue.personCount ? +rawValue.personCount : null,
-      createdAt: null
+      title: rawValue.title!,
+      idCountry: rawValue.country ?? null,
+      idCity: rawValue.city ?? null,
+      age: rawValue.age ? +rawValue.age : null,
+      idLanguage: rawValue.lang ?? null
     };
 
     this.chatService.updateGroup(payload).subscribe({
       next: value => {
-        this.updateGroupForm.controls.title.setValue(value.title)
-        this.updateGroupForm.controls.country.setValue(value.country)
-        this.updateGroupForm.controls.city.setValue(value.city)
-        this.updateGroupForm.controls.age.setValue(value.age)
-        this.updateGroupForm.controls.lang.setValue(value.lang)
+        this.setGroupForm(value)
         this.titleError = ''
         this.isActivateSettings.set(false)
       },

@@ -272,7 +272,7 @@
               </div>
               <div>
                 <label class="input-auth-name">Country</label>
-                <app-dropdown-select [items]="countryList" placeholder="Choose country" formControlName="country"></app-dropdown-select>
+                <app-dropdown-select [items]="countryList()" [searchable]="true" clearLabel="Any country" placeholder="Choose country" formControlName="country"></app-dropdown-select>
                 @if (updateGroupForm.controls.country.errors?.['backend']; as backendErrors) {
                   @for (err of backendErrors; track err) {
                     <small class="error-input-text">{{ err }}</small>
@@ -281,7 +281,7 @@
               </div>
               <div>
                 <label class="input-auth-name">City</label>
-                <app-dropdown-select [items]="cityList" placeholder="Choose city" formControlName="city"></app-dropdown-select>
+                <app-dropdown-select [items]="cityOptions.items()" [searchable]="true" [remoteSearch]="true" (searchChange)="cityOptions.search($event)" clearLabel="Any city" [placeholder]="updateGroupForm.controls.country.value === null ? 'Choose country first' : 'Choose city'" formControlName="city"></app-dropdown-select>
                 @if (updateGroupForm.controls.city.errors?.['backend']; as backendErrors) {
                   @for (err of backendErrors; track err) {
                     <small class="error-input-text">{{ err }}</small>
@@ -299,7 +299,7 @@
               </div>
               <div>
                 <label class="input-auth-name">Language</label>
-                <app-dropdown-select [items]="langList" placeholder="Choose language" formControlName="lang"></app-dropdown-select>
+                <app-dropdown-select [items]="langList()" [searchable]="true" clearLabel="Any language" placeholder="Choose language" formControlName="lang"></app-dropdown-select>
                 @if (updateGroupForm.controls.lang.errors?.['backend']; as backendErrors) {
                   @for (err of backendErrors; track err) {
                     <small class="error-input-text">{{ err }}</small>
