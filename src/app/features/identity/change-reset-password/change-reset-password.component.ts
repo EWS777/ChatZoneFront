@@ -33,7 +33,7 @@ export class ChangeResetPasswordComponent implements OnInit {
       CommonValidator.maxLength(254),
       CommonValidator.noSpaces, //just for strict attributes
     ]),
-    newPassword: new FormControl(null, [
+    password: new FormControl(null, [
       CommonValidator.required,
       CommonValidator.minLength(8),
       CommonValidator.maxLength(64),
@@ -45,7 +45,7 @@ export class ChangeResetPasswordComponent implements OnInit {
       CommonValidator.maxLength(64),
       CommonValidator.noSpaces, //just for strict attributes
     ])
-  }, { validators: matchValidator('newPassword', 'confirmedPassword') })
+  }, { validators: matchValidator('password', 'confirmedPassword') })
 
   resetPassword: ResetPassword = {
     token: '',
@@ -68,7 +68,7 @@ export class ChangeResetPasswordComponent implements OnInit {
     const dataToSend: ResetPassword = {
       token: this.resetPassword.token,
       email: this.resetPasswordForm.controls.email.value!,
-      password: this.resetPasswordForm.value.newPassword!
+      password: this.resetPasswordForm.value.password!
     };
     if (this.isLoading()) return
     this.isLoading.set(true)
