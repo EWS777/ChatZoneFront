@@ -1,4 +1,4 @@
-﻿import { Directive, ElementRef, EventEmitter, OnDestroy, OnInit, Output, inject } from '@angular/core';
+﻿import { Directive, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, inject } from '@angular/core';
 
 @Directive({
   selector: '[appInfiniteScroll]',
@@ -9,6 +9,15 @@
 })
 export class InfiniteScrollDirective implements OnInit, OnDestroy {
   @Output() scrolled = new EventEmitter<void>();
+  @Input() set busy(value: boolean) {
+    if (this.wasBusy && !value && this.observer) {
+      this.observer.unobserve(this.el.nativeElement);
+      this.observer.observe(this.el.nativeElement);
+    }
+    this.wasBusy = value;
+  }
+
+  private wasBusy = false;
 
   private el = inject(ElementRef<HTMLElement>);
   private observer?: IntersectionObserver;

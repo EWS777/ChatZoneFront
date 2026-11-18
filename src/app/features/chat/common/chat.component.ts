@@ -137,6 +137,7 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
   isLoading = signal<boolean>(false)
   hasNextPage = signal<boolean>(true)
   lastCrusor = signal<string | Date | null>(null)
+  lastCursorId = signal<number | null>(null)
 
   @HostListener('window:beforeunload')
   unloadHandler() {
@@ -424,6 +425,12 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   getGroupMembers() {
+    this.groupMembers = []
+    this.hasNextPage.set(true)
+    this.lastCrusor.set(null)
+    this.lastCursorId.set(null)
+    this.commonErrorGetGroupMembers = ''
+    this.isGroupMember.set(true)
     this.loadMore()
   }
 
@@ -432,21 +439,27 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.isLoading.set(true)
 
-    this.groupMemberService.getUsers(this.chatPersonInfo.idGroup!, this.takePerson, this.lastCrusor()).subscribe({
-      next: (newGroups) => {
-        const items = newGroups ?? []
-
-        this.isGroupMember.set(true)
+    this.groupMemberService.getUsers(this.chatPersonInfo.idGroup!, this.takePerson, this.lastCrusor(), this.lastCursorId()).subscribe({
+      next: (newMembers) => {
+        const items = newMembers ?? []
 
         this.groupMembers = [...(this.groupMembers ?? []), ...items];
 
         if (items.length < this.takePerson) this.hasNextPage.set(false)
 
-        if (items.length > 0) this.lastCrusor.set(items[items.length - 1].joinedAt)
+        if (items.length > 0) {
+          const last = items[items.length - 1]
+          this.lastCrusor.set(last.joinedAt)
+          this.lastCursorId.set(last.idPerson)
+        }
 
         this.isLoading.set(false)
       },
-      error: () => this.isLoading.set(false)
+      error: (err) => {
+        this.isLoading.set(false)
+        this.hasNextPage.set(false)
+        this.commonErrorGetGroupMembers = err.error?.title || 'Unhandled exception. To repair'
+      }
     })
   }
 

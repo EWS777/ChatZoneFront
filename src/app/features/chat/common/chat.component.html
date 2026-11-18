@@ -355,7 +355,7 @@
           }
 
           @if (hasNextPage()) {
-            <div appInfiniteScroll (scrolled)="loadMore()">
+            <div appInfiniteScroll [busy]="isLoading()" (scrolled)="loadMore()">
               @if (isLoading()) {
                 <div class="flex justify-center">
                   <svg class="animate-spin h-6 w-6 text-indigo-500" fill="none" viewBox="0 0 24 24">

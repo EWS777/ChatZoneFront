@@ -41,7 +41,7 @@ export class ChatService {
     let params = new HttpParams().set('takeGroup', takeGroup)
 
     if (cursor){
-      params = params.set('cursor', new Date(cursor).toISOString())
+      params = params.set('cursor', typeof cursor === 'string' ? cursor : cursor.toISOString())
       if (cursorId != null) params = params.set('cursorId', cursorId)
     }
 

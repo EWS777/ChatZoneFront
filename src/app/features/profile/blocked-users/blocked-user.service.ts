@@ -14,8 +14,7 @@ export class BlockedUserService {
     let params = new HttpParams().set('takePerson', takePerson)
 
     if (cursor){
-      const dateObj = new Date(cursor);
-      params = params.set('cursor', dateObj.toISOString());
+      params = params.set('cursor', typeof cursor === 'string' ? cursor : cursor.toISOString());
       if (cursorId != null) params = params.set('cursorId', cursorId)
     }
 

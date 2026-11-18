@@ -10,17 +10,17 @@ export class GroupMemberService {
   http = inject(HttpClient)
   url = `${environment.apiUrl}groupMember`
 
-  getUsers(idGroup: number, takePerson: number = 10, cursor?: string | Date | null) {
-    let params = new HttpParams().set('takePerson', takePerson)
-
-    params = params.set('idGroup', idGroup)
+  getUsers(idGroup: number, takePerson: number = 10, cursor?: string | Date | null, cursorId?: number | null) {
+    let params = new HttpParams()
+      .set('idGroup', idGroup)
+      .set('takePerson', takePerson)
 
     if (cursor){
-      const dateObj = new Date(cursor);
-      params = params.set('cursor', dateObj.toISOString());
+      params = params.set('cursor', typeof cursor === 'string' ? cursor : cursor.toISOString());
+      if (cursorId != null) params = params.set('cursorId', cursorId)
     }
 
-    return this.http.get<GroupMember[]>(`${this.url}/get-list?idGroup=${idGroup}`, {
+    return this.http.get<GroupMember[]>(`${this.url}/get-list`, {
       params,
       withCredentials: true
     })

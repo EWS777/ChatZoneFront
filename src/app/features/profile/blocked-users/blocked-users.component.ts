@@ -67,6 +67,7 @@ export class BlockedUsersComponent implements OnInit {
     ).subscribe({
       next: value => {
         this.blockedUser = value
+        if (value.length === 0 && this.hasNextPage()) this.loadMore()
       },
       error: () => {}
     })
